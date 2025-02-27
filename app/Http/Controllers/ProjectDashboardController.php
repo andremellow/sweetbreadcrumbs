@@ -14,7 +14,6 @@ class ProjectDashboardController extends Controller
      */
     public function index(Organization $organization, Project $project)
     {
-        session()->flash('success', "meeting created");
         
         return Inertia::render('projects/dashboard', [
             'project' => $project

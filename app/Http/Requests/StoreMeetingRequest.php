@@ -23,7 +23,7 @@ class StoreMeetingRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:2', 'max:50'],
-            'date' => ['date'],
+            'date' => ['required', 'date'],
         ];
     }
 }

@@ -1,24 +1,14 @@
-import { PageProps, SharedData } from "@/types";
+import {  SharedData } from "@/types";
 import { usePage } from "@inertiajs/react";
-import { useEffect, useState } from "react";
+import { toast } from "sonner"
 
 
 export default function FlashMessage() {
     const { flash } = usePage<SharedData>().props;
-    const [visible, setVisible] = useState<boolean>(false);
-
-    useEffect(() => {
+    
         if (flash?.success || flash?.error) {
-            setVisible(true);
-            const timer = setTimeout(() => setVisible(false), 5000);
-            return () => clearTimeout(timer);
+            toast(flash?.success)
         }
-    }, [flash]);
-
-    if (!visible || (!flash?.success && !flash?.error)) return null;
-
-    return (
-
-       <div>aaa</div>
-    );
+  
+    return ;
 }
