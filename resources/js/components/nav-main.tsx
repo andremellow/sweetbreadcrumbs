@@ -8,8 +8,8 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
         <SidebarGroup className="px-2 py-0">
             <SidebarGroupLabel>Platform</SidebarGroupLabel>
             <SidebarMenu>
-                {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                {items.map((item, index) => (
+                    <SidebarMenuItem key={`sidebar_menu_item_${index}`}>
                         <SidebarMenuButton asChild isActive={item.url === page.url}>
                             <Link href={item.url} prefetch>
                                 {item.icon && <item.icon />}

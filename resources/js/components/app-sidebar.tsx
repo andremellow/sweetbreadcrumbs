@@ -2,10 +2,11 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { type SharedData, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { LayoutGrid, List, PlusSquare } from 'lucide-react';
 import AppLogo from './app-logo';
+import { ProjectSheet } from '@/pages/projects/project-sheet';
 
 const mainNavItems: NavItem[] = [
     {
@@ -15,22 +16,36 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        url: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        url: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
-    },
-];
+
 
 export function AppSidebar() {
+
+    const { organization, featuredProjects } = usePage<SharedData>().props;
+
+    featuredProjects.forEach(project => {
+        mainNavItems.push({
+            key: `mainNavItems_${project.id}`,
+            title: project.name,
+            url: route('projects.dashboard', { organization: organization.slug, project: project.id }),
+        } );
+    });
+
+
+    const footerNavItems: NavItem[] = [
+        {
+            title: 'Manager Projects',
+            url: route('projects', { organization: organization.slug }),
+            icon: List,
+        },
+        {
+            title: 'Add project',
+            url: route('projects.create', { organization: organization.slug }),
+            icon: PlusSquare,
+        },
+    ];
+
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="icon" variant="inset" >
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
