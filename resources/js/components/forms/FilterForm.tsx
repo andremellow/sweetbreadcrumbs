@@ -2,11 +2,18 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button";
+import { Filter, FilterX } from "lucide-react";
+
+interface FilterFormProps extends React.ComponentProps<"form"> {
+  isDirty?: boolean,
+  onReset?: () => void
+}
+
 
 const FilterForm = React.forwardRef<
   HTMLFormElement,
-  React.ComponentProps<"form">
->(({ children, className, ...props }, ref) => {
+  FilterFormProps
+>(({ onReset, isDirty = false, children, className, ...props }, ref) => {
 
   return (
     <form
@@ -18,8 +25,9 @@ const FilterForm = React.forwardRef<
       {...props}
     >
         {children}
-        <div className="flex items-end justify-start h-full sm:justify-end sm:col-span-1">
-            <Button >Filter</Button>
+        <div className="flex items-end justify-start h-full sm:justify-end sm:col-span-1 gap-x-2">
+            <Button size='sm' ><Filter />Filter</Button>
+            {isDirty && <Button size='sm' onClick={() => onReset && onReset()} ><FilterX /></Button>}
         </div>
     </form>
   )

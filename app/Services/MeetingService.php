@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Actions\CreateMeeting;
+use App\Actions\UpdateMeeting;
 use App\Actions\UpdateProject;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
@@ -19,7 +20,7 @@ class MeetingService
      * @param CreateMeeting $createMeeting
      * @return MeetingService
      */
-    public function __construct(protected CreateMeeting $createMeeting, protected UpdateProject $updateProject)
+    public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting)
     {
 
     }
@@ -49,43 +50,31 @@ class MeetingService
         );
     }
 
-    // /**
-    //  * Update an existing project
-    //  *
-    // * @param Organization $organization,
-    //  * @param string $name,
-    //  * @param int $priorityId,
-    //  * @param int $toggleOnByReleaseId,
-    //  * @param string $releasePlan,
-    //  * @param string $technicalDocumentation,
-    //  * @param String | Carbon $needsToStartBy,
-    //  * @param String | Carbon $needsToDeployedBy,
-    //  * @return Project
-    //  */
-    // public function update(
-    //     Organization $organization,
-    //     int $projectId,
-    //     string $name,
-    //     int $priorityId,
-    //     int | null $toggleOnByReleaseId,
-    //     string | null $releasePlan,
-    //     string | null $technicalDocumentation,
-    //     Carbon | String | null $needsToStartBy,
-    //     Carbon | String | null $needsToDeployedBy,
-    // ): Project
-    // {
-    //    return ($this->updateProject)(
-    //         $organization,
-    //         $projectId,
-    //         $name,
-    //         $priorityId,
-    //         $toggleOnByReleaseId,
-    //         $releasePlan,
-    //         $technicalDocumentation,
-    //         $this->maybeParseToCarbon($needsToStartBy),
-    //         $this->maybeParseToCarbon($needsToDeployedBy),
-    //     );
-    // }
+    /**
+     * Update an existing meeting
+     *
+     * @param Project $project,
+     * @param string $name,
+     * @param string | null $description,
+     * @param String | Carbon $date,
+     * @return Meeting
+     */
+    public function update(
+        project $project,
+        int $meetingId,
+        string $name,
+        string | null $description,
+        Carbon | string | null $date,
+    ): Meeting
+    {
+       return ($this->updateMeeting)(
+            $project,
+            $meetingId,
+            $name,
+            $description,
+            $this->maybeParseToCarbon($date)
+        );
+    }
 
     protected function maybeParseToCarbon(String | Carbon | null $maybeADate): Carbon | null
     {
@@ -93,7 +82,7 @@ class MeetingService
             return Carbon::parse($maybeADate);
         }
 
-        return null;
+        return $maybeADate;
     }
 
     public function list(

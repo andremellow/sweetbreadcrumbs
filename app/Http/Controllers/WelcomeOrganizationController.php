@@ -29,7 +29,6 @@ class WelcomeOrganizationController extends Controller
             $request->name
         );
 
-        session()->flash('success', "You're now part of $organization->name!");
         return Redirect::route('dashboard', [ 'organization' => $organization->slug ]);
     }
 }

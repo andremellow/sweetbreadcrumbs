@@ -14,7 +14,6 @@ class ProjectDashboardController extends Controller
      */
     public function index(Organization $organization, Project $project)
     {
-        
         return Inertia::render('projects/dashboard', [
             'project' => $project
         ]);

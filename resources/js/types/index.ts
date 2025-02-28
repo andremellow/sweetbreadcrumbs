@@ -59,14 +59,6 @@ export interface Project {
     toggle_on_by_release?: ReleaseShort
 }
 
-export interface Meeting {
-    id: number,
-    name:  string
-    description:  string
-    date?: Date
-    created_at?: Date
-    updated_at?: Date
-}
 
 
 export interface SharedData extends PageProps {
@@ -111,28 +103,12 @@ export interface PageProjectForm extends PageProps {
 }
 
 
-export interface PageProjectMeetingForm extends PageProps {
-    project: Project,
-    meeting?: Meeting    
-}
-
-
 export interface PageListProject extends SharedData{
     projects: PaginatedData<Project>
     sortable: Sortable,
     filters?: {
         name?: string,
         priority_id?: number
-    }
-}
-
-
-export interface PageProjectMeetings extends SharedData{
-    project: Project,
-    meetings: PaginatedData<Meeting>
-    sortable: Sortable,
-    filters?: {
-        name?: string,
     }
 }
 
