@@ -22,7 +22,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group([ 'prefix' => '/{organization:slug}', 'middleware' => ['verified'] ], function() {
         Route::get('/dashboard', function (Organization $organization) {
-            // session()->flash('success', "You're now part of $organization->name!");
             return Inertia::render('dashboard');
         })->name('dashboard');
 
@@ -36,10 +35,10 @@ Route::middleware(['auth'])->group(function () {
 
 
         //MEETINGS
-        Route::get('/projects/{project}/meetings', [ProjectMeetingController::class, 'index'])->name('projects.meetings');
+        Route::get('/projects/{project}/meetings', [MeetingController::class, 'index'])->name('projects.meetings');
+        Route::get('/projects/{project}/meetings/{meeting}', [MeetingController::class, 'edit'])->name('projects.meetings.edit');
         Route::post('/projects/{project}/meetings/create', [MeetingController::class, 'store'])->name('projects.meetings.store');
-
-
+        Route::patch('/projects/{project}/meetings/{meeting}/edit', [MeetingController::class, 'update'])->name('projects.meetings.update');
     });
 
     Route::get('/welcome/organization', [WelcomeOrganizationController::class, 'create'])->name('welcome.organization');
