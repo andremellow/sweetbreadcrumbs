@@ -42,7 +42,7 @@ class UpdateProject
     ): Project
     {
 
-        $project = $organization->projects()->find($projectId);
+        $project = $organization->projects()->findOrFail($projectId);
         $project->update([
             "name" => $name,
             "priority_id" => $priorityId,

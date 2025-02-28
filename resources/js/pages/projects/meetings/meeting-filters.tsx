@@ -1,31 +1,52 @@
 import { FilterColumn, FilterForm } from "@/components/forms/FilterForm";
 import { InputGroup } from "@/components/input-group/input-group";
-import { PageProjectMeetings } from "@/types";
+import { ListMeetings } from '@/types/meeting.types';
 import { useForm, usePage } from "@inertiajs/react";
-import { FormEventHandler } from "react";
+import { FormEventHandler, useCallback, useEffect } from "react";
   export function MeetingFilters() {
 
     const {         
       filters,
       organization,
       project 
-    } = usePage<PageProjectMeetings>().props;
+    } = usePage<ListMeetings>().props;
     
 
-    const { data, setData, get, errors } =
+    const { data, setData, get, errors, isDirty } =
         useForm({
-            name: filters?.name || ''
+            name: '',
+            resetKey: ''
         });
+
+    useEffect(() => {
+      setData('name', filters?.name || '');
+    }, [filters, setData])
+
+    const _onReset = () => {
+      setData({
+        'name': '',
+        'resetKey': 'reseted'
+      });
+    }
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
-        get(route('projects.meetings', { organization: organization.slug, project: project.id }));
+        submitForm();
     };
 
+    const submitForm = useCallback(() => {
+      get(route("projects.meetings", { organization: organization.slug, project: project.id }));
+    }, [organization.slug, project.id, get]); 
+
+    useEffect(() => {
+      if(data.resetKey === 'reseted') {
+        submitForm();
+      }
+    }, [data.resetKey, submitForm])
+
     return (
-        
-        <FilterForm onSubmit={submit}>
+        <>
+        <FilterForm onSubmit={submit} isDirty={isDirty} onReset={_onReset}>
             <FilterColumn span={5}>
             <InputGroup
                   label='Name' 
@@ -37,8 +58,8 @@ import { FormEventHandler } from "react";
                   onChange={(e) => setData('name', e.target.value)}
               />
             </FilterColumn>
-           
         </FilterForm>
+        </>
     )
   }
   

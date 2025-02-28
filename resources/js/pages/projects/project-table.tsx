@@ -1,4 +1,6 @@
+import EmptyTable from "@/components/empty-table";
 import { TablePagination } from "@/components/table-pagination";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
     Table,
@@ -10,14 +12,15 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { PageListProject } from "@/types";
-import { usePage } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { format } from "date-fns";
 
   
   
   export function ProjectTable() {
 
-    const {         
+    const {
+      organization,
       projects,
       sortable: {
           sorted_by,
@@ -25,7 +28,16 @@ import { format } from "date-fns";
       },
     } = usePage<PageListProject>().props;
     const { data } = projects;
-    
+    if(data.length === 0 ) {
+      return (
+        <EmptyTable>
+          
+          <Button asChild>
+            <Link href={route('projects.create', { organization: organization.slug })} >Add Project</Link>
+          </Button>
+        </EmptyTable>
+      )
+    }
     return (
         <Card>
         <Table >

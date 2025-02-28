@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\SortDirection;
 use App\Http\Requests\StoreMeetingRequest;
 use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateMeetingRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Models\Meeting;
 use App\Models\Organization;
 use App\Models\Project;
 use App\Services\MeetingService;
@@ -17,43 +19,37 @@ use Inertia\Inertia;
 
 class MeetingController extends Controller
 {
-    public function __construct(protected ProjectService $projectService, protected MeetingService $meetingService)
-    {
+    public function __construct(protected MeetingService $meetingService) { }
 
-    }
     /**
      * Display a listing of the resource.
      */
-    public function index(Organization $organization, OrganizationService $organizationService, Request $request)
+    public function index(Organization $organization, Project $project, Request $request)
     {
         $sortBy = $request->get('sort_by', 'name');
         $name = $request->name;
-        $priorityId = $request->priority_id;
-        $organizationService->setOrganization($organization);
         $sortDirection = SortDirection::tryFrom($request->get('sort_direction', SortDirection::DESC->value));
 
-        $projects = $this->projectService->list(
-            $organization,
+        $meetings = $this->meetingService->list(
+            $project,
             $name,
-            $priorityId,
             $sortBy,
             $sortDirection
         );
 
-        return Inertia::render('projects/list-project', [
-            'projects' => $projects,
-            'priorities' => $organizationService->getPrioritiesDropDownData(),
+        return Inertia::render('projects/meetings', [
+            'project' => $project,
+            'meetings' => $meetings,
             'sortable' => [
                 'sorted_by' => $sortBy,
                 'sorted_direction' => $sortDirection->value
             ],
             'filters' => [
-                'name' => $name,
-                'priority_id' => $priorityId,
+                'name' => $name
             ]
         ]);
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -66,52 +62,38 @@ class MeetingController extends Controller
             $request->date
         );
 
-        session()->flash('success', "meeting created");
+        session()->flash('success', "Meeting created");
         return Redirect::route('projects.meetings', [ 'organization' => $organization->slug, 'project' => $project->id  ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Project $project)
-    {
-        //
-    }
+    
 
-    /**
-     * Show the form for editing the specified resource.
+ /**
+     * Return resource to get edit.
      */
-    public function edit(Organization $organization, OrganizationService $organizationService, Project $project)
+    public function edit(Organization $organization, Project $project, Meeting $meeting, Request $request)
     {
-        $organizationService->setOrganization($organization);
-
-        return Inertia::render('Projects/Create', [
-            'project' => $project,
-            'priorities' => $organizationService->getPrioritiesDropDownData(),
-            'releases' => $organizationService->getReleasesDropDownData()
+        return Inertia::render('projects/meetings', [
+            'meeting' => $meeting,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Organization $organization,  UpdateProjectRequest $request, Project $project)
+    public function update(Organization $organization, Project $project, Meeting $meeting, UpdateMeetingRequest $request)
     {
-
-        $project = $this->projectService->update(
-            $organization,
-            $project->id,
+        $this->meetingService->update(
+            $project,
+            $meeting->id,
             $request->name,
-            intval($request->priority_id),
-            $request->toggle_on_by_release_id,
-            $request->release_plan,
-            $request->technical_documentation,
-            $request->needs_to_start_by,
-            $request->needs_to_deployed_by,
+            $request->description,
+            $request->date
         );
 
-        session()->flash('success', "Project update");
-        return Redirect::route('projects.dashboard', [ 'organization' => $organization->slug, 'project' => $project->id  ]);
+        session()->flash('success', "Meeting updated");
+        return Redirect::route('projects.meetings', [ 'organization' => $organization->slug, 'project' => $project->id, ...$request->get('redirect_parameters', [])  ]);
+        
     }
 
     /**

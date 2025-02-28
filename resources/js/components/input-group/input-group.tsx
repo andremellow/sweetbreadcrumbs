@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import InputError from '@/components/input-error';
+import { CircleX } from "lucide-react";
  
 export function InputGroup({
     label,
@@ -16,9 +17,9 @@ export function InputGroup({
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label htmlFor={rest.name}>{label}</Label>
       <Input 
-        // onChange={(e) => onChange && onChange(e.target.value)}
         {...rest}
       />
+      
       <InputError className="mt-2" message={error} />
     </div>
   )
