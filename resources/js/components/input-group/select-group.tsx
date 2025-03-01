@@ -21,7 +21,9 @@ export function SelectGroup({
     onChange?: (value: string) => void;
 }) {
     const handleChange = (val: string) => {
-        onChange && onChange(val === 'clear' ? '' : val);
+        if(onChange) {
+            onChange(val === 'clear' ? '' : val);
+        }
     };
     return (
         <div className="grid w-full max-w-sm items-center gap-1.5">

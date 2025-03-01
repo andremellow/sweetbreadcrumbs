@@ -117,8 +117,12 @@ export interface PaginationLink {
     active: boolean;
 }
 
-export interface PaginatedData<T> {
+export interface PaginatedData<T> extends Pagination {
     data: T[];
+    
+}
+
+export interface Pagination {
     current_page: number;
     from: number | null;
     last_page: number;

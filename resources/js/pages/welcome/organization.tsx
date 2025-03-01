@@ -1,6 +1,5 @@
 import InputError from '@/components/input-error';
 import AuthLayoutTemplate from '@/layouts/auth/auth-card-layout';
-import { type BreadcrumbItem } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
@@ -8,13 +7,6 @@ import HeadingSmall from '@/components/heading-small';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Password settings',
-        href: '/settings/password',
-    },
-];
 
 export default function Organization() {
     const { data, setData, errors, post, processing } = useForm({
