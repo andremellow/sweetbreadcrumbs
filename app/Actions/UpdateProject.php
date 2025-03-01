@@ -27,7 +27,7 @@ class UpdateProject
         Organization $organization,
         int $projectId,
         string $name,
-        int $priorityId,
+        ?int $priorityId,
         ?int $toggleOnByReleaseId,
         ?string $releasePlan,
         ?string $technicalDocumentation,

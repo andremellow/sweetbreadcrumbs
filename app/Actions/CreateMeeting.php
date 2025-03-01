@@ -21,8 +21,8 @@ class CreateMeeting
     public function __invoke(
         Project $project,
         string $name,
-        ?string $description,
-        ?Carbon $date,
+        string $description,
+        Carbon $date,
     ): Meeting {
         return $project->meetings()->create([
             'name' => $name,

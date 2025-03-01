@@ -25,7 +25,7 @@ class CreateProject
     public function __invoke(
         Organization $organization,
         string $name,
-        int $priorityId,
+        ?int $priorityId,
         ?int $toggleOnByReleaseId,
         ?string $releasePlan,
         ?string $technicalDocumentation,
