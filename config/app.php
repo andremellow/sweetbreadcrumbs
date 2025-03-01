@@ -5,7 +5,7 @@ return [
     'demo_organization_id' => env('DEMO_ORGANIZATION_ID', 1),
 
     'pagination_items' => env('PAGINATION_ITEMS', 15),
-    
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

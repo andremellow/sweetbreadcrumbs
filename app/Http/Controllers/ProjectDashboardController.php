@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Organization;
 use App\Models\Project;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProjectDashboardController extends Controller
@@ -15,7 +14,7 @@ class ProjectDashboardController extends Controller
     public function index(Organization $organization, Project $project)
     {
         return Inertia::render('projects/dashboard', [
-            'project' => $project
+            'project' => $project,
         ]);
     }
 }

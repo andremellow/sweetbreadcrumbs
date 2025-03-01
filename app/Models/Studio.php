@@ -14,10 +14,10 @@ class Studio extends Model
      *
      * @var string[]
      */
-    protected $fillable = [ 'id', 'name' ];
+    protected $fillable = ['id', 'name'];
 
     /**
-     * Studio Users
+     * Studio Users.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::belongsToMany
      */
@@ -27,7 +27,7 @@ class Studio extends Model
     }
 
     /**
-     * Studio's project
+     * Studio's project.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::belongsToMany
      */

@@ -30,49 +30,45 @@ export interface SelectOption {
     [key: number]: string;
 }
 
-export interface OrganizationShort  {
-    name: string
-    slug: string
+export interface OrganizationShort {
+    name: string;
+    slug: string;
 }
 
-export type ProjectShort = ShortEntity
-export type PrioritiesShort = ShortEntity
-export type ReleaseShort = ShortEntity
+export type ProjectShort = ShortEntity;
+export type PrioritiesShort = ShortEntity;
+export type ReleaseShort = ShortEntity;
 
 export interface ProjectDashboard extends SharedData {
-    project: Project
+    project: Project;
 }
-
 
 export interface Project {
-    id: number,
-    name:  string
-    priority_id: number,
-    release_plan?: string
-    technical_documentation?: string
-    needs_to_start_by?: Date
-    needs_to_deployed_by?: Date
-    toggle_on_by_release_id?: number
-    created_at?: Date
-    updated_at?: Date
-    priority?: PrioritiesShort
-    toggle_on_by_release?: ReleaseShort
+    id: number;
+    name: string;
+    priority_id: number;
+    release_plan?: string;
+    technical_documentation?: string;
+    needs_to_start_by?: Date;
+    needs_to_deployed_by?: Date;
+    toggle_on_by_release_id?: number;
+    created_at?: Date;
+    updated_at?: Date;
+    priority?: PrioritiesShort;
+    toggle_on_by_release?: ReleaseShort;
 }
-
-
 
 export interface SharedData extends PageProps {
     name: string;
     auth: Auth;
-    organization : OrganizationShort
-    featuredProjects : ProjectShort[]
-    priorities?: SelectOption
-    releases?: SelectOption
+    organization: OrganizationShort;
+    featuredProjects: ProjectShort[];
+    priorities?: SelectOption;
+    releases?: SelectOption;
     flash?: {
         success?: string;
         error?: string;
     };
-    
 }
 
 export interface User {
@@ -87,44 +83,46 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-
 export interface PageWithPriorities extends PageProps {
-    priorities: SelectOption
+    priorities: SelectOption;
 }
 
 export interface PageWithReleases extends PageProps {
-    releases: SelectOption
+    releases: SelectOption;
 }
 
 export interface PageProjectForm extends PageProps {
-    project?: Project
-    priorities: PrioritiesShort[],
-    releases: ReleaseShort[],
+    project?: Project;
+    priorities: PrioritiesShort[];
+    releases: ReleaseShort[];
 }
 
-
-export interface PageListProject extends SharedData{
-    projects: PaginatedData<Project>
-    sortable: Sortable,
+export interface PageListProject extends SharedData {
+    projects: PaginatedData<Project>;
+    sortable: Sortable;
     filters?: {
-        name?: string,
-        priority_id?: number
-    }
+        name?: string;
+        priority_id?: number;
+    };
 }
 
 export interface Sortable {
-    sorted_by?: string,
-    sorted_direction?: 'asc' | 'desc'
+    sorted_by?: string;
+    sorted_direction?: 'asc' | 'desc';
 }
 
 export interface PaginationLink {
     url: string | null;
     label: string;
     active: boolean;
-  }
+}
 
-  export interface PaginatedData<T> {
+export interface PaginatedData<T> extends Pagination {
     data: T[];
+    
+}
+
+export interface Pagination {
     current_page: number;
     from: number | null;
     last_page: number;
@@ -137,11 +135,6 @@ export interface PaginationLink {
     last_page_url: string;
     next_page_url: string | null;
     prev_page_url: string | null;
-  }
+}
 
-
-  export type PageProps<
-    T extends Record<string, unknown> = Record<string, unknown>,
-> = T & {
-
-};
+export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {};

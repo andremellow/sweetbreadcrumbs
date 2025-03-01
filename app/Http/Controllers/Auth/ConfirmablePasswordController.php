@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,13 @@ class ConfirmablePasswordController extends Controller
 
         $request->session()->put('auth.password_confirmed_at', time());
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $userService = new UserService($request->user());
+        $organization = $userService->getCurrentOrganization();
+
+        if ($organization === null) {
+            return redirect(route('welcome.organization'));
+        }
+
+        return redirect()->intended(route('dashboard', ['organization' => $organization->slug], absolute: false));
     }
 }

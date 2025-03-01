@@ -54,7 +54,7 @@ class User extends Authenticatable
     }
 
     /**
-     * User's Organization
+     * User's Organization.
      *
      * @return lluminate\Database\Eloquent\Concerns\HasRelationships::belongsToMany
      */

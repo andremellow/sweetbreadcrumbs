@@ -15,10 +15,8 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    public function __construct(protected ProjectService $projectService)
-    {
+    public function __construct(protected ProjectService $projectService) {}
 
-    }
     /**
      * Display a listing of the resource.
      */
@@ -43,19 +41,19 @@ class ProjectController extends Controller
             'priorities' => $organizationService->getPrioritiesDropDownData(),
             'sortable' => [
                 'sorted_by' => $sortBy,
-                'sorted_direction' => $sortDirection->value
+                'sorted_direction' => $sortDirection->value,
             ],
             'filters' => [
                 'name' => $name,
                 'priority_id' => $priorityId,
-            ]
+            ],
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Organization $organization )
+    public function create(Organization $organization)
     {
         return Inertia::render('projects/create-project');
     }
@@ -76,8 +74,9 @@ class ProjectController extends Controller
             $request->needs_to_deployed_by,
         );
 
-        session()->flash('success', "Project created");
-        return Redirect::route('projects.dashboard', [ 'organization' => $organization->slug, 'project' => $project->id  ]);
+        session()->flash('success', 'Project created');
+
+        return Redirect::route('projects.dashboard', ['organization' => $organization->slug, 'project' => $project->id]);
     }
 
     /**
@@ -98,14 +97,14 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Create', [
             'project' => $project,
             'priorities' => $organizationService->getPrioritiesDropDownData(),
-            'releases' => $organizationService->getReleasesDropDownData()
+            'releases' => $organizationService->getReleasesDropDownData(),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Organization $organization,  UpdateProjectRequest $request, Project $project)
+    public function update(Organization $organization, UpdateProjectRequest $request, Project $project)
     {
 
         $project = $this->projectService->update(
@@ -120,8 +119,9 @@ class ProjectController extends Controller
             $request->needs_to_deployed_by,
         );
 
-        session()->flash('success', "Project update");
-        return Redirect::route('projects.dashboard', [ 'organization' => $organization->slug, 'project' => $project->id  ]);
+        session()->flash('success', 'Project update');
+
+        return Redirect::route('projects.dashboard', ['organization' => $organization->slug, 'project' => $project->id]);
     }
 
     /**

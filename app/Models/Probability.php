@@ -14,7 +14,7 @@ class Probability extends Model
      *
      * @var string[]
      */
-    protected $fillable = [ 'id', 'name' ];
+    protected $fillable = ['id', 'name'];
 
     public function project()
     {

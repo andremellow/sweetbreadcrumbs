@@ -9,16 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Meeting extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = [ 'name', 'description', 'date' ];
+    protected $fillable = ['name', 'description', 'date'];
 
-     /**
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -36,7 +36,7 @@ class Meeting extends Model
         return $this->belongsTo(Project::class);
     }
 
-        /**
+    /**
      * Get all of the post's comments.
      */
     public function comments(): MorphMany

@@ -1,4 +1,4 @@
-import { SharedData, Project, PaginatedData, Sortable } from '.';
+import { PaginatedData, Project, SharedData, Sortable } from '.';
 
 export interface ListMeetings extends SharedData {
     project: Project;
@@ -10,15 +10,14 @@ export interface ListMeetings extends SharedData {
 }
 
 export interface Meeting {
-    id: number,
-    name:  string
-    description:  string
-    date?: Date
-    created_at?: Date
-    updated_at?: Date
+    id: number;
+    name: string;
+    description: string;
+    date?: Date;
+    created_at?: Date;
+    updated_at?: Date;
 }
 
-
 export interface EditMeeting {
-    meeting: Meeting
+    meeting: Meeting;
 }

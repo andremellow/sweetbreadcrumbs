@@ -1,16 +1,11 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import ProjectLayout from '@/layouts/project-layout';
 import { ProjectDashboard, type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { MeetingTable } from './meetings/meeting-table';
-import { MeetingFilters } from './meetings/meeting-filters';
-
-
 
 export default function Meetings() {
-
-    const { organization, project } = usePage<ProjectDashboard>().props
+    const { organization, project } = usePage<ProjectDashboard>().props;
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -29,10 +24,9 @@ export default function Meetings() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-        <ProjectLayout>
-            <MeetingTable />
-        </ProjectLayout>
-    </AppLayout>
+            <ProjectLayout>
+                <MeetingTable />
+            </ProjectLayout>
+        </AppLayout>
     );
 }
-

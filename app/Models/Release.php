@@ -14,5 +14,5 @@ class Release extends Model
      *
      * @var string[]
      */
-    protected $fillable = [ 'id', 'name' ];
+    protected $fillable = ['id', 'name'];
 }

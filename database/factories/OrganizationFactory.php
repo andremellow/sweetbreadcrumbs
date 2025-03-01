@@ -18,7 +18,7 @@ class OrganizationFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'slug' => fake()->slug()
+            'slug' => fake()->slug(),
         ];
     }
 }

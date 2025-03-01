@@ -14,7 +14,7 @@ class Priority extends Model
      *
      * @var string[]
      */
-    protected $fillable = [ 'id', 'name', 'order' ];
+    protected $fillable = ['id', 'name', 'order'];
 
     public function projects()
     {
