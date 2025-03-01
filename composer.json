@@ -24,7 +24,8 @@
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.7",
         "pestphp/pest-plugin-drift": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.1"
+        "pestphp/pest-plugin-laravel": "^3.1",
+        "pestphp/pest-plugin-type-coverage": "^3.3"
     },
     "autoload": {
         "psr-4": {
@@ -63,6 +64,9 @@
         ],
         "coverage": [
             "herd coverage ./vendor/bin/pest --coverage --coverage-html coverage  --testsuite=Feature"
+        ],
+        "mutate": [
+            "herd coverage ./vendor/bin/pest --coverage --mudate"
         ],
         "db-reset": [
             "@php artisan db:wipe",

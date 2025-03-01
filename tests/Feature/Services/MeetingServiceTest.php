@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Mockery;
 
+covers(MeetingService::class);
+ 
+
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
