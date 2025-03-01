@@ -8,23 +8,22 @@ use App\Models\User;
 
 class OrganizationService
 {
-    Protected Organization $organization;
+    protected Organization $organization;
 
     /**
-     * OrganizationService Construct
+     * OrganizationService Construct.
      *
      * @param CreateOrganization $createOrganization
+     *
      * @return OrganizationService
      */
-    public function __construct(protected CreateOrganization $createOrganization)
-    {
-
-    }
+    public function __construct(protected CreateOrganization $createOrganization) {}
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
      * @param Organization $organization
+     *
      * @return OrganizationService
      */
     public function setOrganization(Organization $organization): OrganizationService
@@ -35,10 +34,11 @@ class OrganizationService
     }
 
     /**
-     * Creates a new organization
+     * Creates a new organization.
      *
-     * @param User $user
+     * @param User   $user
      * @param string $name
+     *
      * @return Organization
      */
     public function create(User $user, string $name): Organization
@@ -46,17 +46,18 @@ class OrganizationService
         return ($this->createOrganization)($user, $name);
     }
 
-/**
- * Get Organization's Priorities
- *
- * @return \Illuminate\Support\Collection
- */
+    /**
+     * Get Organization's Priorities.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function getPrioritiesDropDownData(): \Illuminate\Support\Collection
     {
         return $this->organization->priorities()->select('id', 'name')->get()->pluck('name', 'id');
     }
+
     /**
-     * Get Organization's Releases
+     * Get Organization's Releases.
      *
      * @return \Illuminate\Support\Collection
      */
@@ -64,6 +65,4 @@ class OrganizationService
     {
         return $this->organization->releases()->select('id', 'name')->get()->pluck('name', 'id');
     }
-
-
 }

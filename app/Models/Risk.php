@@ -14,9 +14,9 @@ class Risk extends Model
      *
      * @var string[]
      */
-    protected $fillable = [ 'id', 'name' ];
+    protected $fillable = ['id', 'name'];
 
-           /**
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -30,7 +30,7 @@ class Risk extends Model
     }
 
     /**
-     * Risk Status
+     * Risk Status.
      *
      * @return void
      */
@@ -39,9 +39,8 @@ class Risk extends Model
         return $this->belongsTo(RiskStatus::class);
     }
 
-
     /**
-     * Risk Level
+     * Risk Level.
      *
      * @return void
      */
@@ -50,9 +49,8 @@ class Risk extends Model
         return $this->belongsTo(RiskLevel::class);
     }
 
-
     /**
-     * Risk Probability
+     * Risk Probability.
      *
      * @return void
      */

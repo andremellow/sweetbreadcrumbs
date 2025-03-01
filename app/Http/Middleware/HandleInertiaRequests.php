@@ -6,9 +6,7 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Services\OrganizationService;
 use App\Services\UserService;
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -22,10 +20,7 @@ class HandleInertiaRequests extends Middleware
      */
     protected $rootView = 'app';
 
-    public function __construct(protected UserService $userService,protected OrganizationService $organizationService)
-    {
-
-    }
+    public function __construct(protected UserService $userService, protected OrganizationService $organizationService) {}
 
     /**
      * Determines the current asset version.
@@ -47,15 +42,15 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $this->prepareUserService($request);
-        
-        $this->organizationService->setOrganization( $this->userService->getCurrentOrganization() ?? new Organization());
+
+        $this->organizationService->setOrganization($this->userService->getCurrentOrganization() ?? new Organization);
 
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
-            'organization' => $this->userService->getCurrentOrganization()?->toArray() ,
+            'organization' => $this->userService->getCurrentOrganization()?->toArray(),
             'featuredProjects' => $this->getProjects(),
             'priorities' => fn () => $this->organizationService->getPrioritiesDropDownData(),
             'releases' => fn () => $this->organizationService->getReleasesDropDownData(),
@@ -71,16 +66,16 @@ class HandleInertiaRequests extends Middleware
         $projects = $this->userService->getProjects();
 
         return $projects ? $projects->select('id', 'name')
-                            ->toArray() : [];
+            ->toArray() : [];
     }
 
     protected function prepareUserService(Request $request): void
     {
-        $user = $request->user() ?? new User();
+        $user = $request->user() ?? new User;
         $organization = $request->route('organization');
 
-        if(is_string($organization)) {
-            $organization = UserService::getOrganizationBySlug( $user, $organization);
+        if (is_string($organization)) {
+            $organization = UserService::getOrganizationBySlug($user, $organization);
             $this->userService->setOrganization($organization);
         }
 

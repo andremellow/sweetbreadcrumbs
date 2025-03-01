@@ -37,12 +37,11 @@ class AuthenticatedSessionController extends Controller
         $userService = new UserService($request->user());
         $organization = $userService->getCurrentOrganization();
 
-        
-        if($organization === null) {
+        if ($organization === null) {
             return redirect(route('welcome.organization'));
         }
 
-        return redirect()->intended(route('dashboard', [ 'organization' => $organization->slug ],absolute: false));
+        return redirect()->intended(route('dashboard', ['organization' => $organization->slug], absolute: false));
     }
 
     /**

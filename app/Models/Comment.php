@@ -10,7 +10,7 @@ class Comment extends Model
 {
     use SoftDeletes;
 
-     /**
+    /**
      * Get the parent commentable model (post or video).
      */
     public function commentable(): MorphTo

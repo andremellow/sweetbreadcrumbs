@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organization extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = [ 'id', 'name', 'slug' ];
+    protected $fillable = ['id', 'name', 'slug'];
+
     /**
-     * Organization's Priorities
+     * Organization's Priorities.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
@@ -27,11 +28,9 @@ class Organization extends Model
     }
 
     /**
-     * Organization's Releases
+     * Organization's Releases.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
-
-
      */
     public function releases()
     {
@@ -39,11 +38,9 @@ class Organization extends Model
     }
 
     /**
-     * Organization's Studio
+     * Organization's Studio.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
-
-
      */
     public function studios()
     {
@@ -51,11 +48,9 @@ class Organization extends Model
     }
 
     /**
-     * Organization's Projects
+     * Organization's Projects.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
-
-
      */
     public function projects()
     {
@@ -63,7 +58,7 @@ class Organization extends Model
     }
 
     /**
-     * Organization's Risk Levels
+     * Organization's Risk Levels.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
@@ -73,7 +68,7 @@ class Organization extends Model
     }
 
     /**
-     * Organization Risk's Statuses
+     * Organization Risk's Statuses.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
@@ -82,9 +77,8 @@ class Organization extends Model
         return $this->hasMany(RiskStatus::class);
     }
 
-
     /**
-     * Organization's Projects
+     * Organization's Projects.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
@@ -94,7 +88,7 @@ class Organization extends Model
     }
 
     /**
-     * Organization's Users
+     * Organization's Users.
      *
      * @return lluminate\Database\Eloquent\Concerns\HasRelationships::belongsToMany
      */

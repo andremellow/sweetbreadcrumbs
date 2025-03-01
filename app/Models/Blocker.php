@@ -10,7 +10,7 @@ class Blocker extends Model
 {
     use SoftDeletes;
 
-        /**
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -27,7 +27,7 @@ class Blocker extends Model
         return $this->belongsTo(Project::class);
     }
 
-        /**
+    /**
      * Get all of the post's comments.
      */
     public function comments(): MorphMany

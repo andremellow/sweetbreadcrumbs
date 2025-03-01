@@ -12,12 +12,13 @@ use Illuminate\Support\Str;
 
 class CreateOrganization
 {
+    protected $demoOrganizationId;
 
-    protected $demoOrganizationId ;
     /**
-     * Creates new organization
+     * Creates new organization.
      *
      * @param string $name
+     *
      * @return Organization
      */
     public function __invoke(User $user, string $name): Organization
@@ -25,7 +26,7 @@ class CreateOrganization
         $this->demoOrganizationId = config('app.demo_organization_id');
         $organization = Organization::create([
             'name' => $name,
-            'slug' => $this->generateUniqueSlug($name)
+            'slug' => $this->generateUniqueSlug($name),
         ]);
 
         $this->attachUser($organization, $user);
@@ -41,7 +42,7 @@ class CreateOrganization
     protected function copyPriorities(Organization $organization)
     {
         $prioritiesToCopy = Priority::where(['organization_id' => $this->demoOrganizationId])->get();
-        foreach($prioritiesToCopy as $priority) {
+        foreach ($prioritiesToCopy as $priority) {
             $organization->priorities()->create([
                 'name' => $priority->name,
                 'order' => $priority->order,
@@ -52,9 +53,9 @@ class CreateOrganization
     protected function copyRiskLevels(Organization $organization)
     {
         $riskLevelsToCopy = RiskLevel::where(['organization_id' => $this->demoOrganizationId])->get();
-        foreach($riskLevelsToCopy as $priority) {
+        foreach ($riskLevelsToCopy as $priority) {
             $organization->riskLevels()->create([
-                'name' => $priority->name
+                'name' => $priority->name,
             ]);
         }
     }
@@ -62,9 +63,9 @@ class CreateOrganization
     protected function copyRiskStatuses(Organization $organization)
     {
         $riskStatusesToCopy = RiskStatus::where(['organization_id' => $this->demoOrganizationId])->get();
-        foreach($riskStatusesToCopy as $priority) {
+        foreach ($riskStatusesToCopy as $priority) {
             $organization->riskStatuses()->create([
-                'name' => $priority->name
+                'name' => $priority->name,
             ]);
         }
     }
@@ -72,9 +73,9 @@ class CreateOrganization
     protected function copyProbabilities(Organization $organization)
     {
         $probabilitiesToCopy = Probability::where(['organization_id' => $this->demoOrganizationId])->get();
-        foreach($probabilitiesToCopy as $priority) {
+        foreach ($probabilitiesToCopy as $priority) {
             $organization->probabilities()->create([
-                'name' => $priority->name
+                'name' => $priority->name,
             ]);
         }
     }
@@ -84,19 +85,17 @@ class CreateOrganization
         $organization->users()->attach($user);
     }
 
-    protected function generateUniqueSlug(string $name) : string
+    protected function generateUniqueSlug(string $name): string
     {
         $slug = Str::slug($name);
         $originalSlug = $slug;
         $counter = 1;
 
         while (Organization::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
+            $slug = $originalSlug.'-'.$counter;
             $counter++;
         }
 
         return $slug;
     }
-
-
 }

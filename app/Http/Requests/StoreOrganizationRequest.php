@@ -22,7 +22,7 @@ class StoreOrganizationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'min:2', 'max:50']
+            'name' => ['required', 'min:2', 'max:50'],
         ];
     }
 }

@@ -19,7 +19,7 @@ class MeetingFactory extends Factory
         return [
             'name' => fake()->company(),
             'description' => fake()->text(),
-            'date' => fake()->date()
+            'date' => fake()->date(),
         ];
     }
 }

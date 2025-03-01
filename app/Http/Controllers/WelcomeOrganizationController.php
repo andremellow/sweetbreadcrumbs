@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrganizationRequest;
-use App\Http\Requests\UpdateOrganizationRequest;
-use App\Models\Organization;
 use App\Services\OrganizationService;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -29,6 +27,6 @@ class WelcomeOrganizationController extends Controller
             $request->name
         );
 
-        return Redirect::route('dashboard', [ 'organization' => $organization->slug ]);
+        return Redirect::route('dashboard', ['organization' => $organization->slug]);
     }
 }

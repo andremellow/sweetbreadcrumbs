@@ -9,15 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = [ "name", "priority_id", "toggle_on_by_release_id", "release_plan", "technical_documentation", "needs_to_start_by", "needs_to_deployed_by" ];
-
+    protected $fillable = ['name', 'priority_id', 'toggle_on_by_release_id', 'release_plan', 'technical_documentation', 'needs_to_start_by', 'needs_to_deployed_by'];
 
     /**
      * Get the attributes that should be cast.
@@ -33,7 +32,7 @@ class Project extends Model
     }
 
     /**
-     * Project's Studios
+     * Project's Studios.
      *
      * @return void
      */
@@ -42,8 +41,8 @@ class Project extends Model
         return $this->belongsToMany(Studio::class);
     }
 
-     /**
-     * Project's release
+    /**
+     * Project's release.
      *
      * @return void
      */
@@ -53,7 +52,7 @@ class Project extends Model
     }
 
     /**
-     * Organization's priority
+     * Organization's priority.
      *
      * @return void
      */
@@ -63,7 +62,7 @@ class Project extends Model
     }
 
     /**
-     * Project's priority
+     * Project's priority.
      *
      * @return void
      */
@@ -73,7 +72,7 @@ class Project extends Model
     }
 
     /**
-     * Project's priority
+     * Project's priority.
      *
      * @return void
      */
@@ -83,7 +82,7 @@ class Project extends Model
     }
 
     /**
-     * Project blockers
+     * Project blockers.
      *
      * @return void
      */
@@ -92,8 +91,8 @@ class Project extends Model
         return $this->hasMany(Blocker::class);
     }
 
-     /**
-     * Project blockers
+    /**
+     * Project blockers.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */

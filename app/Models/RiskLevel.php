@@ -9,12 +9,12 @@ class RiskLevel extends Model
 {
     use SoftDeletes;
 
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = [ 'id', 'name' ];
+    protected $fillable = ['id', 'name'];
 
     public function project()
     {

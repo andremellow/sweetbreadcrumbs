@@ -24,7 +24,7 @@ class UpdateMeetingRequest extends FormRequest
         return [
             'name' => ['required', 'min:2', 'max:50'],
             'date' => ['required', 'date'],
-            'redirect_parameters' => ['nullable', 'array']
+            'redirect_parameters' => ['nullable', 'array'],
         ];
     }
 }

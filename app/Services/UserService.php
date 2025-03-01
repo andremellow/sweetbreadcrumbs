@@ -7,24 +7,22 @@ use App\Models\User;
 
 class UserService
 {
-
     protected Organization $organization;
 
     /**
-     * UserService Construct
+     * UserService Construct.
      *
      * @param User $user
+     *
      * @return UserService
      */
-    public function __construct(protected User $user)
-    {
-
-    }
+    public function __construct(protected User $user) {}
 
     /**
-     * Set user to the class
+     * Set user to the class.
      *
      * @param User $user
+     *
      * @return UserService
      */
     public function setUser(User $user): UserService
@@ -35,9 +33,10 @@ class UserService
     }
 
     /**
-     * Set user to the class
+     * Set user to the class.
      *
      * @param string $slug
+     *
      * @return UserService
      */
     public function setOrganization(Organization $organization): UserService
@@ -48,9 +47,9 @@ class UserService
     }
 
     /**
-     * Check if the given user has organizations
+     * Check if the given user has organizations.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasOrganizations(): bool
     {
@@ -58,17 +57,17 @@ class UserService
     }
 
     /**
-     * Get user's current Organizations
+     * Get user's current Organizations.
      *
      * @return Organization | null
      */
-    public function getCurrentOrganization(): Organization | null
+    public function getCurrentOrganization(): ?Organization
     {
-        return  $this->organization ?? $this->user->organizations()->first();
+        return $this->organization ?? $this->user->organizations()->first();
     }
 
     /**
-     * Get all user's organizations
+     * Get all user's organizations.
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
      */
@@ -77,8 +76,8 @@ class UserService
         return $this->user->organizations()->get();
     }
 
-      /**
-     * Get all user's projects
+    /**
+     * Get all user's projects.
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
      */
@@ -87,10 +86,8 @@ class UserService
         return $this->getCurrentOrganization()?->projects()->get();
     }
 
-    public static function getOrganizationBySlug(User $user, $slug): Organization | null
+    public static function getOrganizationBySlug(User $user, $slug): ?Organization
     {
         return $user->organizations()->where('slug', $slug)->first();
     }
-
-
 }

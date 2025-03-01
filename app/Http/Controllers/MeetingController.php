@@ -4,22 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Enums\SortDirection;
 use App\Http\Requests\StoreMeetingRequest;
-use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateMeetingRequest;
-use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Meeting;
 use App\Models\Organization;
 use App\Models\Project;
 use App\Services\MeetingService;
-use App\Services\OrganizationService;
-use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class MeetingController extends Controller
 {
-    public function __construct(protected MeetingService $meetingService) { }
+    public function __construct(protected MeetingService $meetingService) {}
 
     /**
      * Display a listing of the resource.
@@ -42,14 +38,14 @@ class MeetingController extends Controller
             'meetings' => $meetings,
             'sortable' => [
                 'sorted_by' => $sortBy,
-                'sorted_direction' => $sortDirection->value
+                'sorted_direction' => $sortDirection->value,
             ],
             'filters' => [
-                'name' => $name
-            ]
+                'name' => $name,
+            ],
         ]);
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -62,13 +58,12 @@ class MeetingController extends Controller
             $request->date
         );
 
-        session()->flash('success', "Meeting created");
-        return Redirect::route('projects.meetings', [ 'organization' => $organization->slug, 'project' => $project->id  ]);
+        session()->flash('success', 'Meeting created');
+
+        return Redirect::route('projects.meetings', ['organization' => $organization->slug, 'project' => $project->id]);
     }
 
-    
-
- /**
+    /**
      * Return resource to get edit.
      */
     public function edit(Organization $organization, Project $project, Meeting $meeting, Request $request)
@@ -91,9 +86,10 @@ class MeetingController extends Controller
             $request->date
         );
 
-        session()->flash('success', "Meeting updated");
-        return Redirect::route('projects.meetings', [ 'organization' => $organization->slug, 'project' => $project->id, ...$request->get('redirect_parameters', [])  ]);
-        
+        session()->flash('success', 'Meeting updated');
+
+        return Redirect::route('projects.meetings', ['organization' => $organization->slug, 'project' => $project->id, ...$request->get('redirect_parameters', [])]);
+
     }
 
     /**
