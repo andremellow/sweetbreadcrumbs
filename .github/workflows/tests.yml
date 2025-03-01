@@ -35,7 +35,7 @@ jobs:
         run: npm install --global yarn
 
       - name: Install Node Dependencies
-        run: yarn ci
+        run: yarn install --immutable
 
       - name: Build Assets
         run: yarn run build
