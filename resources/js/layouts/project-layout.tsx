@@ -5,12 +5,10 @@ import { cn } from '@/lib/utils';
 import { ProjectDashboard, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 
-
-
 export default function ProjectLayout({ children }: { children: React.ReactNode }) {
     const currentPath = window.location.pathname;
 
-    const { organization, project } = usePage<ProjectDashboard>().props
+    const { organization, project } = usePage<ProjectDashboard>().props;
 
     const sidebarNavItems: NavItem[] = [
         {
@@ -52,7 +50,7 @@ export default function ProjectLayout({ children }: { children: React.ReactNode 
 
                 <Separator className="my-6 md:hidden" />
 
-                <div className="flex-1 ">
+                <div className="flex-1">
                     <section className="space-y-12">{children}</section>
                 </div>
             </div>

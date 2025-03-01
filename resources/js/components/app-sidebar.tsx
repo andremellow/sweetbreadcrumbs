@@ -2,11 +2,10 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type SharedData, type NavItem } from '@/types';
+import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { LayoutGrid, List, PlusSquare } from 'lucide-react';
 import AppLogo from './app-logo';
-import { ProjectSheet } from '@/pages/projects/project-sheet';
 
 const mainNavItems: NavItem[] = [
     {
@@ -16,20 +15,16 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-
-
 export function AppSidebar() {
-
     const { organization, featuredProjects } = usePage<SharedData>().props;
 
-    featuredProjects.forEach(project => {
+    featuredProjects.forEach((project) => {
         mainNavItems.push({
             key: `mainNavItems_${project.id}`,
             title: project.name,
             url: route('projects.dashboard', { organization: organization.slug, project: project.id }),
-        } );
+        });
     });
-
 
     const footerNavItems: NavItem[] = [
         {
@@ -45,7 +40,7 @@ export function AppSidebar() {
     ];
 
     return (
-        <Sidebar collapsible="icon" variant="inset" >
+        <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
