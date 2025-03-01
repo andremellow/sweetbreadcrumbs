@@ -21,10 +21,10 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        DB::table('priorities')->insert(['name' => 'Low', 'order' => 1, 'organization_id'=> 1]);
-        DB::table('priorities')->insert(['name' => 'Mid', 'order' => 10, 'organization_id'=> 1]);
-        DB::table('priorities')->insert(['name' => 'High', 'order' => 20, 'organization_id'=> 1]);
-        DB::table('priorities')->insert(['name' => 'Urgent', 'order' => 30, 'organization_id'=> 1]);
+        DB::table('priorities')->insert(['name' => 'Low', 'order' => 1, 'organization_id' => 1]);
+        DB::table('priorities')->insert(['name' => 'Mid', 'order' => 10, 'organization_id' => 1]);
+        DB::table('priorities')->insert(['name' => 'High', 'order' => 20, 'organization_id' => 1]);
+        DB::table('priorities')->insert(['name' => 'Urgent', 'order' => 30, 'organization_id' => 1]);
     }
 
     /**

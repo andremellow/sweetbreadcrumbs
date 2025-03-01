@@ -11,15 +11,11 @@
 |
 */
 
-use Database\Seeders\DatabaseSeeder;
-use Database\Seeders\QuickStartDatabaseSeeder;
-
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
-    // Seed the database before each test
-
+// Seed the database before each test
 
 /*
 |--------------------------------------------------------------------------

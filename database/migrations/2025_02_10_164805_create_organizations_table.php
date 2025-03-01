@@ -19,9 +19,9 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-        
+
         DB::table('organizations')->insert(['name' => 'Demo Organization', 'slug' => 'demo-organization']);
-        
+
     }
 
     /**

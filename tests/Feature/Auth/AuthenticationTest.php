@@ -5,7 +5,7 @@ use App\Models\User;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->organization = app(CreateOrganization::class)($this->user, "New Organization Name");
+    $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
 });
 
 test('login screen can be rendered', function () {
@@ -23,7 +23,6 @@ test('users can authenticate using the login screen', function () {
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', ['organization' => $this->organization->slug], absolute: false));
 });
-
 
 test('users are redirected to create organization', function () {
     $user = User::factory()->create();

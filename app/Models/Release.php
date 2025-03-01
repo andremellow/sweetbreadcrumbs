@@ -19,7 +19,7 @@ class Release extends Model
     protected $fillable = ['id', 'name'];
 
     /**
-     * Release's Organization
+     * Release's Organization.
      *
      * @return BelongsTo
      */

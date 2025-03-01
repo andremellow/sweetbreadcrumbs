@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-        
+
         DB::table('risk_levels')->insert(['name' => 'Low', 'organization_id' => 1]);
         DB::table('risk_levels')->insert(['name' => 'Mid', 'organization_id' => 1]);
         DB::table('risk_levels')->insert(['name' => 'High', 'organization_id' => 1]);

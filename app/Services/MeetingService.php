@@ -83,10 +83,11 @@ class MeetingService
 
     public function list(
         Project $project,
-        ?string $name,
-        string $sortBy = 'name',
-        SortDirection $sortDirection = SortDirection::ASC
+        ?string $name = null,
+        ?string $sortBy = 'name',
+        ?SortDirection $sortDirection = SortDirection::ASC
     ): LengthAwarePaginator {
+
         return $project->meetings()
             ->when($name, function ($query, $name) {
                 return $query->where('meetings.name', 'like', "%$name%");

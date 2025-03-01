@@ -17,13 +17,12 @@ class VerifyEmailController extends Controller
     {
         $userService = new UserService($request->user());
         $organization = $userService->getCurrentOrganization();
-        
 
         if ($request->user()->hasVerifiedEmail()) {
             if ($organization === null) {
                 return redirect(route('welcome.organization'));
             }
-    
+
             return redirect()->intended(route('dashboard', ['organization' => $organization->slug, 'verified' => 1], absolute: false));
         }
 

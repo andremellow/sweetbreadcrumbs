@@ -16,7 +16,7 @@ test('email verification screen can be rendered', function () {
 
 test('email can be verified', function () {
     $user = User::factory()->unverified()->create();
-    $organization = app(CreateOrganization::class)($user, "New Organization Name");
+    $organization = app(CreateOrganization::class)($user, 'New Organization Name');
 
     Event::fake();
 

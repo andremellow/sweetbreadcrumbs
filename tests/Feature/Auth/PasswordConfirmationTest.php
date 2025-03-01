@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\CreateOrganization;
-use App\Models\Organization;
 use App\Models\User;
 
 test('confirm password screen can be rendered', function () {
