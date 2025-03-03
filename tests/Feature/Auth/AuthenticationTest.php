@@ -1,6 +1,6 @@
 <?php
 
-use App\Actions\CreateOrganization;
+use App\Actions\Organization\CreateOrganization;
 use App\Models\User;
 
 beforeEach(function () {

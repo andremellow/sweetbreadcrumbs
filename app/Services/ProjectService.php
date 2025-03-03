@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
-use App\Actions\CreateProject;
-use App\Actions\UpdateProject;
+use App\Actions\Project\CreateProject;
+use App\Actions\Project\UpdateProject;
+use App\DTO\Project\CreateProjectDTO;
+use App\DTO\Project\UpdateProjectDTO;
 use App\Enums\SortDirection;
 use App\Models\Organization;
 use App\Models\Project;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -36,79 +39,35 @@ class ProjectService
      * @return Project
      */
     public function create(
-        Organization $organization,
-        string $name,
-        int $priorityId,
-        ?int $toggleOnByReleaseId,
-        ?string $releasePlan,
-        ?string $technicalDocumentation,
-        Carbon|string|null $needsToStartBy,
-        Carbon|string|null $needsToDeployedBy,
+        User $user,
+        CreateProjectDTO $createProjectDTO
     ): Project {
 
         return ($this->createProject)(
-            $organization,
-            $name,
-            $priorityId,
-            $toggleOnByReleaseId,
-            $releasePlan,
-            $technicalDocumentation,
-            $this->maybeParseToCarbon($needsToStartBy),
-            $this->maybeParseToCarbon($needsToDeployedBy),
+            $createProjectDTO
         );
     }
 
     /**
      * Update an existing project.
      *
-     * @param Organization    $organization,
-     * @param string          $name,
-     * @param int             $priorityId,
-     * @param int             $toggleOnByReleaseId,
-     * @param string          $releasePlan,
-     * @param string          $technicalDocumentation,
-     * @param string | Carbon $needsToStartBy,
-     * @param string | Carbon $needsToDeployedBy,
+     * @param UpdateProjectDTO $updateProjectDTO
      *
      * @return Project
      */
     public function update(
-        Organization $organization,
-        int $projectId,
-        string $name,
-        int $priorityId,
-        ?int $toggleOnByReleaseId,
-        ?string $releasePlan,
-        ?string $technicalDocumentation,
-        Carbon|string|null $needsToStartBy,
-        Carbon|string|null $needsToDeployedBy,
+        User $user,
+        UpdateProjectDTO $updateProjectDTO
     ): Project {
         return ($this->updateProject)(
-            $organization,
-            $projectId,
-            $name,
-            $priorityId,
-            $toggleOnByReleaseId,
-            $releasePlan,
-            $technicalDocumentation,
-            $this->maybeParseToCarbon($needsToStartBy),
-            $this->maybeParseToCarbon($needsToDeployedBy),
+            $updateProjectDTO
         );
-    }
-
-    protected function maybeParseToCarbon(string|Carbon|null $maybeADate): ?Carbon
-    {
-        if (! ($maybeADate instanceof Carbon) && ! is_null($maybeADate)) {
-            return Carbon::parse($maybeADate);
-        }
-
-        return null;
     }
 
     public function list(
         Organization $organization,
-        ?string $name,
-        ?int $priorityId,
+        ?string $name = null,
+        ?int $priorityId = null,
         string $sortBy = 'name',
         SortDirection $sortDirection = SortDirection::ASC
     ): LengthAwarePaginator {

@@ -1,7 +1,8 @@
 <?php
 
-use App\Actions\CreateOrganization;
-use App\Actions\CreateProject;
+use App\Actions\Organization\CreateOrganization;
+use App\Actions\Project\CreateProject;
+use App\DTO\Project\CreateProjectDTO;
 use App\Models\Release;
 use App\Models\User;
 use Carbon\Carbon;
@@ -13,14 +14,12 @@ beforeEach(function () {
 
 it('creates a new project with required fields only', function () {
     $project = app(CreateProject::class)(
-        $this->organization,
-        'This is a test project',
-        null, // $priorityId,
-        null, // $toggleOnByReleaseId,
-        null, // $releasePlan,
-        null, // $technicalDocumentation,
-        null, // $needsToStartBy,
-        null, // $needsToDeployedBy,
+        CreateProjectDTO::from([
+            'organization' => $this->organization,
+            ...[
+                'name' => 'This is a test project',
+            ],
+        ])
     );
 
     $project->refresh();
@@ -38,15 +37,20 @@ it('creates a new project with required fields only', function () {
 it('creates a new project with required with all fields', function () {
     $priority = $this->organization->priorities()->first();
     $release = Release::factory()->for($this->organization)->create();
+
     $project = app(CreateProject::class)(
-        $this->organization,
-        'This is a test project',
-        $priority->id, // $priorityId,
-        $release->id, // $toggleOnByReleaseId,
-        'This is the release plan', // $releasePlan,
-        'this is the technical documentation', // $technicalDocumentation,
-        Carbon::now()->addDays(15), // $needsToStartBy,
-        Carbon::now()->addMonth(3), // $needsToDeployedBy,
+        CreateProjectDTO::from([
+            'organization' => $this->organization,
+            ...[
+                'name' => 'This is a test project',
+                'priority_id' => $priority->id,
+                'toggle_on_by_release_id' => $release->id,
+                'release_plan' => 'This is the release plan',
+                'technical_documentation' => 'this is the technical documentation',
+                'needs_to_start_by' => Carbon::now()->addDays(15)->format('Y/m/d'),
+                'needs_to_deployed_by' => Carbon::now()->addMonth(3)->format('Y/m/d'),
+            ],
+        ])
     );
 
     $project->refresh();

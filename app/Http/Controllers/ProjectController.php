@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Project\CreateProjectDTO;
+use App\DTO\Project\UpdateProjectDTO;
 use App\Enums\SortDirection;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
@@ -64,14 +66,8 @@ class ProjectController extends Controller
     public function store(Organization $organization, StoreProjectRequest $request)
     {
         $project = $this->projectService->create(
-            $organization,
-            $request->name,
-            $request->priority_id,
-            $request->toggle_on_by_release_id,
-            $request->release_plan,
-            $request->technical_documentation,
-            $request->needs_to_start_by,
-            $request->needs_to_deployed_by,
+            $request->user,
+            CreateProjectDTO::from(['organization' => $organization, ...$request->validated()])
         );
 
         session()->flash('success', 'Project created');
@@ -108,15 +104,11 @@ class ProjectController extends Controller
     {
 
         $project = $this->projectService->update(
-            $organization,
-            $project->id,
-            $request->name,
-            intval($request->priority_id),
-            $request->toggle_on_by_release_id,
-            $request->release_plan,
-            $request->technical_documentation,
-            $request->needs_to_start_by,
-            $request->needs_to_deployed_by,
+            $request->user(),
+            UpdateProjectDTO::from([
+                'organization' => $organization,
+                'project_id' => $project->id,
+                ...$request->validated()])
         );
 
         session()->flash('success', 'Project update');

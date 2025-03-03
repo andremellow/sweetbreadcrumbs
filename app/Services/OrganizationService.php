@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Actions\CreateOrganization;
+use App\Actions\Organization\CreateOrganization;
 use App\Models\Organization;
 use App\Models\User;
 
@@ -20,7 +20,7 @@ class OrganizationService
     public function __construct(protected CreateOrganization $createOrganization) {}
 
     /**
-     * Undocumented function.
+     * Set organization.
      *
      * @param Organization $organization
      *
@@ -31,6 +31,16 @@ class OrganizationService
         $this->organization = $organization;
 
         return $this;
+    }
+
+    /**
+     * Get organization.
+     *
+     * @return Organization|null
+     */
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization ?? null;
     }
 
     /**

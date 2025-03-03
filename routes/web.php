@@ -30,10 +30,11 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/projects/{project}/edit', [ProjectController::class, 'update'])->name('projects.update');
 
         // MEETINGS
-        Route::get('/projects/{project}/meetings', [MeetingController::class, 'index'])->name('projects.meetings');
-        Route::get('/projects/{project}/meetings/{meeting}', [MeetingController::class, 'edit'])->name('projects.meetings.edit');
-        Route::post('/projects/{project}/meetings/create', [MeetingController::class, 'store'])->name('projects.meetings.store');
-        Route::patch('/projects/{project}/meetings/{meeting}/edit', [MeetingController::class, 'update'])->name('projects.meetings.update');
+        Route::get('/projects/{project}/meetings', [MeetingController::class, 'index'])->name('projects.meetings.index');
+        Route::get('/projects/{project}/meetings/{meeting}/edit', [MeetingController::class, 'edit'])->name('projects.meetings.edit');
+        Route::post('/projects/{project}/meetings', [MeetingController::class, 'store'])->name('projects.meetings.store');
+        Route::patch('/projects/{project}/meetings/{meeting}', [MeetingController::class, 'update'])->name('projects.meetings.update');
+        Route::delete('/projects/{project}/meetings/{meeting}', [MeetingController::class, 'destroy'])->name('projects.meetings.destroy');
     });
 
     Route::get('/welcome/organization', [WelcomeOrganizationController::class, 'create'])->name('welcome.organization');

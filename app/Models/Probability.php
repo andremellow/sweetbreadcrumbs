@@ -18,7 +18,7 @@ class Probability extends Model
     protected $fillable = ['id', 'name'];
 
     /**
-     * Probablity Project
+     * Probablity Project.
      *
      * @return BelongsTo
      */

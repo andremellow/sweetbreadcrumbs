@@ -2,12 +2,16 @@
 
 namespace App\Services;
 
-use App\Actions\CreateMeeting;
-use App\Actions\UpdateMeeting;
+use App\Actions\Meeting\CreateMeeting;
+use App\Actions\Meeting\DeleteMeeting;
+use App\Actions\Meeting\UpdateMeeting;
+use App\DTO\Meeting\CreateMeetingDTO;
+use App\DTO\Meeting\DeleteMeetingDTO;
+use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Project;
-use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MeetingService
@@ -19,66 +23,52 @@ class MeetingService
      *
      * @return MeetingService
      */
-    public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting) {}
+    public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting, protected DeleteMeeting $deleteMeeting) {}
 
     /**
      * Creates a new meeting.
      *
-     * @param Project         $project,
-     * @param string          $name,
-     * @param string | null   $description,
-     * @param string | Carbon $date,
+     * @param User             $user,
+     * @param CreateMeetingDTO $createMeetingDTO,
      *
      * @return Meeting
      */
     public function create(
-        project $project,
-        string $name,
-        ?string $description,
-        Carbon|string|null $date,
+        User $user,
+        CreateMeetingDTO $createMeetingDTO
     ): Meeting {
-
-        return ($this->createMeeting)(
-            $project,
-            $name,
-            $description,
-            $this->maybeParseToCarbon($date)
-        );
+        return ($this->createMeeting)($createMeetingDTO);
     }
 
     /**
      * Update an existing meeting.
      *
-     * @param Project         $project,
-     * @param string          $name,
-     * @param string | null   $description,
-     * @param string | Carbon $date,
+     * @param UpdateMeetingDTO $updateMeetingDTO
      *
      * @return Meeting
      */
     public function update(
-        project $project,
-        int $meetingId,
-        string $name,
-        ?string $description,
-        Carbon|string|null $date,
+        User $user,
+        UpdateMeetingDTO $updateMeetingDTO
     ): Meeting {
         return ($this->updateMeeting)(
-            $project,
-            $meetingId,
-            $name,
-            $description,
-            $this->maybeParseToCarbon($date)
+            $updateMeetingDTO
         );
     }
 
-    protected function maybeParseToCarbon(string|Carbon|null $maybeADate): ?Carbon
-    {
-        if (! ($maybeADate instanceof Carbon) && ! is_null($maybeADate)) {
-            return Carbon::parse($maybeADate);
-        }
-
-        return $maybeADate;
+    /**
+     * Delete a new meeting.
+     *
+     * @param User             $user,
+     * @param DeleteMeetingDTO $deleteMeetingDTO,
+     *
+     * @return void
+     */
+    public function delete(
+        User $user,
+        DeleteMeetingDTO $deleteMeetingDTO
+    ): void {
+        ($this->deleteMeeting)($deleteMeetingDTO);
     }
 
     public function list(

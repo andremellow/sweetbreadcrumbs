@@ -1,8 +1,12 @@
 <?php
 
-use App\Actions\CreateMeeting;
-use App\Actions\CreateOrganization;
-use App\Actions\UpdateMeeting;
+use App\Actions\Meeting\CreateMeeting;
+use App\Actions\Meeting\DeleteMeeting;
+use App\Actions\Meeting\UpdateMeeting;
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Meeting\CreateMeetingDTO;
+use App\DTO\Meeting\DeleteMeetingDTO;
+use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Project;
@@ -12,18 +16,20 @@ use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
-use Mockery;
 
 covers(MeetingService::class);
- 
 
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
     $this->project = Project::factory()->for($this->organization)->create();
+    /** @var CreateMeeting */
     $this->mockCreateMeeting = Mockery::mock(CreateMeeting::class);
+    /** @var UpdateMeeting */
     $this->mockUpdateMeeting = Mockery::mock(UpdateMeeting::class);
-    $this->service = new MeetingService($this->mockCreateMeeting, $this->mockUpdateMeeting);
+    /** @var DeleteMeeting */
+    $this->mockDeleteMeeting = Mockery::mock(DeleteMeeting::class);
+    $this->service = new MeetingService($this->mockCreateMeeting, $this->mockUpdateMeeting, $this->mockDeleteMeeting);
 });
 
 afterEach(function () {
@@ -31,6 +37,7 @@ afterEach(function () {
 });
 
 it('creates a meeting using CreateMeeting action', function () {
+    /** @var Project $project */
     $project = Mockery::mock(Project::class);
     $name = 'Team Sync';
     $description = 'Weekly team meeting';
@@ -43,23 +50,31 @@ it('creates a meeting using CreateMeeting action', function () {
     $this->mockCreateMeeting
         ->shouldReceive('__invoke')
         ->once()
-        ->with(Mockery::type(Project::class), 'Team Sync', 'Weekly team meeting', Mockery::type(Carbon::class))
-
+        ->with(CreateMeetingDTO::class)
         ->andReturn($mockMeeting);
 
     // Call the method
-    $meeting = $this->service->create($project, $name, $description, $date);
+    $meeting = $this->service->create(
+        $this->user,
+        new CreateMeetingDTO(
+            $project, $name, $description, $carbonDate
+        )
+    );
 
     expect($meeting)->toBe($mockMeeting);
 });
 
 it('updates a meeting using UpdateMeeting action', function () {
+    /** @var Project */
     $project = Mockery::mock(Project::class);
-    $meetingId = 1;
-    $name = 'Updated Meeting';
-    $description = 'Updated description';
-    $date = '2024-03-02 15:30:00';
-    $carbonDate = Carbon::parse($date);
+
+    $dto = new UpdateMeetingDTO(
+        $project,
+        1,
+        'Updated Meeting',
+        'Updated description',
+        Carbon::now()
+    );
 
     $mockMeeting = Mockery::mock(Meeting::class);
 
@@ -67,34 +82,33 @@ it('updates a meeting using UpdateMeeting action', function () {
     $this->mockUpdateMeeting
         ->shouldReceive('__invoke')
         ->once()
-        ->with(Mockery::type(Project::class), 1, 'Updated Meeting', 'Updated description', Mockery::type(Carbon::class))
+        ->with($dto)
 
         ->andReturn($mockMeeting);
 
     // Call the method
-    $meeting = $this->service->update($project, $meetingId, $name, $description, $date);
+    $meeting = $this->service->update($this->user, $dto);
 
     expect($meeting)->toBe($mockMeeting);
 });
 
-it('parses date string to Carbon instance', function () {
-    $method = new ReflectionMethod(MeetingService::class, 'maybeParseToCarbon');
-    $method->setAccessible(true);
+it('deletes a meeting using UpdateMeeting action', function () {
+    $project = Mockery::mock(Project::class);
+    /** @var Meeting */
+    $mockMeeting = Mockery::mock(Meeting::class);
+    $dto = new DeleteMeetingDTO($mockMeeting);
+    // Expect the UpdateMeeting action to be called with these parameters
+    $this->mockDeleteMeeting
+        ->shouldReceive('__invoke')
+        ->once()
+        ->with($dto);
 
-    $carbonDate = $method->invoke($this->service, '2024-03-01 10:00:00');
+    // Call the method
+    $this->service->delete(
+        $this->user,
+        $dto
+    );
 
-    expect($carbonDate)->toBeInstanceOf(Carbon::class);
-    expect($carbonDate->toDateTimeString())->toBe('2024-03-01 10:00:00');
-});
-
-it('does not modify existing Carbon instance', function () {
-    $method = new ReflectionMethod(MeetingService::class, 'maybeParseToCarbon');
-    $method->setAccessible(true);
-
-    $carbonInstance = Carbon::now();
-    $result = $method->invoke($this->service, $carbonInstance);
-
-    expect($result)->toBe($carbonInstance);
 });
 
 describe('list meetings', function () {

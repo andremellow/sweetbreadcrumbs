@@ -5,6 +5,7 @@ import { TextareaGroup } from '@/components/input-group/textarea-group';
 import { Button } from '@/components/ui/button';
 import { Meeting } from '@/types/meeting.types';
 import { useForm } from '@inertiajs/react';
+import { format } from 'date-fns';
 import { FormEventHandler, useEffect } from 'react';
 
 export default function MeetingForm({
@@ -23,7 +24,7 @@ export default function MeetingForm({
     const { data, setData, post, patch, errors, processing, isDirty } = useForm({
         name: meeting?.name || '',
         description: meeting?.description || '',
-        date: meeting?.date,
+        date: meeting?.date ? format(meeting.date, 'y/MM/d') : '',
     });
 
     useEffect(() => {
@@ -77,7 +78,20 @@ export default function MeetingForm({
                 onChange={(e) => setData('description', e.target.value)}
             />
 
-            <DatePickerGroup name="date" label="Date" value={data.date} onChange={(value) => setData('date', value)} />
+            <DatePickerGroup 
+                name="date" 
+                label="Date"
+                error={errors.date}
+                value={data.date}
+                onChange={(value) => {
+                    if(value) {
+                        console.log(format(value, 'y/MM/d'));
+                        setData('date', format(value, 'y/MM/d'))
+                    } else {
+                        setData('date', '')
+                    }
+                }} 
+                />
         </Form>
     );
 }

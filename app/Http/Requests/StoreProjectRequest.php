@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Project\CreateProjectDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProjectRequest extends FormRequest
@@ -21,9 +22,6 @@ class StoreProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'min:2', 'max:50'],
-            'priority_id' => ['required'],
-        ];
+        return CreateProjectDTO::rules();
     }
 }

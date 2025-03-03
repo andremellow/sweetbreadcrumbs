@@ -1,7 +1,8 @@
 <?php
 
-use App\Actions\CreateOrganization;
-use App\Actions\UpdateProject;
+use App\Actions\Organization\CreateOrganization;
+use App\Actions\Project\UpdateProject;
+use App\DTO\Project\UpdateProjectDTO;
 use App\Models\Priority;
 use App\Models\Project;
 use App\Models\Release;
@@ -16,16 +17,11 @@ beforeEach(function () {
 
 it('updates a project with required fields only', function () {
     $updatedProject = app(UpdateProject::class)(
-        $this->organization,
-        $this->project->id,
-        'Updated Project Name',
-        null, // Priority ID
-        null, // Toggle On By Release ID
-        null, // Release Plan
-        null, // Technical Documentation
-        null, // Needs to Start By
-        null  // Needs to Be Deployed By
-    );
+        UpdateProjectDTO::from([
+            'organization' => $this->organization,
+            'project_id' => $this->project->id,
+            'name' => 'Updated Project Name',
+        ]));
 
     $updatedProject->refresh();
 
@@ -44,15 +40,17 @@ it('updates a project with all fields', function () {
     $release = Release::factory()->for($this->organization)->create();
 
     $updatedProject = app(UpdateProject::class)(
-        $this->organization,
-        $this->project->id,
-        'Updated Project Name',
-        $priority->id, // Priority ID
-        $release->id, // Toggle On By Release ID
-        'Updated Release Plan', // Release Plan
-        'Updated Technical Documentation', // Technical Documentation
-        Carbon::now()->addDays(20), // Needs to Start By
-        Carbon::now()->addMonth(4)  // Needs to Be Deployed By
+        UpdateProjectDTO::from([
+            'organization' => $this->organization,
+            'project_id' => $this->project->id,
+            'name' => 'Updated Project Name',
+            'priority_id' => $priority->id, // Priority ID
+            'toggle_on_by_release_id' => $release->id, // Toggle On By Release ID
+            'release_plan' => 'Updated Release Plan', // Release Plan
+            'technical_documentation' => 'Updated Technical Documentation', // Technical Documentation
+            'needs_to_start_by' => Carbon::now()->addDays(20)->format('Y/m/d'), // Needs to Start By
+            'needs_to_deployed_by' => Carbon::now()->addMonth(4)->format('Y/m/d'), // Needs to Be Deployed By
+        ])
     );
 
     $updatedProject->refresh();
@@ -60,7 +58,6 @@ it('updates a project with all fields', function () {
     expect($updatedProject->id)->toBe($this->project->id);
     expect($updatedProject->organization_id)->toBe($this->organization->id);
     expect($updatedProject->name)->toBe('Updated Project Name');
-
     expect($updatedProject->priority_id)->toBe($priority->id);
     expect($updatedProject->toggle_on_by_release_id)->toBe($release->id);
     expect($updatedProject->release_plan)->toBe('Updated Release Plan');

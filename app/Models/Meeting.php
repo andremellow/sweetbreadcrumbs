@@ -19,6 +19,13 @@ class Meeting extends Model
     protected $fillable = ['name', 'description', 'date'];
 
     /**
+     * The attributes hidden from json.
+     *
+     * @var string[]
+     */
+    protected $hidden = ['updated_at', 'deleted_at'];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -26,7 +33,7 @@ class Meeting extends Model
     protected function casts(): array
     {
         return [
-            'date' => 'date',
+            'date' => 'date:Y/m/d',
             'created_at' => 'date',
         ];
     }

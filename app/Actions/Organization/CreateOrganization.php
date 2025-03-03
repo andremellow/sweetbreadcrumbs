@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Organization;
 
 use App\Models\Organization;
 use App\Models\Priority;
@@ -17,6 +17,7 @@ class CreateOrganization
     /**
      * Creates new organization.
      *
+     * @param User   $user
      * @param string $name
      *
      * @return Organization

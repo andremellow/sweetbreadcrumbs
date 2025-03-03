@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Meeting;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,6 +23,7 @@ class UpdateMeetingRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:2', 'max:50'],
+            'description' => ['required', 'min:2'],
             'date' => ['required', 'date'],
             'redirect_parameters' => ['nullable', 'array'],
         ];

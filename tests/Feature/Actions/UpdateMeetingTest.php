@@ -1,7 +1,8 @@
 <?php
 
-use App\Actions\CreateOrganization;
-use App\Actions\UpdateMeeting;
+use App\Actions\Meeting\UpdateMeeting;
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\User;
@@ -26,11 +27,13 @@ it('updates a meeting with new values', function () {
 
     // Call UpdateMeeting action
     $updatedMeeting = app(UpdateMeeting::class)(
-        $this->project,
-        $this->meeting->id,
-        'Updated Meeting Name',
-        'Updated Description',
-        $newDate
+        new UpdateMeetingDTO(
+            $this->project,
+            $this->meeting->id,
+            'Updated Meeting Name',
+            'Updated Description',
+            $newDate
+        )
     );
 
     $updatedMeeting->refresh();

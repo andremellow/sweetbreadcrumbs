@@ -1,6 +1,6 @@
 <?php
 
-use App\Actions\CreateOrganization;
+use App\Actions\Organization\CreateOrganization;
 use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Probability;

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Actions\CreateOrganization;
+use App\Actions\Organization\CreateOrganization;
 use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\User;

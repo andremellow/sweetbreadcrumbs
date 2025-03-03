@@ -1,7 +1,8 @@
 <?php
 
-use App\Actions\CreateMeeting;
-use App\Actions\CreateOrganization;
+use App\Actions\Meeting\CreateMeeting;
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Meeting\CreateMeetingDTO;
 use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\User;
@@ -17,10 +18,12 @@ it('creates a meeting with required fields only', function () {
     $date = Carbon::now()->addWeek();
 
     $meeting = app(CreateMeeting::class)(
-        $this->project,
-        'Retrospective',
-        'Discussion of past sprint',
-        $date
+        CreateMeetingDTO::from([
+            'project' => $this->project,
+            'name' => 'Retrospective',
+            'description' => 'Discussion of past sprint',
+            'date' => $date->format('Y/m/d'),
+        ])
     );
 
     $meeting->refresh();
