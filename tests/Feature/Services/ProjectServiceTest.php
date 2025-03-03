@@ -2,8 +2,10 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\Actions\Project\CreateProject;
+use App\Actions\Project\DeleteProject;
 use App\Actions\Project\UpdateProject;
 use App\DTO\Project\CreateProjectDTO;
+use App\DTO\Project\DeleteProjectDTO;
 use App\DTO\Project\UpdateProjectDTO;
 use App\Enums\SortDirection;
 use App\Models\Organization;
@@ -29,8 +31,11 @@ beforeEach(function () {
     /** @var UpdateProject */
     $this->mockUpdateProject = Mockery::mock(UpdateProject::class);
 
+    /** @var DeleteProject */
+    $this->mockDeleteProject = Mockery::mock(DeleteProject::class);
+
     // Instantiate the service with mocks
-    $this->service = new ProjectService($this->mockCreateProject, $this->mockUpdateProject);
+    $this->service = new ProjectService($this->mockCreateProject, $this->mockUpdateProject, $this->mockDeleteProject);
 });
 
 afterEach(function () {
@@ -98,6 +103,29 @@ it('updates a project using UpdateProject action', function () {
     );
 
     expect($project)->toBe($mockProject);
+});
+
+it('deletes a project using DeleteProject action', function () {
+    /** @var Project */
+    $mockProject = Mockery::mock(Project::class);
+
+    $dto = new DeleteProjectDTO($mockProject);
+
+    $mockProject = Mockery::mock(Project::class);
+
+    // Expect DeleteProject action to be called
+    $this->mockDeleteProject
+        ->shouldReceive('__invoke')
+        ->once()
+        ->with(
+            $dto
+        );
+
+    // Call the method
+    $this->service->delete(
+        $this->user,
+        $dto
+    );
 });
 
 describe('list projects', function () {

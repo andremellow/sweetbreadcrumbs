@@ -15,9 +15,4 @@ class Priority extends Model
      * @var string[]
      */
     protected $fillable = ['id', 'name', 'order'];
-
-    public function projects()
-    {
-        return $this->hasMany(Priority::class);
-    }
 }

@@ -45,11 +45,11 @@ class Meeting extends Model
         return $this->belongsTo(Project::class);
     }
 
-    /**
-     * Get all of the post's comments.
-     */
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
+    // /**
+    //  * Get all of the post's comments.
+    //  */
+    // public function comments(): MorphMany
+    // {
+    //     return $this->morphMany(Comment::class, 'commentable');
+    // }
 }

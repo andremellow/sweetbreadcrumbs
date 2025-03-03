@@ -15,7 +15,7 @@ export function ProjectFilters() {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        get(route('projects', { organization: organization.slug }));
+        get(route('projects.index', { organization: organization.slug }));
     };
 
     return (

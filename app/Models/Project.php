@@ -18,6 +18,8 @@ class Project extends Model
      */
     protected $fillable = ['name', 'priority_id', 'toggle_on_by_release_id', 'release_plan', 'technical_documentation', 'needs_to_start_by', 'needs_to_deployed_by'];
 
+    protected $hidden = ['updated_at', 'deleted_at'];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -81,15 +83,15 @@ class Project extends Model
         return $this->belongsTo(Release::class);
     }
 
-    /**
-     * Project blockers.
-     *
-     * @return void
-     */
-    public function blockers()
-    {
-        return $this->hasMany(Blocker::class);
-    }
+    // /**
+    //  * Project blockers.
+    //  *
+    //  * @return void
+    //  */
+    // public function blockers()
+    // {
+    //     return $this->hasMany(Blocker::class);
+    // }
 
     /**
      * Project blockers.
@@ -101,11 +103,11 @@ class Project extends Model
         return $this->hasMany(Meeting::class);
     }
 
-    /**
-     * Get all of the post's comments.
-     */
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
+    // /**
+    //  * Get all of the post's comments.
+    //  */
+    // public function comments(): MorphMany
+    // {
+    //     return $this->morphMany(Comment::class, 'commentable');
+    // }
 }

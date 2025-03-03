@@ -22,12 +22,13 @@ Route::middleware(['auth'])->group(function () {
             return Inertia::render('dashboard');
         })->name('dashboard');
 
-        Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
+        Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
         Route::get('/projects/{project}/dashboard', [ProjectDashboardController::class, 'index'])->name('projects.dashboard');
         Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
         Route::post('/projects/create', [ProjectController::class, 'store'])->name('projects.store');
         Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-        Route::patch('/projects/{project}/edit', [ProjectController::class, 'update'])->name('projects.update');
+        Route::patch('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
+        Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
         // MEETINGS
         Route::get('/projects/{project}/meetings', [MeetingController::class, 'index'])->name('projects.meetings.index');

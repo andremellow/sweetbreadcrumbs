@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Actions\Project\CreateProject;
+use App\Actions\Project\DeleteProject;
 use App\Actions\Project\UpdateProject;
 use App\DTO\Project\CreateProjectDTO;
+use App\DTO\Project\DeleteProjectDTO;
 use App\DTO\Project\UpdateProjectDTO;
 use App\Enums\SortDirection;
 use App\Models\Organization;
@@ -22,7 +24,40 @@ class ProjectService
      *
      * @return OrganizationService
      */
-    public function __construct(protected CreateProject $createProject, protected UpdateProject $updateProject) {}
+    public function __construct(protected CreateProject $createProject, protected UpdateProject $updateProject, protected DeleteProject $deleteProject) {}
+
+    public function list(
+        Organization $organization,
+        ?string $name = null,
+        ?int $priorityId = null,
+        string $sortBy = 'name',
+        SortDirection $sortDirection = SortDirection::ASC
+    ): LengthAwarePaginator {
+        switch ($sortBy) {
+            case 'priority':
+                $sortBy = 'priorities.order';
+                break;
+        }
+
+        return $organization->projects()
+            ->leftJoin('priorities', 'projects.priority_id', '=', 'priorities.id')
+            ->with(['priority:id,name', 'toggleOnByRelease:id,name'])
+            ->when($name, function ($query, $name) {
+                return $query->where('projects.name', 'like', "%$name%");
+            })
+            ->when($priorityId, function ($query, $priorityId) {
+                return $query->where('projects.priority_id', '=', $priorityId);
+            })
+            ->orderBy($sortBy, $sortDirection->value)
+            ->select('projects.*') // make sure to select projects columns
+            ->paginate(config('app.pagination_items'))
+            ->appends([
+                'sort_by' => $sortBy,
+                'sort_direction' => $sortDirection->value,
+                'name' => $name,
+                'priority_id' => $priorityId,
+            ]);
+    }
 
     /**
      * Creates a new project.
@@ -64,36 +99,20 @@ class ProjectService
         );
     }
 
-    public function list(
-        Organization $organization,
-        ?string $name = null,
-        ?int $priorityId = null,
-        string $sortBy = 'name',
-        SortDirection $sortDirection = SortDirection::ASC
-    ): LengthAwarePaginator {
-        switch ($sortBy) {
-            case 'priority':
-                $sortBy = 'priorities.order';
-                break;
-        }
-
-        return $organization->projects()
-            ->leftJoin('priorities', 'projects.priority_id', '=', 'priorities.id')
-            ->with(['priority:id,name', 'toggleOnByRelease:id,name'])
-            ->when($name, function ($query, $name) {
-                return $query->where('projects.name', 'like', "%$name%");
-            })
-            ->when($priorityId, function ($query, $priorityId) {
-                return $query->where('projects.priority_id', '=', $priorityId);
-            })
-            ->orderBy($sortBy, $sortDirection->value)
-            ->select('projects.*') // make sure to select projects columns
-            ->paginate(config('app.pagination_items'))
-            ->appends([
-                'sort_by' => $sortBy,
-                'sort_direction' => $sortDirection->value,
-                'name' => $name,
-                'priority_id' => $priorityId,
-            ]);
+    /**
+     * Delete an existing project.
+     *
+     * @param User             $user,
+     * @param DeleteProjectDTO $deleteProjectDTO
+     *
+     * @return Project
+     */
+    public function delete(
+        User $user,
+        DeleteProjectDTO $deleteProjectDTO
+    ): void {
+        ($this->deleteProject)(
+            $deleteProjectDTO
+        );
     }
 }

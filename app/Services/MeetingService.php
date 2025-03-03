@@ -16,6 +16,26 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MeetingService
 {
+    public function list(
+        Project $project,
+        ?string $name = null,
+        ?string $sortBy = 'name',
+        ?SortDirection $sortDirection = SortDirection::ASC
+    ): LengthAwarePaginator {
+
+        return $project->meetings()
+            ->when($name, function ($query, $name) {
+                return $query->where('meetings.name', 'like', "%$name%");
+            })
+            ->orderBy($sortBy, $sortDirection->value)
+            ->paginate(config('app.pagination_items'))
+            ->appends([
+                'sort_by' => $sortBy,
+                'sort_direction' => $sortDirection->value,
+                'name' => $name,
+            ]);
+    }
+
     /**
      * MeetingService Construct.
      *
@@ -69,25 +89,5 @@ class MeetingService
         DeleteMeetingDTO $deleteMeetingDTO
     ): void {
         ($this->deleteMeeting)($deleteMeetingDTO);
-    }
-
-    public function list(
-        Project $project,
-        ?string $name = null,
-        ?string $sortBy = 'name',
-        ?SortDirection $sortDirection = SortDirection::ASC
-    ): LengthAwarePaginator {
-
-        return $project->meetings()
-            ->when($name, function ($query, $name) {
-                return $query->where('meetings.name', 'like', "%$name%");
-            })
-            ->orderBy($sortBy, $sortDirection->value)
-            ->paginate(config('app.pagination_items'))
-            ->appends([
-                'sort_by' => $sortBy,
-                'sort_direction' => $sortDirection->value,
-                'name' => $name,
-            ]);
     }
 }
