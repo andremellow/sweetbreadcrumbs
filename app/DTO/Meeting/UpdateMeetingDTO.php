@@ -15,7 +15,7 @@ class UpdateMeetingDTO extends Data
         public int $meeting_id,
         public string $name,
         public string $description,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y/m/d')]
+        #[WithCast(DateTimeInterfaceCast::class)]
         public Carbon $date,
     ) {}
 

@@ -18,9 +18,9 @@ class CreateProjectDTO extends Data
         public ?int $toggle_on_by_release_id,
         public ?string $release_plan,
         public ?string $technical_documentation,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y/m/d')]
+        #[WithCast(DateTimeInterfaceCast::class)]
         public ?Carbon $needs_to_start_by,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y/m/d')]
+        #[WithCast(DateTimeInterfaceCast::class)]
         public ?Carbon $needs_to_deployed_by,
     ) {}
 
@@ -32,8 +32,8 @@ class CreateProjectDTO extends Data
             'toggle_on_by_release_id' => ['nullable', 'integer'],
             'release_plan' => ['nullable', 'string'],
             'technical_documentation' => ['nullable', 'string'],
-            'needs_to_start_by' => ['nullable', Rule::date()->format('Y/m/d')],
-            'needs_to_deployed_by' => ['nullable', Rule::date()->format('Y/m/d')],
+            'needs_to_start_by' => ['nullable', Rule::date()->format(config('app.save_date_format'))],
+            'needs_to_deployed_by' => ['nullable', Rule::date()->format(config('app.save_date_format'))],
         ];
     }
 }

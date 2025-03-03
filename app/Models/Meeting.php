@@ -32,8 +32,10 @@ class Meeting extends Model
      */
     protected function casts(): array
     {
+        $format = config('app.save_date_format');
+
         return [
-            'date' => 'date:Y/m/d',
+            'date' => "date:$format",
             'created_at' => 'date',
         ];
     }
