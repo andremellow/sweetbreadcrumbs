@@ -108,7 +108,7 @@ describe('Changes database', function () {
         $meetingData = [
             'name' => 'Sprint Planning',
             'description' => 'Discuss next sprint tasks',
-            'date' => now()->addWeek()->format('Y/m/d'),
+            'date' => now()->addWeek()->format(config('app.save_date_format')),
         ];
 
         // ✅ Expect DTO conversion & service method call
@@ -169,7 +169,7 @@ describe('Changes database', function () {
         $updateData = [
             'name' => 'Updated Meeting Name',
             'description' => 'Updated meeting details',
-            'date' => now()->addDays(10)->format('Y/m/d'),
+            'date' => now()->addDays(10)->format(config('app.save_date_format')),
         ];
 
         // ✅ Expect service update method to be called

@@ -48,8 +48,8 @@ it('updates a project with all fields', function () {
             'toggle_on_by_release_id' => $release->id, // Toggle On By Release ID
             'release_plan' => 'Updated Release Plan', // Release Plan
             'technical_documentation' => 'Updated Technical Documentation', // Technical Documentation
-            'needs_to_start_by' => Carbon::now()->addDays(20)->format('Y/m/d'), // Needs to Start By
-            'needs_to_deployed_by' => Carbon::now()->addMonth(4)->format('Y/m/d'), // Needs to Be Deployed By
+            'needs_to_start_by' => Carbon::now()->addDays(20)->format(config('app.save_date_format')), // Needs to Start By
+            'needs_to_deployed_by' => Carbon::now()->addMonth(4)->format(config('app.save_date_format')), // Needs to Be Deployed By
         ])
     );
 

@@ -47,8 +47,8 @@ it('creates a new project with required with all fields', function () {
                 'toggle_on_by_release_id' => $release->id,
                 'release_plan' => 'This is the release plan',
                 'technical_documentation' => 'this is the technical documentation',
-                'needs_to_start_by' => Carbon::now()->addDays(15)->format('Y/m/d'),
-                'needs_to_deployed_by' => Carbon::now()->addMonth(3)->format('Y/m/d'),
+                'needs_to_start_by' => Carbon::now()->addDays(15)->format(config('app.save_date_format')),
+                'needs_to_deployed_by' => Carbon::now()->addMonth(3)->format(config('app.save_date_format')),
             ],
         ])
     );

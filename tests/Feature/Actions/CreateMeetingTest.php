@@ -22,7 +22,7 @@ it('creates a meeting with required fields only', function () {
             'project' => $this->project,
             'name' => 'Retrospective',
             'description' => 'Discussion of past sprint',
-            'date' => $date->format('Y/m/d'),
+            'date' => $date->format(config('app.save_date_format')),
         ])
     );
 
