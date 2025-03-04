@@ -2,6 +2,7 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\Actions\Project\UpdateProject;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Project\UpdateProjectDTO;
 use App\Models\Priority;
 use App\Models\Project;
@@ -11,7 +12,7 @@ use Carbon\Carbon;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
     $this->project = Project::factory()->for($this->organization)->create();
 });
 
@@ -31,7 +32,6 @@ it('updates a project with required fields only', function () {
     expect($updatedProject->release_plan)->toBeNull();
     expect($updatedProject->technical_documentation)->toBeNull();
     expect($updatedProject->priority_id)->toBeNull();
-    expect($updatedProject->toggle_on_by_release_id)->toBeNull();
     expect($updatedProject->release_plan)->toBeNull();
 });
 
@@ -45,7 +45,6 @@ it('updates a project with all fields', function () {
             'project_id' => $this->project->id,
             'name' => 'Updated Project Name',
             'priority_id' => $priority->id, // Priority ID
-            'toggle_on_by_release_id' => $release->id, // Toggle On By Release ID
             'release_plan' => 'Updated Release Plan', // Release Plan
             'technical_documentation' => 'Updated Technical Documentation', // Technical Documentation
             'needs_to_start_by' => Carbon::now()->addDays(20)->format(config('app.save_date_format')), // Needs to Start By
@@ -59,7 +58,6 @@ it('updates a project with all fields', function () {
     expect($updatedProject->organization_id)->toBe($this->organization->id);
     expect($updatedProject->name)->toBe('Updated Project Name');
     expect($updatedProject->priority_id)->toBe($priority->id);
-    expect($updatedProject->toggle_on_by_release_id)->toBe($release->id);
     expect($updatedProject->release_plan)->toBe('Updated Release Plan');
     expect($updatedProject->technical_documentation)->toBe('Updated Technical Documentation');
     expect($updatedProject->needs_to_start_by->toDateString())->toBe(Carbon::now()->addDays(20)->toDateString());

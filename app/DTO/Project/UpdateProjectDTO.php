@@ -15,7 +15,6 @@ class UpdateProjectDTO extends Data
         public int $project_id,
         public string $name,
         public ?int $priority_id,
-        public ?int $toggle_on_by_release_id,
         public ?string $release_plan,
         public ?string $technical_documentation,
         #[WithCast(DateTimeInterfaceCast::class)]

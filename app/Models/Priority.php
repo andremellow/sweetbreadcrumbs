@@ -15,4 +15,6 @@ class Priority extends Model
      * @var string[]
      */
     protected $fillable = ['id', 'name', 'order'];
+
+    protected $hidden = ['updated_at', 'deleted_at'];
 }

@@ -4,13 +4,13 @@ use App\Actions\Organization\CreateOrganization;
 use App\Actions\Project\CreateProject;
 use App\Actions\Project\DeleteProject;
 use App\Actions\Project\UpdateProject;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Project\CreateProjectDTO;
 use App\DTO\Project\DeleteProjectDTO;
 use App\DTO\Project\UpdateProjectDTO;
 use App\Enums\SortDirection;
 use App\Models\Organization;
 use App\Models\Project;
-use App\Models\Release;
 use App\Models\User;
 use App\Services\ProjectService;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -22,7 +22,7 @@ covers(ProjectService::class);
 beforeEach(function () {
     $this->user = User::factory()->create();
     // Create test organization
-    $this->organization = (new CreateOrganization)($this->user, 'new Organization');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new Organization'));
 
     // Mock dependencies
     /** @var CreateProject */
@@ -48,11 +48,6 @@ it('creates a project using CreateProject action', function () {
         ...[
             'name' => 'New Project',
             'priority_id' => 1,
-            // 'toggle_on_by_release_id' =>4,
-            // 'release_plan' =>'Some release plan',
-            // 'technical_documentation' =>'Technical details',
-            // 'needs_to_start_by' =>'2024-05-01',
-            // 'needs_to_deployed_by' =>'2024-08-01'
         ],
     ]);
 

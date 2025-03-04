@@ -3,6 +3,7 @@
 use App\Actions\Meeting\UpdateMeeting;
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Meeting\UpdateMeetingDTO;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\User;
@@ -11,7 +12,7 @@ use Carbon\Carbon;
 beforeEach(function () {
     // Create user and organization
     $this->user = User::factory()->create();
-    $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 
     // Create project and meeting
     $this->project = Project::factory()->for($this->organization)->create();

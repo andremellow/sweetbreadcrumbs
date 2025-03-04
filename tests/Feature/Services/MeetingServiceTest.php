@@ -7,6 +7,7 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Meeting\CreateMeetingDTO;
 use App\DTO\Meeting\DeleteMeetingDTO;
 use App\DTO\Meeting\UpdateMeetingDTO;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Project;
@@ -21,7 +22,7 @@ covers(MeetingService::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
     $this->project = Project::factory()->for($this->organization)->create();
     /** @var CreateMeeting */
     $this->mockCreateMeeting = Mockery::mock(CreateMeeting::class);

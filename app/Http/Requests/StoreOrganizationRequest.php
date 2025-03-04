@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Organization\CreateOrganizationDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOrganizationRequest extends FormRequest
@@ -21,8 +22,6 @@ class StoreOrganizationRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'min:2', 'max:50'],
-        ];
+        return CreateOrganizationDTO::rules();
     }
 }

@@ -19,8 +19,6 @@ return new class extends Migration
             $table->text('technical_documentation')->nullable();
             $table->date('needs_to_start_by')->nullable();
             $table->date('needs_to_deployed_by')->nullable();
-            $table->unsignedBigInteger('toggle_on_by_release_id')->nullable();
-            $table->foreign('toggle_on_by_release_id')->references('id')->on('releases');
             $table->foreignId('organization_id')->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();

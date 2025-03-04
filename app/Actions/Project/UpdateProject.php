@@ -22,7 +22,6 @@ class UpdateProject
         $project->update([
             'name' => $updateProjectDTO->name,
             'priority_id' => $updateProjectDTO->priority_id,
-            'toggle_on_by_release_id' => $updateProjectDTO->toggle_on_by_release_id,
             'release_plan' => $updateProjectDTO->release_plan,
             'technical_documentation' => $updateProjectDTO->technical_documentation,
             'needs_to_start_by' => $updateProjectDTO->needs_to_start_by,

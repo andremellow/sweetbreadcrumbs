@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
 use App\Models\User;
 
@@ -46,14 +47,14 @@ class OrganizationService
     /**
      * Creates a new organization.
      *
-     * @param User   $user
-     * @param string $name
+     * @param User                  $user
+     * @param CreateOrganizationDTO $createOrganizationDTO
      *
      * @return Organization
      */
-    public function create(User $user, string $name): Organization
+    public function create(User $user, CreateOrganizationDTO $createOrganizationDTO): Organization
     {
-        return ($this->createOrganization)($user, $name);
+        return ($this->createOrganization)($user, $createOrganizationDTO);
     }
 
     /**

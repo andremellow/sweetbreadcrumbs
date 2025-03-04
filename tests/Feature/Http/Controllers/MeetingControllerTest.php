@@ -169,7 +169,7 @@ describe('Changes database', function () {
         $updateData = [
             'name' => 'Updated Meeting Name',
             'description' => 'Updated meeting details',
-            'date' => now()->addDays(10)->format(config('app.save_date_format')),
+            'date' => now()->addDays(10)->format('Y/m/d'),
         ];
 
         // ✅ Expect service update method to be called

@@ -2,6 +2,7 @@
 
 namespace App\Actions\Organization;
 
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Probability;
@@ -17,17 +18,17 @@ class CreateOrganization
     /**
      * Creates new organization.
      *
-     * @param User   $user
-     * @param string $name
+     * @param User                  $user
+     * @param CreateOrganizationDTO $createOrganizationDTO
      *
      * @return Organization
      */
-    public function __invoke(User $user, string $name): Organization
+    public function __invoke(User $user, CreateOrganizationDTO $createOrganizationDTO)
     {
         $this->demoOrganizationId = config('app.demo_organization_id');
         $organization = Organization::create([
-            'name' => $name,
-            'slug' => $this->generateUniqueSlug($name),
+            'name' => $createOrganizationDTO->name,
+            'slug' => $this->generateUniqueSlug($createOrganizationDTO->name),
         ]);
 
         $this->attachUser($organization, $user);

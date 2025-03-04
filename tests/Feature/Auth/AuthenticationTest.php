@@ -1,11 +1,12 @@
 <?php
 
 use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\User;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 });
 
 test('login screen can be rendered', function () {
@@ -44,6 +45,21 @@ test('users can not authenticate with invalid password', function () {
     ]);
 
     $this->assertGuest();
+});
+
+test('users gets locked after limit request', function () {
+    $response = null;
+    for ($i = 0; $i < 6; $i++) {
+        $response = $this->post('/login', [
+            'email' => $this->user->email,
+            'password' => 'wrong-password',
+        ]);
+        sleep(1 / 300);
+    }
+
+    $response->assertSessionHasErrors([
+        'email' => 'Too many login attempts. Please try again in 59 seconds.',
+    ]);
 });
 
 test('users can logout', function () {

@@ -41,7 +41,7 @@ class ProjectService
 
         return $organization->projects()
             ->leftJoin('priorities', 'projects.priority_id', '=', 'priorities.id')
-            ->with(['priority:id,name', 'toggleOnByRelease:id,name'])
+            ->with(['priority:id,name'])
             ->when($name, function ($query, $name) {
                 return $query->where('projects.name', 'like', "%$name%");
             })
@@ -65,7 +65,6 @@ class ProjectService
      * @param Organization    $organization,
      * @param string          $name,
      * @param int             $priorityId,
-     * @param int             $toggleOnByReleaseId,
      * @param string          $releasePlan,
      * @param string          $technicalDocumentation,
      * @param string | Carbon $needsToStartBy,

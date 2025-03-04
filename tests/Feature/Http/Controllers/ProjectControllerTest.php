@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Project\CreateProjectDTO;
 use App\DTO\Project\DeleteProjectDTO;
 use App\DTO\Project\UpdateProjectDTO;
@@ -21,7 +22,7 @@ use function Pest\Laravel\post;
 beforeEach(function () {
     // Create User and Organization
     $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, 'New Organization');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
 
     // ✅ Mock ProjectService and OrganizationService
     $this->mockProjectService = Mockery::mock(ProjectService::class);
@@ -67,8 +68,6 @@ it('displays a list of projects', function () {
             ->has('technical_documentation')
             ->has('needs_to_start_by')
             ->has('needs_to_deployed_by')
-            ->has('toggle_on_by_release_id')
-            ->has('toggle_on_by_release')
             ->has('created_at')
         )
     );
@@ -94,7 +93,6 @@ it('loads project to be edited', function () {
             ->has('technical_documentation')
             ->has('needs_to_start_by')
             ->has('needs_to_deployed_by')
-            ->has('toggle_on_by_release_id')
             ->has('organization_id')
             ->has('created_at')
         )

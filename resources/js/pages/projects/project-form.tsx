@@ -17,7 +17,6 @@ export default function ProjectForm({ organizationSlug }: { organizationSlug: st
     const { data, setData, post, patch, errors, processing } = useForm({
         name: project?.name || '',
         priority_id: project?.priority_id ?? '',
-        toggle_on_by_release_id: project?.toggle_on_by_release_id || '',
         release_plan: project?.release_plan || '',
         technical_documentation: project?.technical_documentation || '',
         needs_to_start_by: project?.needs_to_start_by || '',
@@ -65,12 +64,6 @@ export default function ProjectForm({ organizationSlug }: { organizationSlug: st
                 value={data.priority_id.toString()}
                 error={errors.priority_id}
                 onChange={(value) => setData('priority_id', value)}
-            />
-
-            <ReleaseDropdownGroup
-                value={data.toggle_on_by_release_id.toString()}
-                error={errors.toggle_on_by_release_id}
-                onChange={(value) => setData('toggle_on_by_release_id', value)}
             />
 
             <TextareaGroup

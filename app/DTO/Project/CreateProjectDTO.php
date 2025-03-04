@@ -15,7 +15,6 @@ class CreateProjectDTO extends Data
         public Organization $organization,
         public string $name,
         public ?int $priority_id,
-        public ?int $toggle_on_by_release_id,
         public ?string $release_plan,
         public ?string $technical_documentation,
         #[WithCast(DateTimeInterfaceCast::class)]
@@ -29,7 +28,6 @@ class CreateProjectDTO extends Data
         return [
             'name' => ['required', 'min:2', 'max:50'],
             'priority_id' => ['nullable', 'integer'],
-            'toggle_on_by_release_id' => ['nullable', 'integer'],
             'release_plan' => ['nullable', 'string'],
             'technical_documentation' => ['nullable', 'string'],
             'needs_to_start_by' => ['nullable', Rule::date()->format(config('app.save_date_format'))],

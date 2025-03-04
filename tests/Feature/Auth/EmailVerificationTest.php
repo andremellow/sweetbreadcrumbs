@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
@@ -16,7 +17,7 @@ test('email verification screen can be rendered', function () {
 
 test('email can be verified', function () {
     $user = User::factory()->unverified()->create();
-    $organization = app(CreateOrganization::class)($user, 'New Organization Name');
+    $organization = (new CreateOrganization)($user, new CreateOrganizationDTO('New Organization Name'));
 
     Event::fake();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Project\UpdateProjectDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProjectRequest extends FormRequest
@@ -21,9 +22,6 @@ class UpdateProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'min:2', 'max:50'],
-            'priority_id' => ['required'],
-        ];
+        return UpdateProjectDTO::rules();
     }
 }

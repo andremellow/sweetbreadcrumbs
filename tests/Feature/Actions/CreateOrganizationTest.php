@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Probability;
@@ -10,7 +11,7 @@ use App\Models\User;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 });
 
 it('creates a new organization', function () {
@@ -20,11 +21,11 @@ it('creates a new organization', function () {
 });
 
 it('slugs are unique', function () {
-    $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
     expect($this->organization->name)->toBe('New Organization Name');
     expect($this->organization->slug)->toBe('new-organization-name-1');
 
-    $this->organization = app(CreateOrganization::class)($this->user, 'New Organization Name');
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
     expect($this->organization->slug)->toBe('new-organization-name-2');
 });
 
