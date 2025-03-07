@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Actions\CreateOrganization;
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\User;
@@ -18,7 +19,7 @@ class QuickStartDatabaseSeeder extends Seeder
     public function run(): void
     {
         $userAndreMello = User::create(['first_name' => 'Andre', 'last_name' => 'Mello', 'email' => 'andre.mello@disney.com', 'password' => Hash::make('123456')]);
-        $organization = (new CreateOrganization)($userAndreMello, 'Disney');
+        $organization = (new CreateOrganization)($userAndreMello, new CreateOrganizationDTO('Disney'));
 
         $studioWounder = $organization->studios()->create(['name' => 'Wounder']);
         $studioFantasy = $organization->studios()->create(['name' => 'Fantasy']);

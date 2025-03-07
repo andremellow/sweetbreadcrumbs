@@ -1,54 +1,70 @@
 <?php
 
-namespace Tests\Feature\Auth;
-
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class AuthenticationTest extends TestCase
-{
-    use RefreshDatabase;
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+});
 
-    public function test_login_screen_can_be_rendered()
-    {
-        $response = $this->get('/login');
+test('login screen can be rendered', function () {
+    $response = $this->get('/login');
 
-        $response->assertStatus(200);
-    }
+    $response->assertStatus(200);
+});
 
-    public function test_users_can_authenticate_using_the_login_screen()
-    {
-        $user = User::factory()->create();
+test('users can authenticate using the login screen', function () {
+    $response = $this->post('/login', [
+        'email' => $this->user->email,
+        'password' => 'password',
+    ]);
 
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('dashboard', ['organization' => $this->organization->slug], absolute: false));
+});
+
+test('users are redirected to create organization', function () {
+    $user = User::factory()->create();
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('welcome.organization', absolute: false));
+});
+
+test('users can not authenticate with invalid password', function () {
+    $user = User::factory()->create();
+
+    $this->post('/login', [
+        'email' => $this->user->email,
+        'password' => 'wrong-password',
+    ]);
+
+    $this->assertGuest();
+});
+
+test('users gets locked after limit request', function () {
+    $response = null;
+    for ($i = 0; $i < 6; $i++) {
         $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
-    }
-
-    public function test_users_can_not_authenticate_with_invalid_password()
-    {
-        $user = User::factory()->create();
-
-        $this->post('/login', [
-            'email' => $user->email,
+            'email' => $this->user->email,
             'password' => 'wrong-password',
         ]);
-
-        $this->assertGuest();
+        sleep(1 / 300);
     }
 
-    public function test_users_can_logout()
-    {
-        $user = User::factory()->create();
+    $response->assertSessionHasErrors([
+        'email' => 'Too many login attempts. Please try again in 59 seconds.',
+    ]);
+});
 
-        $response = $this->actingAs($user)->post('/logout');
+test('users can logout', function () {
+    $response = $this->actingAs($this->user)->post('/logout');
 
-        $this->assertGuest();
-        $response->assertRedirect('/');
-    }
-}
+    $this->assertGuest();
+    $response->assertRedirect('/');
+});

@@ -18,7 +18,7 @@ export default function ProjectLayout({ children }: { children: React.ReactNode 
         },
         {
             title: 'Meetings',
-            url: route('projects.meetings', { organization: organization.slug, project: project.id }),
+            url: route('projects.meetings.index', { organization: organization.slug, project: project.id }),
             icon: null,
         },
     ];

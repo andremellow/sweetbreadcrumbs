@@ -18,7 +18,7 @@ export default function Meetings() {
         },
         {
             title: 'Meetings',
-            href: route('projects.meetings', { organization: organization.slug, project: project.id }),
+            href: route('projects.meetings.index', { organization: organization.slug, project: project.id }),
         },
     ];
 

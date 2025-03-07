@@ -51,11 +51,9 @@ export interface Project {
     technical_documentation?: string;
     needs_to_start_by?: Date;
     needs_to_deployed_by?: Date;
-    toggle_on_by_release_id?: number;
     created_at?: Date;
     updated_at?: Date;
     priority?: PrioritiesShort;
-    toggle_on_by_release?: ReleaseShort;
 }
 
 export interface SharedData extends PageProps {

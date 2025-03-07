@@ -29,7 +29,7 @@ export function AppSidebar() {
     const footerNavItems: NavItem[] = [
         {
             title: 'Manager Projects',
-            url: route('projects', { organization: organization.slug }),
+            url: route('projects.index', { organization: organization.slug }),
             icon: List,
         },
         {

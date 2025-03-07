@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Services\OrganizationService;
 use Illuminate\Support\Facades\Redirect;
@@ -20,12 +21,14 @@ class WelcomeOrganizationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOrganizationRequest $request, OrganizationService $organizationService)
+    public function store(OrganizationService $organizationService, StoreOrganizationRequest $request)
     {
         $organization = $organizationService->create(
             $request->user(),
-            $request->name
+            CreateOrganizationDTO::from($request->validated())
         );
+
+        session()->flash('success', 'Organization created');
 
         return Redirect::route('dashboard', ['organization' => $organization->slug]);
     }

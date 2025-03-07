@@ -28,7 +28,7 @@ export function MeetingFilters() {
     };
 
     const submitForm = useCallback(() => {
-        get(route('projects.meetings', { organization: organization.slug, project: project.id }));
+        get(route('projects.meetings.index', { organization: organization.slug, project: project.id }));
     }, [organization.slug, project.id, get]);
 
     useEffect(() => {

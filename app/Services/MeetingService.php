@@ -2,91 +2,27 @@
 
 namespace App\Services;
 
-use App\Actions\CreateMeeting;
-use App\Actions\UpdateMeeting;
+use App\Actions\Meeting\CreateMeeting;
+use App\Actions\Meeting\DeleteMeeting;
+use App\Actions\Meeting\UpdateMeeting;
+use App\DTO\Meeting\CreateMeetingDTO;
+use App\DTO\Meeting\DeleteMeetingDTO;
+use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Project;
-use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MeetingService
 {
-    /**
-     * MeetingService Construct.
-     *
-     * @param CreateMeeting $createMeeting
-     *
-     * @return MeetingService
-     */
-    public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting) {}
-
-    /**
-     * Creates a new meeting.
-     *
-     * @param Project         $project,
-     * @param string          $name,
-     * @param string | null   $description,
-     * @param string | Carbon $date,
-     *
-     * @return Meeting
-     */
-    public function create(
-        project $project,
-        string $name,
-        ?string $description,
-        Carbon|string|null $date,
-    ): Meeting {
-
-        return ($this->createMeeting)(
-            $project,
-            $name,
-            $description,
-            $this->maybeParseToCarbon($date)
-        );
-    }
-
-    /**
-     * Update an existing meeting.
-     *
-     * @param Project         $project,
-     * @param string          $name,
-     * @param string | null   $description,
-     * @param string | Carbon $date,
-     *
-     * @return Meeting
-     */
-    public function update(
-        project $project,
-        int $meetingId,
-        string $name,
-        ?string $description,
-        Carbon|string|null $date,
-    ): Meeting {
-        return ($this->updateMeeting)(
-            $project,
-            $meetingId,
-            $name,
-            $description,
-            $this->maybeParseToCarbon($date)
-        );
-    }
-
-    protected function maybeParseToCarbon(string|Carbon|null $maybeADate): ?Carbon
-    {
-        if (! ($maybeADate instanceof Carbon) && ! is_null($maybeADate)) {
-            return Carbon::parse($maybeADate);
-        }
-
-        return $maybeADate;
-    }
-
     public function list(
         Project $project,
-        ?string $name,
-        string $sortBy = 'name',
-        SortDirection $sortDirection = SortDirection::ASC
+        ?string $name = null,
+        ?string $sortBy = 'name',
+        ?SortDirection $sortDirection = SortDirection::ASC
     ): LengthAwarePaginator {
+
         return $project->meetings()
             ->when($name, function ($query, $name) {
                 return $query->where('meetings.name', 'like', "%$name%");
@@ -98,5 +34,60 @@ class MeetingService
                 'sort_direction' => $sortDirection->value,
                 'name' => $name,
             ]);
+    }
+
+    /**
+     * MeetingService Construct.
+     *
+     * @param CreateMeeting $createMeeting
+     *
+     * @return MeetingService
+     */
+    public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting, protected DeleteMeeting $deleteMeeting) {}
+
+    /**
+     * Creates a new meeting.
+     *
+     * @param User             $user,
+     * @param CreateMeetingDTO $createMeetingDTO,
+     *
+     * @return Meeting
+     */
+    public function create(
+        User $user,
+        CreateMeetingDTO $createMeetingDTO
+    ): Meeting {
+        return ($this->createMeeting)($createMeetingDTO);
+    }
+
+    /**
+     * Update an existing meeting.
+     *
+     * @param UpdateMeetingDTO $updateMeetingDTO
+     *
+     * @return Meeting
+     */
+    public function update(
+        User $user,
+        UpdateMeetingDTO $updateMeetingDTO
+    ): Meeting {
+        return ($this->updateMeeting)(
+            $updateMeetingDTO
+        );
+    }
+
+    /**
+     * Delete a new meeting.
+     *
+     * @param User             $user,
+     * @param DeleteMeetingDTO $deleteMeetingDTO,
+     *
+     * @return void
+     */
+    public function delete(
+        User $user,
+        DeleteMeetingDTO $deleteMeetingDTO
+    ): void {
+        ($this->deleteMeeting)($deleteMeetingDTO);
     }
 }

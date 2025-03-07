@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Project\CreateProjectDTO;
+use App\DTO\Project\DeleteProjectDTO;
+use App\DTO\Project\UpdateProjectDTO;
 use App\Enums\SortDirection;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
@@ -64,14 +67,8 @@ class ProjectController extends Controller
     public function store(Organization $organization, StoreProjectRequest $request)
     {
         $project = $this->projectService->create(
-            $organization,
-            $request->name,
-            $request->priority_id,
-            $request->toggle_on_by_release_id,
-            $request->release_plan,
-            $request->technical_documentation,
-            $request->needs_to_start_by,
-            $request->needs_to_deployed_by,
+            $request->user(),
+            CreateProjectDTO::from(['organization' => $organization, ...$request->validated()])
         );
 
         session()->flash('success', 'Project created');
@@ -90,11 +87,11 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Organization $organization, OrganizationService $organizationService, Project $project)
+    public function edit(Organization $organization, Project $project, OrganizationService $organizationService)
     {
         $organizationService->setOrganization($organization);
 
-        return Inertia::render('Projects/Create', [
+        return Inertia::render('projects/create-project', [
             'project' => $project,
             'priorities' => $organizationService->getPrioritiesDropDownData(),
             'releases' => $organizationService->getReleasesDropDownData(),
@@ -108,18 +105,14 @@ class ProjectController extends Controller
     {
 
         $project = $this->projectService->update(
-            $organization,
-            $project->id,
-            $request->name,
-            intval($request->priority_id),
-            $request->toggle_on_by_release_id,
-            $request->release_plan,
-            $request->technical_documentation,
-            $request->needs_to_start_by,
-            $request->needs_to_deployed_by,
+            $request->user(),
+            UpdateProjectDTO::from([
+                'organization' => $organization,
+                'project_id' => $project->id,
+                ...$request->validated()])
         );
 
-        session()->flash('success', 'Project update');
+        session()->flash('success', 'Project updated');
 
         return Redirect::route('projects.dashboard', ['organization' => $organization->slug, 'project' => $project->id]);
     }
@@ -127,8 +120,15 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+    public function destroy(Organization $organization, Project $project, Request $request)
     {
-        //
+        $this->projectService->delete(
+            $request->user(),
+            new DeleteProjectDTO($project)
+        );
+
+        session()->flash('success', 'Project deleted');
+
+        return Redirect::route('projects.index', ['organization' => $organization->slug]);
     }
 }

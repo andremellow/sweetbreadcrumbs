@@ -58,9 +58,4 @@ class Risk extends Model
     {
         return $this->belongsTo(Probability::class);
     }
-
-    public function project()
-    {
-        return $this->belongsTo(Project::class);
-    }
 }

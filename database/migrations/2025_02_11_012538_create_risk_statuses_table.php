@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -18,6 +19,12 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        DB::table('risk_statuses')->insert(['name' => 'Raised', 'organization_id' => 1]);
+        DB::table('risk_statuses')->insert(['name' => 'Open', 'organization_id' => 1]);
+        DB::table('risk_statuses')->insert(['name' => 'In Analysis', 'organization_id' => 1]);
+        DB::table('risk_statuses')->insert(['name' => 'Mitigated', 'organization_id' => 1]);
+        DB::table('risk_statuses')->insert(['name' => 'Resolved', 'organization_id' => 1]);
     }
 
     /**

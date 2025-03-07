@@ -6,6 +6,8 @@ return [
 
     'pagination_items' => env('PAGINATION_ITEMS', 15),
 
+    'save_date_format' => 'Y/m/d',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

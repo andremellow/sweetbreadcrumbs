@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -18,6 +19,10 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        DB::table('probabilities')->insert(['name' => 'Low', 'organization_id' => 1]);
+        DB::table('probabilities')->insert(['name' => 'Mid', 'organization_id' => 1]);
+        DB::table('probabilities')->insert(['name' => 'High', 'organization_id' => 1]);
     }
 
     /**

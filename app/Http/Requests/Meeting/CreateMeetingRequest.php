@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Meeting;
 
+use App\DTO\Meeting\CreateMeetingDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreMeetingRequest extends FormRequest
+class CreateMeetingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,9 +22,6 @@ class StoreMeetingRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'min:2', 'max:50'],
-            'date' => ['required', 'date'],
-        ];
+        return CreateMeetingDTO::rules();
     }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Meeting\CreateMeetingDTO;
+use App\DTO\Meeting\DeleteMeetingDTO;
+use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Enums\SortDirection;
-use App\Http\Requests\StoreMeetingRequest;
-use App\Http\Requests\UpdateMeetingRequest;
+use App\Http\Requests\Meeting\CreateMeetingRequest;
+use App\Http\Requests\Meeting\UpdateMeetingRequest;
 use App\Models\Meeting;
 use App\Models\Organization;
 use App\Models\Project;
@@ -49,18 +52,19 @@ class MeetingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Organization $organization, Project $project, StoreMeetingRequest $request)
+    public function store(Organization $organization, Project $project, CreateMeetingRequest $request)
     {
         $this->meetingService->create(
-            $project,
-            $request->name,
-            $request->description,
-            $request->date
+            $request->user(),
+            CreateMeetingDTO::from([
+                'project' => $project,
+                ...$request->validated(),
+            ])
         );
 
         session()->flash('success', 'Meeting created');
 
-        return Redirect::route('projects.meetings', ['organization' => $organization->slug, 'project' => $project->id]);
+        return Redirect::route('projects.meetings.index', ['organization' => $organization->slug, 'project' => $project->id]);
     }
 
     /**
@@ -79,24 +83,32 @@ class MeetingController extends Controller
     public function update(Organization $organization, Project $project, Meeting $meeting, UpdateMeetingRequest $request)
     {
         $this->meetingService->update(
-            $project,
-            $meeting->id,
-            $request->name,
-            $request->description,
-            $request->date
+            $request->user(),
+            UpdateMeetingDTO::from([
+                'project' => $project,
+                'meeting_id' => $meeting->id,
+                ...$request->validated(),
+            ])
         );
 
         session()->flash('success', 'Meeting updated');
 
-        return Redirect::route('projects.meetings', ['organization' => $organization->slug, 'project' => $project->id, ...$request->get('redirect_parameters', [])]);
+        return Redirect::route('projects.meetings.index', ['organization' => $organization->slug, 'project' => $project->id, ...$request->get('redirect_parameters', [])]);
 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+    public function destroy(Organization $organization, Project $project, Meeting $meeting, Request $request)
     {
-        //
+        $this->meetingService->delete(
+            $request->user(),
+            new DeleteMeetingDTO($meeting)
+        );
+
+        session()->flash('success', 'Meeting deleted');
+
+        return Redirect::route('projects.meetings.index', ['organization' => $organization->slug, 'project' => $project->id]);
     }
 }
