@@ -16,7 +16,7 @@ class Project extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['name', 'priority_id', 'release_plan', 'technical_documentation', 'needs_to_start_by', 'needs_to_deployed_by'];
+    protected $fillable = ['name', 'priority_id'];
 
     protected $hidden = ['updated_at', 'deleted_at'];
 
@@ -30,6 +30,7 @@ class Project extends Model
         return [
             'needs_to_start_by' => 'datetime:Y-m-d',
             'needs_to_deployed_by' => 'datetime:Y-m-d',
+            'created_at' => 'datetime:Y-m-d',
         ];
     }
 

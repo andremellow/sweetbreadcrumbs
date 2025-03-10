@@ -3,9 +3,6 @@
 namespace App\DTO\Project;
 
 use App\Models\Organization;
-use Carbon\Carbon;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 
 class UpdateProjectDTO extends Data
@@ -14,13 +11,7 @@ class UpdateProjectDTO extends Data
         public Organization $organization,
         public int $project_id,
         public string $name,
-        public ?int $priority_id,
-        public ?string $release_plan,
-        public ?string $technical_documentation,
-        #[WithCast(DateTimeInterfaceCast::class)]
-        public ?Carbon $needs_to_start_by,
-        #[WithCast(DateTimeInterfaceCast::class)]
-        public ?Carbon $needs_to_deployed_by,
+        public ?int $priority_id
     ) {}
 
     public static function rules(): array

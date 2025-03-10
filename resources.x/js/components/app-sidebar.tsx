@@ -28,7 +28,7 @@ export function AppSidebar() {
 
     const footerNavItems: NavItem[] = [
         {
-            title: 'Manager Projects',
+            title: 'Manage Projects',
             url: route('projects.index', { organization: organization.slug }),
             icon: List,
         },
