@@ -4,7 +4,7 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <livewire:project.create-project />
+        <livewire:project.project-modal />
         <flux:sidebar sticky stashable class="border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
@@ -24,12 +24,12 @@
                 <flux:navlist.item icon="folder-git-2" href="{{ route('projects.index') }}" wire:navigate>
                     {{ __('Manage Projects') }}
                 </flux:navlist.item>
-                <flux:modal.trigger name="create-project">
+
+                <flux:modal.trigger name="project-form-modal">
                     <flux:navlist.item icon="folder-git-2">
-                        {{ __('Add Projects') }}
+                        {{ __('Add Project') }}
                     </flux:navlist.item>
                 </flux:modal.trigger>
-                
 
                 <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits" target="_blank">
                     {{ __('Documentation') }}

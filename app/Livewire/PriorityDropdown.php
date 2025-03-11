@@ -3,21 +3,20 @@
 namespace App\Livewire;
 
 use App\Services\OrganizationService;
+use Livewire\Attributes\Modelable;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class PriorityDropdown extends Component
 {
-    public $eventName = 'onPriorityDropdownSelected';
-
-    public $priorityId;
-
-    public function updatedPriorityId()
-    {
-        $this->dispatch($this->eventName, priorityId: empty($this->priorityId) ? null : $this->priorityId);
-    }
+    #[Modelable]
+    public ?int $priorityId;
 
     public function render(OrganizationService $organizationService)
     {
+        if(isset($this->hydratePriorityId)) {
+            dd($this->hydratePriorityId);
+        }
         return view('livewire.priority-dropdown', [
             'priorities' => $organizationService->getPrioritiesDropDownData(),
         ]);

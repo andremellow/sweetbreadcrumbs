@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-#[On(['project-created', 'project-deleted'])] 
+#[On(['project-created', 'project-deleted', 'project-updated'])] 
 class FeaturedProjects extends Component
 {
     public function render(UserService $userService)

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\SetOrganizationRouteParameter;
+use App\Livewire\Project\Dashboard as ProjectDashboard;
 use App\Livewire\Project\ListProjects;
 use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
@@ -19,10 +20,10 @@ Route::middleware([
     Route::group(['prefix' => '/{organization:slug}', 'middleware' => ['verified']], function () {
 
         // Set Livewire update route (handles multi-tenant URLs)
-        Livewire::setUpdateRoute(fn ($handle) => Route::post('livewire/update', $handle) // Tenant-aware route
-        );
+        Livewire::setUpdateRoute(fn ($handle) => Route::post('livewire/update', $handle));
 
         Route::get('/projects', ListProjects::class)->name('projects.index');
+        Route::get('/projects/{project}/dashboard', ProjectDashboard::class)->name('projects.dashboard');
 
         Route::view('dashboard', 'dashboard')->name('dashboard');
 

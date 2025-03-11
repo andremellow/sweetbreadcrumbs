@@ -13,7 +13,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[On('project-created')] 
+#[On(['project-created', 'project-updated'])]
 class ListProjects extends Component
 {
     use WithPagination, WithSorting;
@@ -29,12 +29,6 @@ class ListProjects extends Component
     public function mount()
     {
         $this->sortBy = 'name';
-    }
-
-    #[On('onPriorityDropdownSelected')]
-    public function updatePriorityId($priorityId)
-    {
-        $this->priorityId = $priorityId;
     }
 
     public function applyFilter() {}

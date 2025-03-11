@@ -7,6 +7,7 @@ use App\Models\Organization;
 use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Console\Application;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -37,5 +38,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserService::class, function () {
             return new UserService(auth()->user());
         });
+
+
+        if (!app()->runningInConsole()) {
+            $organizationSlug = request()->route('organization');
+            View::share('currentOrganizationSlug', $organizationSlug);
+        }
     }
 }
