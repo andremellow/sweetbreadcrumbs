@@ -21,10 +21,6 @@ class CreateProject
         return $createProjectDTO->organization->projects()->create([
             'name' => $createProjectDTO->name,
             'priority_id' => $createProjectDTO->priority_id,
-            'release_plan' => $createProjectDTO->release_plan,
-            'technical_documentation' => $createProjectDTO->technical_documentation,
-            'needs_to_start_by' => $createProjectDTO->needs_to_start_by,
-            'needs_to_deployed_by' => $createProjectDTO->needs_to_deployed_by,
         ]);
 
     }

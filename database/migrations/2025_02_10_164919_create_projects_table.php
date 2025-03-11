@@ -15,11 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('priority_id')->nullable()->constrained();
-            $table->text('release_plan')->nullable();
-            $table->text('technical_documentation')->nullable();
-            $table->date('needs_to_start_by')->nullable();
-            $table->date('needs_to_deployed_by')->nullable();
-            $table->foreignId('organization_id')->nullable()->constrained();
+            $table->foreignId('organization_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -15,4 +15,9 @@ class Studio extends Model
      * @var string[]
      */
     protected $fillable = ['id', 'name'];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

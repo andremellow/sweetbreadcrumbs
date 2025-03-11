@@ -48,7 +48,7 @@ class QuickStartDatabaseSeeder extends Seeder
         $organization->releases()->create(['name' => '5.35']);
         $organization->releases()->create(['name' => '5.36']);
 
-        Project::factory()->count(30)->for($organization)->create();
+        Project::factory()->count(30)->for($organization)->withPriority($organization)->create();
 
         $project = $organization->projects()->first();
 

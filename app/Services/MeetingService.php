@@ -12,28 +12,33 @@ use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MeetingService
 {
     public function list(
         Project $project,
-        ?string $name = null,
+        ?string $search = null,
+        ?Carbon $dateStart = null,
+        ?Carbon $dateEnd = null,
         ?string $sortBy = 'name',
         ?SortDirection $sortDirection = SortDirection::ASC
     ): LengthAwarePaginator {
 
         return $project->meetings()
-            ->when($name, function ($query, $name) {
-                return $query->where('meetings.name', 'like', "%$name%");
+            ->when($search, function ($query, $search) {
+                $query->whereLike('meetings.name', "%$search%")
+                    ->orWhereLike('meetings.description', "%$search%");
+            })
+            ->when($dateStart, function ($query, $dateStart) {
+                return $query->whereDate('meetings.date', '>=', $dateStart);
+            })
+            ->when($dateEnd, function ($query, $dateEnd) {
+                return $query->whereDate('meetings.date', '<=', $dateEnd);
             })
             ->orderBy($sortBy, $sortDirection->value)
-            ->paginate(config('app.pagination_items'))
-            ->appends([
-                'sort_by' => $sortBy,
-                'sort_direction' => $sortDirection->value,
-                'name' => $name,
-            ]);
+            ->paginate(config('app.pagination_items'));
     }
 
     /**

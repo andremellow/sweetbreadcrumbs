@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,5 +20,17 @@ class ProjectFactory extends Factory
         return [
             'name' => fake()->company(),
         ];
+    }
+
+    /**
+     * Indicate that the user is suspended.
+     */
+    public function withPriority(Organization $organization): Factory
+    {
+        return $this->state(function (array $attributes) use ($organization) {
+            return [
+                'priority_id' => $organization->priorities()->inRandomOrder()->first()->id,
+            ];
+        });
     }
 }
