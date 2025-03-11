@@ -1,7 +1,7 @@
 <section class="w-full">
     @include('partials.projects-heading')
 
-    <x-projects.layout :$project :heading="__('Profile')" :subheading="__('Update your name and email address')">
+    <x-projects.layout :$project >
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
             <flux:input wire:model="first_name" :label="__('First Name')" type="text" required autofocus autocomplete="first_name" />
 

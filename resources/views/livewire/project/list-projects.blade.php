@@ -13,9 +13,6 @@
     @if(count($projects) > 0)
         <x-projects.table :$projects :$sortBy :$sortDirection />
     @else
-    <flux:card class="mt-5 justify-center text-center space-y-5 ">
-        <div>No results found for the search criteria</div>
-        <flux:button icon="adjustments-horizontal" wire:click="resetForm">Clear filter</flux:button>
-    </flux:card>
+        <x-table-no-data />
     @endif
 </section>

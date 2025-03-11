@@ -7,6 +7,7 @@
             <flux:table.column sortable :sorted="$sortBy === 'name'" :direction="$sortDirection->value" wire:click="sort('name')">Name</flux:table.column>
             <flux:table.column sortable :sorted="$sortBy === 'priority'" :direction="$sortDirection->value" wire:click="sort('priority')" class="hidden sm:table-cell">Priority</flux:table.column>
             <flux:table.column sortable :sorted="$sortBy === 'date'" :direction="$sortDirection->value" wire:click="sort('date')" class="hidden sm:table-cell">Created at</flux:table.column>
+            <flux:table.column />
         </flux:table.columns>
         <flux:table.rows>
             

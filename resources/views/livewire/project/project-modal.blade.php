@@ -2,8 +2,8 @@
     <form wire:submit="save">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">Update profile</flux:heading>
-                <flux:subheading>Make changes to your personal details.</flux:subheading>
+                <flux:heading size="lg">Project</flux:heading>
+                <flux:subheading>Keep on track</flux:subheading>
             </div>
 
             <flux:input label="Name" placeholder="Project Name" wire:model="form.name" />

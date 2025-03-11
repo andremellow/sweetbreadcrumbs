@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\SetOrganizationRouteParameter;
+use App\Livewire\Meeting\ListMeetings;
 use App\Livewire\Project\Dashboard as ProjectDashboard;
 use App\Livewire\Project\ListProjects;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ Route::middleware([
 
         Route::get('/projects', ListProjects::class)->name('projects.index');
         Route::get('/projects/{project}/dashboard', ProjectDashboard::class)->name('projects.dashboard');
+        Route::get('/projects/{project}/meetings', ListMeetings::class)->name('projects.meetings.index');
 
         Route::view('dashboard', 'dashboard')->name('dashboard');
 

@@ -6,15 +6,12 @@
     {{ $slot }}
 
     <div class="flex h-full items-end justify-start gap-x-2 sm:col-span-1 sm:justify-end">
-        <x-button onclick="submit()" size="sm">
-            <x-icons.icon-filter />
+        <flux:button type="submit" icon="filter">
             Filter
-        </x-button>
+        </flux:button>
         
         @if ($isFiltred)
-            <x-button type="button" size="sm" wire:click="$dispatch('reset')">
-                <x-icons.icon-filter-x />
-            </x-button>
+            <flux:button type="button" icon="filter-x" wire:click="$dispatch('reset')" />
         @endif
     </div>
 </form>

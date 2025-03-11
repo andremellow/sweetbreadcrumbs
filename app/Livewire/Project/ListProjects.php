@@ -25,12 +25,7 @@ class ListProjects extends Component
     public ?int $priorityId = null;
 
     public bool $isFiltred = false;
-
-    public function mount()
-    {
-        $this->sortBy = 'name';
-    }
-
+    
     public function applyFilter() {}
 
     #[On('reset')]

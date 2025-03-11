@@ -15,7 +15,6 @@ class CreateMeetingDTO extends Data
         public Project $project,
         public string $name,
         public string $description,
-        #[WithCast(DateTimeInterfaceCast::class)]
         public Carbon $date,
     ) {}
 
@@ -24,7 +23,7 @@ class CreateMeetingDTO extends Data
         return [
             'name' => ['required', 'string', 'min:2', 'max:50'],
             'description' => ['required', 'string', 'min:2'],
-            'date' => ['required', Rule::date()->format(config('app.save_date_format'))],
+            'date' => ['required', Rule::date()],
         ];
     }
 }
