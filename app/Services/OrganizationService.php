@@ -9,7 +9,7 @@ use App\Models\User;
 
 class OrganizationService
 {
-    protected Organization $organization;
+    //  Organization $organization;
 
     /**
      * OrganizationService Construct.
@@ -18,7 +18,7 @@ class OrganizationService
      *
      * @return OrganizationService
      */
-    public function __construct(protected CreateOrganization $createOrganization) {}
+    public function __construct(protected CreateOrganization $createOrganization, protected ?Organization $organization = null) {}
 
     /**
      * Set organization.

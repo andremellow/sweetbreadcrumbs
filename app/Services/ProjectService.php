@@ -12,7 +12,6 @@ use App\Enums\SortDirection;
 use App\Models\Organization;
 use App\Models\Project;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProjectService
@@ -37,6 +36,12 @@ class ProjectService
             case 'priority':
                 $sortBy = 'priorities.order';
                 break;
+            case 'date':
+                $sortBy = 'created_at';
+                break;
+            default:
+                $sortBy = 'name';
+                break;
         }
 
         return $organization->projects()
@@ -50,25 +55,14 @@ class ProjectService
             })
             ->orderBy($sortBy, $sortDirection->value)
             ->select('projects.*') // make sure to select projects columns
-            ->paginate(config('app.pagination_items'))
-            ->appends([
-                'sort_by' => $sortBy,
-                'sort_direction' => $sortDirection->value,
-                'name' => $name,
-                'priority_id' => $priorityId,
-            ]);
+            ->paginate(config('app.pagination_items'));
     }
 
     /**
      * Creates a new project.
      *
-     * @param Organization    $organization,
-     * @param string          $name,
-     * @param int             $priorityId,
-     * @param string          $releasePlan,
-     * @param string          $technicalDocumentation,
-     * @param string | Carbon $needsToStartBy,
-     * @param string | Carbon $needsToDeployedBy,
+     * @param Use              $user,
+     * @param CreateProjectDTO $createProjectDTO,
      *
      * @return Project
      */
