@@ -4,28 +4,32 @@ namespace App\Enums;
 
 enum PriorityEnum: string
 {
-    case LOW = 'Low';
-    case MID = 'Mid';
+    case HIGHEST = 'Highest';
     case HIGH = 'High';
-    case URGENT = 'Urgent';
+    case MIDIUM = 'Midium';
+    case LOW = 'Low';
+    case LOWEST = 'Lowest';
+
 
     public function color(): string
     {
         return match ($this) {
-            PriorityEnum::LOW => 'green',
-            PriorityEnum::MID => 'yellow',
-            PriorityEnum::HIGH => 'pink',
-            PriorityEnum::URGENT => 'red',
+            PriorityEnum::HIGHEST => 'red',
+            PriorityEnum::HIGH => 'orange',
+            PriorityEnum::MIDIUM => 'yellow',
+            PriorityEnum::LOW => 'lime',
+            PriorityEnum::LOWEST => 'green',
         };
     }
 
     public function icon(): string
     {
         return match ($this) {
-            PriorityEnum::LOW => 'arrow-down',
-            PriorityEnum::MID => 'minus',
-            PriorityEnum::HIGH => 'arrow-up',
-            PriorityEnum::URGENT => 'exclamation-triangle',
+            PriorityEnum::HIGHEST => 'chevron-double-up',
+            PriorityEnum::HIGH => 'chevron-up',
+            PriorityEnum::MIDIUM => 'bars-2',
+            PriorityEnum::LOW => 'chevron-down',
+            PriorityEnum::LOWEST => 'chevron-double-down',
         };
     }
 }
