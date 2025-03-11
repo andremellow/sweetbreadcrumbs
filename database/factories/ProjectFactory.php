@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Organization;
-use App\Models\Priority;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,19 +18,19 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->company()
+            'name' => fake()->company(),
         ];
     }
 
     /**
- * Indicate that the user is suspended.
- */
-public function withPriority(Organization $organization ): Factory
-{
-    return $this->state(function (array $attributes) use ($organization) {
-        return [
-            'priority_id' => $organization->priorities()->inRandomOrder()->first()->id,
-        ];
-    });
-}
+     * Indicate that the user is suspended.
+     */
+    public function withPriority(Organization $organization): Factory
+    {
+        return $this->state(function (array $attributes) use ($organization) {
+            return [
+                'priority_id' => $organization->priorities()->inRandomOrder()->first()->id,
+            ];
+        });
+    }
 }

@@ -4,7 +4,6 @@ namespace App\Livewire\Project;
 
 use App\DTO\Project\DeleteProjectDTO;
 use App\Livewire\Traits\WithSorting;
-use App\Models\Organization;
 use App\Models\Project;
 use App\Services\OrganizationService;
 use App\Services\ProjectService;
@@ -25,7 +24,7 @@ class ListProjects extends Component
     public ?int $priorityId = null;
 
     public bool $isFiltred = false;
-    
+
     public function applyFilter() {}
 
     #[On('reset')]
@@ -50,11 +49,11 @@ class ListProjects extends Component
         $projectService->delete(
             auth()->user(),
             new DeleteProjectDTO(
-                //THIS IS TERRIBLE
+                // THIS IS TERRIBLE
                 project: Project::findOrFail($projectId)
             )
         );
-        
+
         $this->dispatch('project-deleted', projectId: $projectId);
     }
 

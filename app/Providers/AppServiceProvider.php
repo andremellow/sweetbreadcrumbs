@@ -34,13 +34,11 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
-        
         $this->app->bind(UserService::class, function () {
             return new UserService(auth()->user());
         });
 
-
-        if (!app()->runningInConsole()) {
+        if (! app()->runningInConsole()) {
             $organizationSlug = request()->route('organization');
             View::share('currentOrganizationSlug', $organizationSlug);
         }

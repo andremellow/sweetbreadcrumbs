@@ -10,7 +10,6 @@ enum PriorityEnum: string
     case LOW = 'Low';
     case LOWEST = 'Lowest';
 
-
     public function color(): string
     {
         return match ($this) {

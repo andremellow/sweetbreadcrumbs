@@ -5,7 +5,6 @@ namespace App\Livewire\Forms;
 use App\DTO\Project\CreateProjectDTO;
 use App\DTO\Project\UpdateProjectDTO;
 use App\Models\Project;
-use Livewire\Attributes\Reactive;
 use Livewire\Form;
 
 class ProjectForm extends Form
@@ -29,7 +28,7 @@ class ProjectForm extends Form
             auth()->user(),
             CreateProjectDTO::from([
                 'organization' => $organizationService->getOrganization(),
-                ...$validated
+                ...$validated,
             ])
         );
     }
@@ -43,7 +42,7 @@ class ProjectForm extends Form
             UpdateProjectDTO::from([
                 'organization' => $organizationService->getOrganization(),
                 'project_id' => $this->id,
-                ...$validated
+                ...$validated,
             ])
         );
 
@@ -52,7 +51,7 @@ class ProjectForm extends Form
 
     public function maybeLoadProject(?int $projectId)
     {
-        if($projectId !== null) {
+        if ($projectId !== null) {
             $project = Project::findOrFail($projectId);
             $this->id = $project->id;
             $this->name = $project->name;

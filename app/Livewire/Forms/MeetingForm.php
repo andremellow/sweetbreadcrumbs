@@ -22,7 +22,6 @@ class MeetingForm extends Form
 
     public Project $project;
 
-
     protected function rules()
     {
         return CreateMeetingDTO::rules();
@@ -36,7 +35,7 @@ class MeetingForm extends Form
             auth()->user(),
             CreateMeetingDTO::from([
                 'organization' => $this->project,
-                ...$validated
+                ...$validated,
             ])
         );
     }
@@ -50,14 +49,14 @@ class MeetingForm extends Form
             UpdateMeetingDTO::from([
                 'project' => $this->project,
                 'meeting_id' => $this->id,
-                ...$validated
+                ...$validated,
             ])
-            );
+        );
     }
 
     public function maybeLoadMeeting(?int $meetingId)
     {
-        if($meetingId !== null) {
+        if ($meetingId !== null) {
             $meeting = Meeting::findOrFail($meetingId);
             $this->id = $meeting->id;
             $this->name = $meeting->name;

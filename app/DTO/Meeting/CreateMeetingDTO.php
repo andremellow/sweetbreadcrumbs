@@ -5,8 +5,6 @@ namespace App\DTO\Meeting;
 use App\Models\Project;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 
 class CreateMeetingDTO extends Data

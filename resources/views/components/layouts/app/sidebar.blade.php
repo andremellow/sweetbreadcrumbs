@@ -30,16 +30,12 @@
                         {{ __('Add Project') }}
                     </flux:navlist.item>
                 </flux:modal.trigger>
-
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits" target="_blank">
-                    {{ __('Documentation') }}
-                </flux:navlist.item>
             </flux:navlist>
 
             <!-- Desktop User Menu -->
             <flux:dropdown position="bottom" align="start">
                 <flux:profile
-                    :name="auth()->user()->name"
+                    :name="auth()->user()->first_name"
                     :avatar="auth()->user()->avatar ?: null"
                     :initials="auth()->user()->initials()"
                     icon-trailing="chevrons-up-down"
