@@ -13,7 +13,7 @@
                 <flux:subheading>Log It Before You Forget It—Because Meetings Deserve a Paper Trail!</flux:subheading>
             </div>
 
-            <flux:input label="Name" placeholder="Meeing Name" wire:model="form.name" />
+            <flux:input label="Name" placeholder="Meeting Name" wire:model="form.name" />
 
             <flux:editor wire:model="form.description" label="Description"  />
 

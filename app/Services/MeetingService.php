@@ -44,6 +44,17 @@ class MeetingService
             ->orderBy($sortBy, $sortDirection->value)
             ->paginate(config('app.pagination_items'));
     }
+    
+    public function lastMeeings(
+        Project $project,
+        int $take = 5
+    ) {
+
+        return $project->meetings()
+                ->orderBy('date', SortDirection::DESC->value)
+                ->take($take)
+                ->get();
+    }
 
     /**
      * MeetingService Construct.

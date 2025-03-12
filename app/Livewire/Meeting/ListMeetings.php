@@ -14,6 +14,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[On(['meeting-created', 'meeting-updated'])]
 class ListMeetings extends Component
 {
     use WithPagination, WithSorting;
