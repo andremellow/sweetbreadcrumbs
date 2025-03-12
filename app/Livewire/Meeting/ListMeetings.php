@@ -21,7 +21,7 @@ class ListMeetings extends Component
     #[Url()]
     public ?string $search = null;
 
-    // #[Url()]
+    #[Url()]
     public DateRange $dateRange;
 
     public bool $isFiltred = false;
@@ -71,6 +71,7 @@ class ListMeetings extends Component
         $this->isFiltred = ! empty($this->search) || isset($this->dateRange);
 
         return view('livewire.meeting.list-meetings', [
+            'project' => $this->project,
             'meetings' => $this->list($organizationService, $meetingService),
         ]);
     }

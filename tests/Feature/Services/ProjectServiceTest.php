@@ -9,10 +9,10 @@ use App\DTO\Project\CreateProjectDTO;
 use App\DTO\Project\DeleteProjectDTO;
 use App\DTO\Project\UpdateProjectDTO;
 use App\Enums\SortDirection;
-use App\Models\Organization;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\ProjectService;
+use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
@@ -77,6 +77,7 @@ it('updates a project using UpdateProject action', function () {
     $dto = UpdateProjectDTO::from([
         'organization' => $this->organization,
         'project_id' => 1,
+        'priority_id' => 1,
         'name' => 'Updated Project',
     ]);
 
@@ -126,23 +127,23 @@ it('deletes a project using DeleteProject action', function () {
 describe('list projects', function () {
 
     beforeEach(function () {
-        // Priorities
-        // 5 = LOW
-        // 6 = MID
-        // 7 = HIGH
-        // 8 = URGENT
+        // 6	 = Highest
+        // 7	 = High
+        // 8	 = Midium
+        // 9	 = Low
+        // 10 = Lowest
 
-        Project::factory()->for($this->organization)->create(['name' => 'Project A', 'priority_id' => 8]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project A.1', 'priority_id' => 8]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project B', 'priority_id' => 8]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project B.2', 'priority_id' => 7]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project C', 'priority_id' => 7]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project C.3', 'priority_id' => 7]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project D', 'priority_id' => 6]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project E', 'priority_id' => 6]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project G', 'priority_id' => 5]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project H', 'priority_id' => 5]);
-        Project::factory()->for($this->organization)->create(['name' => 'Project H.1', 'priority_id' => 5]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project A', 'priority_id' => 8, 'created_at' => Carbon::now()->addDay(11)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project A.1', 'priority_id' => 8, 'created_at' => Carbon::now()->addDay(10)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project B', 'priority_id' => 8, 'created_at' => Carbon::now()->addDay(9)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project B.2', 'priority_id' => 7, 'created_at' => Carbon::now()->addDay(8)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project C', 'priority_id' => 7, 'created_at' => Carbon::now()->addDay(7)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project C.3', 'priority_id' => 7, 'created_at' => Carbon::now()->addDay(6)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project D', 'priority_id' => 6, 'created_at' => Carbon::now()->addDay(5)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project E', 'priority_id' => 6, 'created_at' => Carbon::now()->addDay(4)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project G', 'priority_id' => 8, 'created_at' => Carbon::now()->addDay(3)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project H', 'priority_id' => 7, 'created_at' => Carbon::now()->addDay(2)]);
+        Project::factory()->for($this->organization)->create(['name' => 'Project H.1', 'priority_id' => 8, 'created_at' => Carbon::now()->addDay(1)]);
     });
 
     it('lists projects with default sorting', function () {
@@ -166,9 +167,25 @@ describe('list projects', function () {
 
         expect($projects->total())->toBe(11);
         expect($projects)->toBeInstanceOf(LengthAwarePaginator::class);
-        expect($projects[0]->name)->toBe('Project G');
+        expect($projects[0]->priority_id)->toBe(6);
+        expect($projects[1]->priority_id)->toBe(6);
+        expect($projects[2]->priority_id)->toBe(7);
+    });
+
+    it('lists projects sorted by date', function () {
+        $projects = $this->service->list(
+            $this->organization,
+            null,
+            null,
+            'date',
+            SortDirection::ASC
+        );
+
+        expect($projects->total())->toBe(11);
+        expect($projects)->toBeInstanceOf(LengthAwarePaginator::class);
+        expect($projects[0]->name)->toBe('Project H.1');
         expect($projects[1]->name)->toBe('Project H');
-        expect($projects[2]->name)->toBe('Project H.1');
+        expect($projects[2]->name)->toBe('Project G');
     });
 
     it('filters projects by contain name', function () {
@@ -190,10 +207,11 @@ describe('list projects', function () {
         $projects = $this->service->list($this->organization, null, 7);
 
         expect($projects)->toBeInstanceOf(LengthAwarePaginator::class);
-        expect($projects)->toHaveCount(3);
-        expect($projects[0]->name)->toBe('Project B.2');
-        expect($projects[1]->name)->toBe('Project C');
-        expect($projects[2]->name)->toBe('Project C.3');
+        expect($projects)->toHaveCount(4);
+        expect($projects[0]->priority_id)->toBe(7);
+        expect($projects[1]->priority_id)->toBe(7);
+        expect($projects[2]->priority_id)->toBe(7);
+        expect($projects[3]->priority_id)->toBe(7);
     });
 
     it('paginates projects correctly', function () {

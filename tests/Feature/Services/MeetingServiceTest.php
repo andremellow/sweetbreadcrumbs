@@ -23,7 +23,7 @@ covers(MeetingService::class);
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
-    $this->project = Project::factory()->for($this->organization)->create();
+    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
     /** @var CreateMeeting */
     $this->mockCreateMeeting = Mockery::mock(CreateMeeting::class);
     /** @var UpdateMeeting */
@@ -125,6 +125,20 @@ describe('list meetings', function () {
         Meeting::factory()->for($this->project)->create(['name' => 'Sprint planing 3', 'description' => 'Description for Sprint planing 3', 'date' => Carbon::now()->addDays(1)]);
     });
 
+    it('lists meetings default sort by name if invalid argument is given', function () {
+        $meetings = $this->service->list(
+            $this->project,
+            null,
+            null,
+            null,
+            'any_invalid_sort_fields',
+            SortDirection::ASC
+        );
+
+        expect($meetings)->toHaveCount(9);
+        expect($meetings[0]->name)->toBe('Sprint planing 1');
+    });
+
     it('lists meetings with default sorting', function () {
         $meetings = $this->service->list(
             $this->project
@@ -141,6 +155,8 @@ describe('list meetings', function () {
         $meetings = $this->service->list(
             $this->project,
             null,
+            null,
+            null,
             'name',
             SortDirection::DESC
         );
@@ -149,6 +165,23 @@ describe('list meetings', function () {
         expect($meetings[1]->name)->toBe('TD descusion 2');
         expect($meetings[2]->name)->toBe('TD descusion 1');
         expect($meetings[3]->name)->toBe('Stand up 3');
+    });
+
+    it('lists meetings with date range sorting', function () {
+        $meetings = $this->service->list(
+            $this->project,
+            null,
+            Carbon::now()->today(),
+            Carbon::now()->addDays(7),
+            'date',
+            SortDirection::DESC
+        );
+
+        expect($meetings)->toHaveCount(7);
+        expect($meetings[0]->name)->toBe('Stand up 3');
+        expect($meetings[1]->name)->toBe('TD descusion 1');
+        expect($meetings[2]->name)->toBe('TD descusion 2');
+        expect($meetings[3]->name)->toBe('TD descusion 3');
     });
 
     it('lists meetings with partial name', function () {

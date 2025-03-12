@@ -34,7 +34,7 @@ it('it attaches the user', function () {
 });
 
 it('copies priorities', function () {
-    expect($this->organization->priorities->count())->toBe(4);
+    expect($this->organization->priorities->count())->toBe(5);
     expect($this->organization->priorities->first()->name)->tobe(
         Priority::where(['organization_id' => config('app.demo_organization_id')])->first()->name
     );

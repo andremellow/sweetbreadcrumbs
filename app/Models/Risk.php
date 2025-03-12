@@ -21,41 +21,41 @@ class Risk extends Model
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'raised_at' => 'date',
-            'resolved_at' => 'date',
-        ];
-    }
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'raised_at' => 'date',
+    //         'resolved_at' => 'date',
+    //     ];
+    // }
 
     /**
      * Risk Status.
      *
      * @return void
      */
-    public function riskStatus()
-    {
-        return $this->belongsTo(RiskStatus::class);
-    }
+    // public function riskStatus()
+    // {
+    //     return $this->belongsTo(RiskStatus::class);
+    // }
 
     /**
      * Risk Level.
      *
      * @return void
      */
-    public function riskLevel()
-    {
-        return $this->belongsTo(RiskLevel::class);
-    }
+    // public function riskLevel()
+    // {
+    //     return $this->belongsTo(RiskLevel::class);
+    // }
 
     /**
      * Risk Probability.
      *
      * @return void
      */
-    public function probability()
-    {
-        return $this->belongsTo(Probability::class);
-    }
+    // public function probability()
+    // {
+    //     return $this->belongsTo(Probability::class);
+    // }
 }

@@ -19,5 +19,5 @@
             <x-table-no-data />
         @endif
     </x-projects.layout>
-    <livewire:meeting.meeting-modal />
+    <livewire:meeting.meeting-modal :$project />
 </section>

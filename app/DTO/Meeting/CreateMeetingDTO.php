@@ -4,7 +4,6 @@ namespace App\DTO\Meeting;
 
 use App\Models\Project;
 use Carbon\Carbon;
-use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
 
 class CreateMeetingDTO extends Data
@@ -21,7 +20,7 @@ class CreateMeetingDTO extends Data
         return [
             'name' => ['required', 'string', 'min:2', 'max:50'],
             'description' => ['required', 'string', 'min:2'],
-            'date' => ['required', Rule::date()],
+            'date' => ['required', 'date'],
         ];
     }
 }

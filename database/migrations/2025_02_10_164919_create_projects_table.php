@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('priority_id')->nullable()->constrained();
+            $table->foreignId('priority_id')->constrained();
             $table->foreignId('organization_id')->constrained();
             $table->timestamps();
             $table->softDeletes();

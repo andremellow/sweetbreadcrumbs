@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Project;
 
-use App\DTO\Project\CreateProjectDTO;
 use App\Livewire\Forms\ProjectForm;
+use App\Models\Organization;
 use App\Services\OrganizationService;
 use App\Services\ProjectService;
 use Livewire\Attributes\On;
@@ -15,17 +15,14 @@ class ProjectModal extends Component
 
     public $showProjectFormModal = false;
 
+    public ?Organization $organization;
+
     #[On(['load-project-form-modal'])]
     public function load(?int $projectId = null)
     {
         $this->form->maybeLoadProject($projectId);
 
         $this->showProjectFormModal = true;
-    }
-
-    protected function rules()
-    {
-        return CreateProjectDTO::rules();
     }
 
     public function onModalClose()
@@ -47,8 +44,10 @@ class ProjectModal extends Component
         $this->showProjectFormModal = false;
     }
 
-    public function render()
+    public function render(OrganizationService $organizationService)
     {
-        return view('livewire.project.project-modal');
+        return view('livewire.project.project-modal', [
+            'organization' => $organizationService->getOrganization(),
+        ]);
     }
 }

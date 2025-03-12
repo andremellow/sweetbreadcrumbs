@@ -39,20 +39,20 @@ class Project extends Model
      *
      * @return void
      */
-    public function studios()
-    {
-        return $this->belongsToMany(Studio::class);
-    }
+    // public function studios()
+    // {
+    //     return $this->belongsToMany(Studio::class);
+    // }
 
     /**
      * Project's release.
      *
      * @return void
      */
-    public function releases()
-    {
-        return $this->belongsToMany(Release::class);
-    }
+    // public function releases()
+    // {
+    //     return $this->belongsToMany(Release::class);
+    // }
 
     /**
      * Organization's priority.

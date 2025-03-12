@@ -42,10 +42,10 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function studios()
-    {
-        return $this->hasMany(Studio::class);
-    }
+    // public function studios()
+    // {
+    //     return $this->hasMany(Studio::class);
+    // }
 
     /**
      * Organization's Projects.

@@ -12,7 +12,7 @@ use Carbon\Carbon;
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
-    $this->project = Project::factory()->for($this->organization)->create();
+    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
 });
 
 it('creates a meeting with required fields only', function () {

@@ -13,8 +13,8 @@ class Comment extends Model
     /**
      * Get the parent commentable model (post or video).
      */
-    public function commentable(): MorphTo
-    {
-        return $this->morphTo();
-    }
+    // public function commentable(): MorphTo
+    // {
+    //     return $this->morphTo();
+    // }
 }

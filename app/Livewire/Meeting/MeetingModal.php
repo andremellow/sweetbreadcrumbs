@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Meeting;
 
-use App\DTO\Meeting\CreateMeetingDTO;
 use App\Livewire\Forms\MeetingForm;
+use App\Models\Project;
 use App\Services\MeetingService;
 use Illuminate\Http\Request;
 use Livewire\Attributes\On;
@@ -15,23 +15,17 @@ class MeetingModal extends Component
 
     public $showMeetingFormModal = false;
 
-    public function mount()
+    public function mount(Project $project)
     {
-        $this->form->project = request()->route('project');
+        $this->form->project = $project;
     }
 
     #[On(['load-meeting-form-modal'])]
     public function load(?int $meetingId = null)
     {
-
         $this->form->maybeLoadMeeting($meetingId);
 
         $this->showMeetingFormModal = true;
-    }
-
-    protected function rules()
-    {
-        return CreateMeetingDTO::rules();
     }
 
     public function onModalClose(Request $request)

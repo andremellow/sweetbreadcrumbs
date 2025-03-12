@@ -13,7 +13,7 @@ beforeEach(function () {
 });
 
 it('Soft deletes a meeting', function () {
-    $project = Project::factory()->for($this->organization)->create();
+    $project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
     expect($project->deleted_at)->toBeNull();
 
     app(DeleteProject::class)(

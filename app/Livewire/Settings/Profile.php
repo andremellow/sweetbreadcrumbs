@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 class Profile extends Component
@@ -32,6 +33,7 @@ class Profile extends Component
 
         $validated = $this->validate([
             'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['string', 'max:255'],
         ]);
 
         $user->fill($validated);
@@ -41,8 +43,10 @@ class Profile extends Component
         $this->dispatch('profile-updated', name: $user->name);
     }
 
+    #[Layout('components.layouts.no-sidebar-app')]
     public function render()
     {
+
         return view('livewire.settings.profile');
     }
 }

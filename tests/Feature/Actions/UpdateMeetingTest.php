@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 
     // Create project and meeting
-    $this->project = Project::factory()->for($this->organization)->create();
+    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
     $this->meeting = Meeting::factory()->for($this->project)->create([
         'name' => 'Initial Meeting',
         'description' => 'Initial Description',

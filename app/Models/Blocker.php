@@ -15,23 +15,23 @@ class Blocker extends Model
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'resolved_at' => 'date',
-        ];
-    }
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'resolved_at' => 'date',
+    //     ];
+    // }
 
-    public function project()
-    {
-        return $this->belongsTo(Project::class);
-    }
+    // public function project()
+    // {
+    //     return $this->belongsTo(Project::class);
+    // }
 
     /**
      * Get all of the post's comments.
      */
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
+    // public function comments(): MorphMany
+    // {
+    //     return $this->morphMany(Comment::class, 'commentable');
+    // }
 }
