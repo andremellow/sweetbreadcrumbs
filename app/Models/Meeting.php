@@ -19,14 +19,23 @@ class Meeting extends Model
     protected $fillable = ['name', 'description', 'date'];
 
     /**
+     * The attributes hidden from json.
+     *
+     * @var string[]
+     */
+    protected $hidden = ['updated_at', 'deleted_at'];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
      */
     protected function casts(): array
     {
+        $format = config('app.save_date_format');
+
         return [
-            'date' => 'date',
+            'date' => "date:$format",
             'created_at' => 'date',
         ];
     }
@@ -36,11 +45,11 @@ class Meeting extends Model
         return $this->belongsTo(Project::class);
     }
 
-    /**
-     * Get all of the post's comments.
-     */
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
+    // /**
+    //  * Get all of the post's comments.
+    //  */
+    // public function comments(): MorphMany
+    // {
+    //     return $this->morphMany(Comment::class, 'commentable');
+    // }
 }

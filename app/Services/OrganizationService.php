@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use App\Actions\CreateOrganization;
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
 use App\Models\User;
 
 class OrganizationService
 {
-    protected Organization $organization;
+    //  Organization $organization;
 
     /**
      * OrganizationService Construct.
@@ -17,10 +18,10 @@ class OrganizationService
      *
      * @return OrganizationService
      */
-    public function __construct(protected CreateOrganization $createOrganization) {}
+    public function __construct(protected CreateOrganization $createOrganization, protected ?Organization $organization = null) {}
 
     /**
-     * Undocumented function.
+     * Set organization.
      *
      * @param Organization $organization
      *
@@ -34,16 +35,26 @@ class OrganizationService
     }
 
     /**
+     * Get organization.
+     *
+     * @return Organization|null
+     */
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization ?? null;
+    }
+
+    /**
      * Creates a new organization.
      *
-     * @param User   $user
-     * @param string $name
+     * @param User                  $user
+     * @param CreateOrganizationDTO $createOrganizationDTO
      *
      * @return Organization
      */
-    public function create(User $user, string $name): Organization
+    public function create(User $user, CreateOrganizationDTO $createOrganizationDTO): Organization
     {
-        return ($this->createOrganization)($user, $name);
+        return ($this->createOrganization)($user, $createOrganizationDTO);
     }
 
     /**

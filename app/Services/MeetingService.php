@@ -2,16 +2,49 @@
 
 namespace App\Services;
 
-use App\Actions\CreateMeeting;
-use App\Actions\UpdateMeeting;
+use App\Actions\Meeting\CreateMeeting;
+use App\Actions\Meeting\DeleteMeeting;
+use App\Actions\Meeting\UpdateMeeting;
+use App\DTO\Meeting\CreateMeetingDTO;
+use App\DTO\Meeting\DeleteMeetingDTO;
+use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Project;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MeetingService
 {
+    public function list(
+        Project $project,
+        ?string $search = null,
+        ?Carbon $dateStart = null,
+        ?Carbon $dateEnd = null,
+        ?string $sortBy = 'name',
+        ?SortDirection $sortDirection = SortDirection::ASC
+    ): LengthAwarePaginator {
+
+        if (! in_array($sortBy, ['name', 'date'])) {
+            $sortBy = 'name';
+        }
+
+        return $project->meetings()
+            ->when($search, function ($query, $search) {
+                $query->whereLike('meetings.name', "%$search%")
+                    ->orWhereLike('meetings.description', "%$search%");
+            })
+            ->when($dateStart, function ($query, $dateStart) {
+                return $query->whereDate('meetings.date', '>=', $dateStart);
+            })
+            ->when($dateEnd, function ($query, $dateEnd) {
+                return $query->whereDate('meetings.date', '<=', $dateEnd);
+            })
+            ->orderBy($sortBy, $sortDirection->value)
+            ->paginate(config('app.pagination_items'));
+    }
+
     /**
      * MeetingService Construct.
      *
@@ -19,84 +52,51 @@ class MeetingService
      *
      * @return MeetingService
      */
-    public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting) {}
+    public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting, protected DeleteMeeting $deleteMeeting) {}
 
     /**
      * Creates a new meeting.
      *
-     * @param Project         $project,
-     * @param string          $name,
-     * @param string | null   $description,
-     * @param string | Carbon $date,
+     * @param User             $user,
+     * @param CreateMeetingDTO $createMeetingDTO,
      *
      * @return Meeting
      */
     public function create(
-        project $project,
-        string $name,
-        ?string $description,
-        Carbon|string|null $date,
+        User $user,
+        CreateMeetingDTO $createMeetingDTO
     ): Meeting {
-
-        return ($this->createMeeting)(
-            $project,
-            $name,
-            $description,
-            $this->maybeParseToCarbon($date)
-        );
+        return ($this->createMeeting)($createMeetingDTO);
     }
 
     /**
      * Update an existing meeting.
      *
-     * @param Project         $project,
-     * @param string          $name,
-     * @param string | null   $description,
-     * @param string | Carbon $date,
+     * @param UpdateMeetingDTO $updateMeetingDTO
      *
      * @return Meeting
      */
     public function update(
-        project $project,
-        int $meetingId,
-        string $name,
-        ?string $description,
-        Carbon|string|null $date,
+        User $user,
+        UpdateMeetingDTO $updateMeetingDTO
     ): Meeting {
         return ($this->updateMeeting)(
-            $project,
-            $meetingId,
-            $name,
-            $description,
-            $this->maybeParseToCarbon($date)
+            $updateMeetingDTO
         );
     }
 
-    protected function maybeParseToCarbon(string|Carbon|null $maybeADate): ?Carbon
-    {
-        if (! ($maybeADate instanceof Carbon) && ! is_null($maybeADate)) {
-            return Carbon::parse($maybeADate);
-        }
-
-        return $maybeADate;
-    }
-
-    public function list(
-        Project $project,
-        ?string $name,
-        string $sortBy = 'name',
-        SortDirection $sortDirection = SortDirection::ASC
-    ): LengthAwarePaginator {
-        return $project->meetings()
-            ->when($name, function ($query, $name) {
-                return $query->where('meetings.name', 'like', "%$name%");
-            })
-            ->orderBy($sortBy, $sortDirection->value)
-            ->paginate(config('app.pagination_items'))
-            ->appends([
-                'sort_by' => $sortBy,
-                'sort_direction' => $sortDirection->value,
-                'name' => $name,
-            ]);
+    /**
+     * Delete a new meeting.
+     *
+     * @param User             $user,
+     * @param DeleteMeetingDTO $deleteMeetingDTO,
+     *
+     * @return void
+     */
+    public function delete(
+        User $user,
+        DeleteMeetingDTO $deleteMeetingDTO
+    ): void {
+        ($this->deleteMeeting)($deleteMeetingDTO);
     }
 }

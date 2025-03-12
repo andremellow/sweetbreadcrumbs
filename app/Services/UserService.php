@@ -33,6 +33,16 @@ class UserService
     }
 
     /**
+     * get user from the class.
+     *
+     * @return ?User
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
      * Set user to the class.
      *
      * @param string $slug
@@ -83,7 +93,7 @@ class UserService
      */
     public function getProjects()
     {
-        return $this->getCurrentOrganization()?->projects()->get();
+        return $this->getCurrentOrganization()?->projects()->orderBy('name')->get();
     }
 
     public static function getOrganizationBySlug(User $user, $slug): ?Organization

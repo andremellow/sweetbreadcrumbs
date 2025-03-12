@@ -10,13 +10,19 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "laravel/workos": "^0.1.6",
+        "livewire/flux": "^2.0",
+        "livewire/flux-pro": "^2.0",
+        "livewire/livewire": "^3.6",
+        "livewire/volt": "^1.7",
+        "spatie/laravel-data": "^4.13",
         "tightenco/ziggy": "^2.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/dusk": "^8.3",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.18",
         "laravel/sail": "^1.41",
@@ -24,7 +30,8 @@
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.7",
         "pestphp/pest-plugin-drift": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.1"
+        "pestphp/pest-plugin-laravel": "^3.1",
+        "pestphp/pest-plugin-type-coverage": "^3.3"
     },
     "autoload": {
         "psr-4": {
@@ -64,6 +71,9 @@
         "coverage": [
             "herd coverage ./vendor/bin/pest --coverage --coverage-html coverage  --testsuite=Feature"
         ],
+        "mutate": [
+            "herd coverage ./vendor/bin/pest --coverage --mudate"
+        ],
         "db-reset": [
             "@php artisan db:wipe",
             "@php artisan migrate",
@@ -86,5 +96,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "flux-pro": {
+            "type": "composer",
+            "url": "https://composer.fluxui.dev"
+        }
+    }
 }

@@ -16,7 +16,9 @@ class Project extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['name', 'priority_id', 'toggle_on_by_release_id', 'release_plan', 'technical_documentation', 'needs_to_start_by', 'needs_to_deployed_by'];
+    protected $fillable = ['name', 'priority_id'];
+
+    protected $hidden = ['updated_at', 'deleted_at'];
 
     /**
      * Get the attributes that should be cast.
@@ -28,6 +30,7 @@ class Project extends Model
         return [
             'needs_to_start_by' => 'datetime:Y-m-d',
             'needs_to_deployed_by' => 'datetime:Y-m-d',
+            'created_at' => 'datetime:Y-m-d',
         ];
     }
 
@@ -36,20 +39,20 @@ class Project extends Model
      *
      * @return void
      */
-    public function studios()
-    {
-        return $this->belongsToMany(Studio::class);
-    }
+    // public function studios()
+    // {
+    //     return $this->belongsToMany(Studio::class);
+    // }
 
     /**
      * Project's release.
      *
      * @return void
      */
-    public function releases()
-    {
-        return $this->belongsToMany(Release::class);
-    }
+    // public function releases()
+    // {
+    //     return $this->belongsToMany(Release::class);
+    // }
 
     /**
      * Organization's priority.
@@ -71,25 +74,15 @@ class Project extends Model
         return $this->belongsTo(Priority::class);
     }
 
-    /**
-     * Project's priority.
-     *
-     * @return void
-     */
-    public function toggleOnByRelease()
-    {
-        return $this->belongsTo(Release::class);
-    }
-
-    /**
-     * Project blockers.
-     *
-     * @return void
-     */
-    public function blockers()
-    {
-        return $this->hasMany(Blocker::class);
-    }
+    // /**
+    //  * Project blockers.
+    //  *
+    //  * @return void
+    //  */
+    // public function blockers()
+    // {
+    //     return $this->hasMany(Blocker::class);
+    // }
 
     /**
      * Project blockers.
@@ -101,11 +94,11 @@ class Project extends Model
         return $this->hasMany(Meeting::class);
     }
 
-    /**
-     * Get all of the post's comments.
-     */
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
+    // /**
+    //  * Get all of the post's comments.
+    //  */
+    // public function comments(): MorphMany
+    // {
+    //     return $this->morphMany(Comment::class, 'commentable');
+    // }
 }

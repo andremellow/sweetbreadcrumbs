@@ -1,5 +1,9 @@
 <?php
 
+pest()->extend(Tests\DuskTestCase::class)
+//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
+    ->in('Browser');
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,15 +15,11 @@
 |
 */
 
-use Database\Seeders\DatabaseSeeder;
-use Database\Seeders\QuickStartDatabaseSeeder;
-
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
-    // Seed the database before each test
-
+// Seed the database before each test
 
 /*
 |--------------------------------------------------------------------------

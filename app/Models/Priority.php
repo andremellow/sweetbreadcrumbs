@@ -16,8 +16,5 @@ class Priority extends Model
      */
     protected $fillable = ['id', 'name', 'order'];
 
-    public function projects()
-    {
-        return $this->hasMany(Priority::class);
-    }
+    protected $hidden = ['updated_at', 'deleted_at'];
 }

@@ -15,9 +15,4 @@ class RiskStatus extends Model
      * @var string[]
      */
     protected $fillable = ['id', 'name'];
-
-    public function project()
-    {
-        return $this->belongsTo(Project::class);
-    }
 }
