@@ -26,6 +26,10 @@ class MeetingService
         ?SortDirection $sortDirection = SortDirection::ASC
     ): LengthAwarePaginator {
 
+        if (! in_array($sortBy, ['name', 'date'])) {
+            $sortBy = 'name';
+        }
+
         return $project->meetings()
             ->when($search, function ($query, $search) {
                 $query->whereLike('meetings.name', "%$search%")

@@ -7,7 +7,8 @@ use App\Models\Organization;
 use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Console\Application;
-use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,22 +26,31 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (env('APP_ENV') !== 'production') {
+            DB::listen(function ($query) {
+                Log::info(
+                    $query->sql,
+                    $query->bindings,
+                    $query->time
+                );
+            });
+        }
+
         $this->app->bind(OrganizationService::class, function () {
-            $oganization = request()->route('organization');
+            $organization = request()->route('organization');
+
+            if (($organization instanceof Organization) === false) {
+                $organization = Organization::whereSlug($organization)->first();
+            }
 
             return new OrganizationService(
                 app(CreateOrganization::class),
-                Organization::whereSlug($oganization)->first()
+                $organization
             );
         });
 
         $this->app->bind(UserService::class, function () {
             return new UserService(auth()->user());
         });
-
-        if (! app()->runningInConsole()) {
-            $organizationSlug = request()->route('organization');
-            View::share('currentOrganizationSlug', $organizationSlug);
-        }
     }
 }

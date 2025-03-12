@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
 use App\Models\Project;
 use App\Models\User;
@@ -7,7 +9,7 @@ use App\Services\UserService;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-    $this->organization = Organization::factory()->hasAttached($this->user)->create();
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
 
     // Instantiate UserService with a user
     $this->userService = new UserService($this->user);
@@ -22,6 +24,7 @@ it('sets a user', function () {
 
     expect($this->userService->setUser($newUser))->toBeInstanceOf(UserService::class);
     expect($this->userService->setUser($newUser))->not->toBe($this->user);
+    expect($this->userService->getUser())->toBe($newUser);
 });
 
 it('sets an organization', function () {
@@ -66,7 +69,7 @@ it('gets all user organizations', function () {
 });
 
 it('gets all projects from the current organization', function () {
-    $factoryProjects = Project::factory(4)->for($this->organization)->create();
+    $factoryProjects = Project::factory(4)->for($this->organization)->withPriority($this->organization)->create()->sortBy('name')->values();
 
     $projects = $this->userService->getProjects();
 

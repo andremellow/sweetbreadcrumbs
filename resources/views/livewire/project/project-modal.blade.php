@@ -1,3 +1,8 @@
+@php
+    if(!isset($organization)){
+        $organization = app(App\Services\OrganizationService::class)->getOrganization();
+    }
+@endphp
 <flux:modal name="project-form-modal" variant="flyout" :dismissible="false" wire:model.self="showProjectFormModal"  @close="onModalClose">
     <form wire:submit="save">
         <div class="space-y-6">
@@ -11,6 +16,7 @@
             <div>
                 <livewire:priority-dropdown
                     wire:model="form.priority_id"
+                    :organization="isset($organization) ? $organization : request()->route('organization')"
                 />
                 <flux:error name="form.priority_id"/>
             </div>
