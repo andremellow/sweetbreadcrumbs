@@ -6,6 +6,7 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Meeting;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -51,7 +52,9 @@ class QuickStartDatabaseSeeder extends Seeder
         Project::factory()->count(30)->for($organization)->withPriority($organization)->create();
 
         $project = $organization->projects()->first();
+        $project->update(['name' => 'AA First Project']);
 
         Meeting::factory()->count(30)->for($project)->create();
+        Task::factory()->count(30)->for($project)->withPriority($organization)->create();
     }
 }

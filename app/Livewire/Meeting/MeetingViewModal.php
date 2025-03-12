@@ -2,18 +2,13 @@
 
 namespace App\Livewire\Meeting;
 
-use App\Livewire\Forms\MeetingForm;
 use App\Models\Meeting;
-use App\Models\Project;
-use App\Services\MeetingService;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class MeetingViewModal extends Component
 {
-    
     public $showMeetingViewModal = false;
 
     public ?int $id = null;
@@ -23,7 +18,6 @@ class MeetingViewModal extends Component
     public ?string $description = null;
 
     public ?Carbon $date = null;
-
 
     #[On(['load-meeting-view-modal'])]
     public function load(?int $meetingId = null)

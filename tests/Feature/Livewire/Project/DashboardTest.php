@@ -39,7 +39,7 @@ it('renders the Dashboard component successfully', function () {
 
 it('loads meeting card', function () {
     $meetingService = app(MeetingService::class);
-    
+
     $meetings = $meetingService->lastMeeings($this->project, 5);
 
     Livewire::actingAs($this->user)
