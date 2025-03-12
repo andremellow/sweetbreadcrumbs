@@ -34,7 +34,7 @@ class MeetingForm extends Form
         return $meetingService->create(
             auth()->user(),
             CreateMeetingDTO::from([
-                'organization' => $this->project,
+                'project' => $this->project,
                 ...$validated,
             ])
         );

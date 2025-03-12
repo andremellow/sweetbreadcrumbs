@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Organization;
+use App\Services\UserService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -21,7 +22,9 @@ class SetOrganizationRouteParameter
         // Get the organization from the current route
         $organization = $request->route('organization');
 
-        if ($organization instanceof Organization) {
+        if ($organization == null) {
+            $organization = app(UserService::class)->getCurrentOrganization()->slug;
+        } elseif ($organization instanceof Organization) {
             $organization = $organization->slug;
         }
 

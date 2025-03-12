@@ -21,11 +21,11 @@ class QuickStartDatabaseSeeder extends Seeder
         $userAndreMello = User::create(['first_name' => 'Andre', 'last_name' => 'Mello', 'email' => 'andre.mello@disney.com', 'password' => Hash::make('123456')]);
         $organization = (new CreateOrganization)($userAndreMello, new CreateOrganizationDTO('Disney'));
 
-        $studioWounder = $organization->studios()->create(['name' => 'Wounder']);
-        $studioFantasy = $organization->studios()->create(['name' => 'Fantasy']);
-        $studioDream = $organization->studios()->create(['name' => 'Dream']);
-        $studioUni = $organization->studios()->create(['name' => 'Uni']);
-        $studioNautilus = $organization->studios()->create(['name' => 'Nautilus']);
+        // $studioWounder = $organization->studios()->create(['name' => 'Wounder']);
+        // $studioFantasy = $organization->studios()->create(['name' => 'Fantasy']);
+        // $studioDream = $organization->studios()->create(['name' => 'Dream']);
+        // $studioUni = $organization->studios()->create(['name' => 'Uni']);
+        // $studioNautilus = $organization->studios()->create(['name' => 'Nautilus']);
 
         $userJonathanNammour = $organization->users()->create(['first_name' => 'Jonathan Nammour', 'email' => 'jonathan.nammour@disney.com']);
         $userMitchThomas = $organization->users()->create(['first_name' => 'Mitch Thomas', 'email' => 'mitch.thomas@disney.com']);
@@ -36,10 +36,10 @@ class QuickStartDatabaseSeeder extends Seeder
         $userSandyLeon = $organization->users()->create(['first_name' => 'Sandy Leon', 'email' => 'sandy.leon@disney.com']);
         $userWalterCojal = $organization->users()->create(['first_name' => 'Walter Cojal', 'email' => 'walter.cojal@disney.com']);
 
-        $studioWounder->users()->sync([$userAndreMello, $userJonathanNammour, $userMitchThomas, $userKevinHaynes, $userBrendonHaynes]);
-        $studioUni->users()->sync([$userAndreMello, $userJonathanNammour]);
-        $studioFantasy->users()->sync([$userSandyLeon]);
-        $studioDream->users()->sync([$userWalterCojal]);
+        // $studioWounder->users()->sync([$userAndreMello, $userJonathanNammour, $userMitchThomas, $userKevinHaynes, $userBrendonHaynes]);
+        // $studioUni->users()->sync([$userAndreMello, $userJonathanNammour]);
+        // $studioFantasy->users()->sync([$userSandyLeon]);
+        // $studioDream->users()->sync([$userWalterCojal]);
 
         $organization->releases()->create(['name' => '5.31']);
         $organization->releases()->create(['name' => '5.32']);

@@ -1,11 +1,3 @@
-<?php
-
-use Livewire\Volt\Component;
-
-new class extends Component {
-    //
-}; ?>
-
 <div class="flex flex-col items-start">
     @include('partials.settings-heading')
 
@@ -17,3 +9,4 @@ new class extends Component {
         </flux:radio.group>
     </x-settings.layout>
 </div>
+

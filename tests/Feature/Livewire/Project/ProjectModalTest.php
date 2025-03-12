@@ -28,7 +28,7 @@ afterEach(function () {
     Mockery::close();
 });
 
-it('renders the ListProjects component successfully', function () {
+it('renders the ProjectModal component successfully', function () {
     Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
             'organization' => $this->organization,
@@ -38,7 +38,7 @@ it('renders the ListProjects component successfully', function () {
         ->assertSee('Project Name')
         ->assertSee('Priority')
         ->assertSeeHtml('wire:model="form.name"')
-        ->assertSeeHtml('wire:model="form.name"')
+        ->assertSeeHtml('wire:model.live="priorityId"')
         ->assertSeeHtml('data-modal="project-form-modal"')
         ->assertSeeHtml('Save');
 });
@@ -62,6 +62,7 @@ it('it resets the form if a project id null is given', function () {
         ->call('load', $this->project->id)
         ->assertSet('form.name', $this->project->name)
         ->call('load', null)
+        ->assertSet('form.id', null)
         ->assertSet('form.name', '');
 });
 
@@ -73,6 +74,7 @@ it('it is listeing for load-project-form-modal event', function () {
 
     $projectModal
         ->dispatch('load-project-form-modal', projectId: $this->project->id)
+        ->assertSet('form.id', $this->project->id)
         ->assertSet('form.name', $this->project->name)
         ->assertSet('form.priority_id', $this->project->priority_id)
         ->assertSet('showProjectFormModal', true);
@@ -92,7 +94,7 @@ it('it resets form when modal is closed', function () {
         ->assertSet('form.priority_id', null);
 });
 
-it('return it validates', function () {
+it('it validates', function () {
 
     Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
@@ -124,7 +126,7 @@ it('created a project', function () {
     expect($project->priority_id)->toBe($this->priorities[0]);
 });
 
-it('created updates a project', function () {
+it('it updates a project', function () {
     Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
             'organization' => $this->organization,
