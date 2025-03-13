@@ -13,7 +13,7 @@
                 <livewire:priority-dropdown wire:model.live="priorityId" :$organization/>
             </x-form.filter-column>
             <x-form.filter-column span="2">
-                <flux:date-picker wire:model="dateRange"  :label="__('Due date')" mode="range" with-presets />
+                <flux:date-picker wire:model.live="dateRange"  :label="__('Due date')" mode="range" with-presets />
             </x-form.filter-column>
             <x-form.filter-column span="2">
                 <flux:radio.group wire:model.live="status" size="sm" variant="segmented" :label="__('Status')">
@@ -22,9 +22,14 @@
                     <flux:radio label="Closed"  value="closed" icon="square-check-big" />
                 </flux:radio.group>
             </x-form.filter-column>
+            <x-form.filter-column span="2" class="flex items-end">
+                <flux:button type="button" :loading="false" wire:click="toggleLate()" size="sm" variant="{{ $onlyLates ? 'danger' : 'filled' }}" icon="{{ $onlyLates ? 'clock-alert' : 'clock' }}">Lates</flux:button>
+            </x-form.filter-column>
         </x-form.filter-form>
         @if(count($tasks) > 0)
-            <x-tasks.table :$tasks :$sortBy :$sortDirection />
+            <div wire:loading.class="opacity-50">
+                <x-tasks.table :$tasks :$sortBy :$sortDirection />
+            </div>
         @else
             <x-table-no-data />
         @endif

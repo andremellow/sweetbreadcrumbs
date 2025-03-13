@@ -8,6 +8,7 @@ use App\Models\Meeting;
 use App\Models\Project;
 use App\Services\OrganizationService;
 use App\Services\TaskService;
+use Carbon\Carbon;
 use Flux\DateRange;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -29,7 +30,10 @@ class ListTasks extends Component
     public ?int $priorityId = null;
 
     #[Url()]
-    public DateRange $dateRange;
+    public array $dateRange;
+
+    #[Url(as: 'lates')]
+    public bool $onlyLates = false;
 
     public bool $isFiltred = false;
 
@@ -39,6 +43,18 @@ class ListTasks extends Component
     {
         $this->project = $project;
         $this->sortBy = 'due_date';
+        $this->sortDirection = SortDirection::DESC;
+    }
+
+    public function updated($name)
+    {
+        if(in_array($name, ['status', 'dateRange'])) {
+            $this->reset('onlyLates');
+        }
+    }
+
+    public function toggleLate() {
+        $this->onlyLates = !$this->onlyLates;
     }
 
     public function applyFilter() {}
@@ -46,29 +62,28 @@ class ListTasks extends Component
     #[On('reset')]
     public function resetForm()
     {
-        $this->reset('search', 'dateRange');
+        $this->reset(['search','status', 'dateRange', 'priorityId', 'onlyLates']);
     }
 
-        public function open(TaskService $taskService, int $taskId)
-        {
-            $taskService->open(
-                auth()->user(),
-                $taskId
-            );
+    public function open(TaskService $taskService, int $taskId)
+    {
+        $taskService->open(
+            auth()->user(),
+            $taskId
+        );
 
-            $this->dispatch('task-opened', taskId: $taskId);
-        }
+        $this->dispatch('task-opened', taskId: $taskId);
+    }
 
-        public function close(TaskService $taskService, int $taskId)
-        {
-            $taskService->close(
-                auth()->user(),
-                $taskId
-            );
+    public function close(TaskService $taskService, int $taskId)
+    {
+        $taskService->close(
+            auth()->user(),
+            $taskId
+        );
 
-            $this->dispatch('task-closed', taskId: $taskId);
-        }
-
+        $this->dispatch('task-closed', taskId: $taskId);
+    }
 
     // public function delete(TaskService $taskService, int $taskId)
     // {
@@ -84,21 +99,40 @@ class ListTasks extends Component
 
     protected function list(TaskService $taskService)
     {
+        if($this->onlyLates) {
+            $this->reset(['status', 'dateRange']);
+        }
+        $endDate = isset($this->dateRange) && array_key_exists('end', $this->dateRange) 
+            ? Carbon::parse($this->dateRange['end']) : null;
+        
+        $startDate =  isset($this->dateRange) && array_key_exists('start', $this->dateRange) 
+                ? Carbon::parse($this->dateRange['start']) : null;
+
         return $taskService->list(
             $this->project,
             $this->search,
             $this->priorityId,
-            $this->status,
-            isset($this->dateRange) ? $this->dateRange->start() : null,
-            isset($this->dateRange) ? $this->dateRange->end() : null,
+            $this->onlyLates ? 'open' : $this->status,
+            $startDate,
+            $this->onlyLates ? Carbon::now() : $endDate,
             $this->sortBy,
             $this->sortDirection
         );
     }
 
+    protected function isFiltered()
+    {
+        return 
+            !empty($this->search) 
+            || !empty($this->status) 
+            || !empty($this->priorityId) 
+            || isset($this->dateRange)
+            || $this->onlyLates === true;
+    }
+
     public function render(OrganizationService $organizationService, TaskService $taskService)
     {
-        $this->isFiltred = ! empty($this->search) || isset($this->dateRange);
+        $this->isFiltred = $this->isFiltered();
 
         return view('livewire.task.list-tasks', [
             'project' => $this->project,

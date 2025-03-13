@@ -25,8 +25,8 @@ class TaskService
         ?string $status = null,
         ?Carbon $dateStart = null,
         ?Carbon $dateEnd = null,
-        ?string $sortBy = 'name',
-        ?SortDirection $sortDirection = SortDirection::ASC
+        ?string $sortBy = 'due_date',
+        ?SortDirection $sortDirection = SortDirection::DESC
     ): LengthAwarePaginator {
 
         if (! in_array($sortBy, ['name', 'due_date', 'priority'])) {
@@ -49,9 +49,9 @@ class TaskService
                 return $query->where('tasks.priority_id', '=', $priorityId);
             })
             ->when($status, function ($query, $status) {
-                if($status === 'open') {
+                if ($status === 'open') {
                     return $query->whereNull('tasks.completed_at');
-                } else if($status === 'closed') {
+                } elseif ($status === 'closed') {
                     return $query->whereNotNull('tasks.completed_at');
                 }
             })
@@ -68,12 +68,12 @@ class TaskService
 
     public function open(User $user, int $taskId): void
     {
-        Task::find($taskId)->update([ 'completed_at' => null ]);
+        Task::find($taskId)->update(['completed_at' => null]);
     }
 
     public function close(User $user, int $taskId): void
     {
-        Task::find($taskId)->update([ 'completed_at' => Carbon::now() ]);
+        Task::find($taskId)->update(['completed_at' => Carbon::now()]);
     }
 
     // public function lastMeeings(
