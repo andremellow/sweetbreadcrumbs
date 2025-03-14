@@ -14,10 +14,7 @@
             <flux:input label="Name" placeholder="Project Name" wire:model="form.name" />
 
             <div>
-                <livewire:priority-dropdown
-                    wire:model="form.priority_id"
-                    :organization="isset($organization) ? $organization : request()->route('organization')"
-                />
+                <livewire:priority-dropdown wire:model="form.priority_id" />
                 <flux:error name="form.priority_id"/>
             </div>
             <div class="flex">

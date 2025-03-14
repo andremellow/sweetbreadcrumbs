@@ -22,6 +22,13 @@ beforeEach(function () {
     $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
+
+    app()->bind(OrganizationService::class, function () {
+        return new OrganizationService(
+            app(CreateOrganization::class),
+            $this->organization
+        );
+    });
 });
 
 afterEach(function () {

@@ -41,7 +41,7 @@ class TaskModal extends Component
         if ($this->form->id === null) {
             $task = $this->form->add($taskService);
             $this->dispatch('task-created', taskId: $task->id);
-        } 
+        }
         // else {
         //     $this->form->edit($taskService);
         //     $this->dispatch('task-updated', taskId: $this->form->id);

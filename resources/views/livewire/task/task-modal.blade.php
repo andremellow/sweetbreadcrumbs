@@ -4,7 +4,6 @@
     :dismissible="false"
     wire:model.self="showTaskFormModal"
     @close="onModalClose"
-    class="w-full xl:w-2/3 2xl:w-1/2"
 >
     <form wire:submit="save">
         <div class="space-y-6">
@@ -18,10 +17,7 @@
             <flux:editor wire:model="form.description" label="Description"  />
 
             <div>
-                <livewire:priority-dropdown
-                    wire:model="form.priority_id"
-                    :organization="isset($organization) ? $organization : request()->route('organization')"
-                />
+                <livewire:priority-dropdown wire:model="form.priority_id" key="priority-dropdown" />
                 <flux:error name="form.priority_id"/>
             </div>
 

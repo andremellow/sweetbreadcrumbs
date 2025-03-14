@@ -12,12 +12,12 @@ class ConfigDefault extends Model
      *
      * @var string[]
      */
-    protected $fillable = [ 'key', 'value' ];
+    protected $fillable = ['id', 'key', 'value'];
 
     public function casts()
     {
         return [
-            'key' => ConfigEnum::class
+            'key' => ConfigEnum::class,
         ];
     }
 }

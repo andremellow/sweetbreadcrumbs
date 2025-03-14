@@ -12,9 +12,9 @@ class CreateTaskDTO extends Data
         public User $user,
         public Project $project,
         public string $name,
-        public ?string $description,
-        public ?string $priority_id,
-        public ?string $due_date,
+        public string $priority_id,
+        public ?string $description = null,
+        public ?string $due_date = null,
     ) {}
 
     public static function rules(): array
@@ -24,7 +24,7 @@ class CreateTaskDTO extends Data
             'description' => ['nullable', 'string'],
             'priority_id' => ['required', 'integer'],
             'due_date' => ['nullable', 'date'],
-            
+
         ];
     }
 }

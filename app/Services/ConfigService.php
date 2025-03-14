@@ -4,31 +4,34 @@ namespace App\Services;
 
 use App\Enums\ConfigEnum;
 use App\Models\Config;
-use App\Models\Organization;
-use App\Models\User;
 use Illuminate\Database\Query\JoinClause;
 
 class ConfigService
 {
     public function __construct(
-        protected OrganizationService $organizationService, 
+        protected OrganizationService $organizationService,
     ) {}
 
     public function get(ConfigEnum $key)
     {
-        $config = Config::rightJoin('config_defaults', function (JoinClause $join) {
-                    $join->on('configs.config_default_id','=', 'config_defaults.id')
-                        ->where('configs.organization_id', $this->organizationService->getOrganization()->id);
-                })->where('config_defaults.key', $key->value)
-                ->select('configs.value', 'config_defaults.value as default')
-                ->first();
-        
+        $config = $this->getConfigWithDefaultByKey($key);
+
         return $this->valueOrDefault($key, $config);
     }
 
-    protected function valueOrDefault(ConfigEnum $key, Config $config): ?string
+    public function getConfigWithDefaultByKey(ConfigEnum $key)
     {
-        if($config->value !== null) {
+        return Config::rightJoin('config_defaults', function (JoinClause $join) {
+            $join->on('configs.config_default_id', '=', 'config_defaults.id')
+                ->where('configs.organization_id', $this->organizationService->getOrganization()->id);
+        })->where('config_defaults.id', $key->value)
+            ->select('configs.value', 'config_defaults.value as default')
+            ->first();
+    }
+
+    public function valueOrDefault(ConfigEnum $key, Config $config): ?string
+    {
+        if ($config->value !== null) {
             return $config->value;
         }
 
@@ -36,7 +39,7 @@ class ConfigService
             case ConfigEnum::TASK_DEFAULT_PRIORITY_ID:
                 return $this->getTaskDefaultPriorityId($config->default);
                 break;
-            
+
             default:
                 return $config->default;
                 break;
@@ -47,7 +50,7 @@ class ConfigService
     {
         $priority = $this->organizationService->getOrganization()->priorities()->where('name', $priorityName)->first();
 
-        if(!$priority) {
+        if (! $priority) {
             $priority = $this->organizationService->getOrganization()->priorities()->first();
         }
 

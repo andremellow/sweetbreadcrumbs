@@ -10,7 +10,7 @@
                 <flux:input wire:model="search" :label="__('Name or Description')" type="text" />
             </x-form.filter-column>
             <x-form.filter-column span="2">
-                <livewire:priority-dropdown wire:model.live="priorityId" :$organization/>
+                <livewire:priority-dropdown wire:model.live="priorityId"/>
             </x-form.filter-column>
             <x-form.filter-column span="2">
                 <flux:date-picker wire:model.live="dateRange"  :label="__('Due date')" mode="range" with-presets />

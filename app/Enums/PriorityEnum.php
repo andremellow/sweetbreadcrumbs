@@ -31,5 +31,4 @@ enum PriorityEnum: string
             PriorityEnum::LOWEST => 'chevron-double-down',
         };
     }
-
 }

@@ -15,13 +15,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('config_defaults', function (Blueprint $table) {
-            $table->id();
-            $table->string('key');
-            $table->text('value')->nullable();
+            $table->unsignedBigInteger('id', false)->primary();
+            $table->text('value');
             $table->timestamps();
         });
 
-        ConfigDefault::create([ 'key' => ConfigEnum::TASK_DEFAULT_PRIORITY_ID, 'value' => PriorityEnum::MIDIUM ]);
+        ConfigDefault::create(['id' => ConfigEnum::TASK_DEFAULT_PRIORITY_ID, 'value' => PriorityEnum::MIDIUM]);
+        ConfigDefault::create(['id' => ConfigEnum::PAGINATION_ITEMS, 'value' => 15]);
     }
 
     /**

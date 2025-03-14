@@ -55,6 +55,6 @@ class QuickStartDatabaseSeeder extends Seeder
         $project->update(['name' => 'AA First Project']);
 
         Meeting::factory()->count(30)->for($project)->create();
-        Task::factory()->count(30)->for($project)->withPriority($organization)->create();
+        Task::factory()->count(30)->for($project, 'taskable')->withPriority($organization)->create();
     }
 }

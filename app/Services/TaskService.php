@@ -5,11 +5,11 @@ namespace App\Services;
 use App\Actions\Task\CloseTask;
 use App\Actions\Task\CreateTask;
 use App\Actions\Task\OpenTask;
-use App\DTO\Task\DeleteTaskDTO;
-use App\DTO\Task\UpdateTaskDTO;
 use App\DTO\Task\CloseTaskDTO;
 use App\DTO\Task\CreateTaskDTO;
+use App\DTO\Task\DeleteTaskDTO;
 use App\DTO\Task\OpenTaskDTO;
+use App\DTO\Task\UpdateTaskDTO;
 use App\Enums\SortDirection;
 use App\Models\Project;
 use App\Models\Task;
@@ -20,20 +20,20 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class TaskService
 {
     /**
-     * Task Service
+     * Task Service.
      *
      * @param OrganizationService $organizationService
-     * @param CloseTask $closeTask
-     * @param OpenTask $openTask
-     * @param CreateTask $createTask
+     * @param CloseTask           $closeTask
+     * @param OpenTask            $openTask
+     * @param CreateTask          $createTask
      */
     public function __construct(
-            protected OrganizationService $organizationService, 
-            protected CloseTask $closeTask, 
-            protected OpenTask $openTask, 
-            protected CreateTask $createTask
-        ) {}
-        
+        protected OrganizationService $organizationService,
+        protected CloseTask $closeTask,
+        protected OpenTask $openTask,
+        protected CreateTask $createTask
+    ) {}
+
     public function list(
         Project $project,
         ?string $search = null,
@@ -96,7 +96,7 @@ class TaskService
     /**
      * Creates a new task.
      *
-     * @param User             $user,
+     * @param User          $user,
      * @param CreateTaskDTO $createTaskDTO,
      *
      * @return Task
@@ -156,7 +156,7 @@ class TaskService
     /**
      * Delete a new task.
      *
-     * @param User             $user,
+     * @param User          $user,
      * @param DeleteTaskDTO $deleteTaskDTO,
      *
      * @return void

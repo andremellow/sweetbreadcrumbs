@@ -3,10 +3,9 @@
 namespace App\Livewire\Forms;
 
 use App\DTO\Task\CreateTaskDTO;
-use App\Enums\PriorityEnum;
 // use App\DTO\Task\UpdateTaskDTO;
-use App\Models\Task;
 use App\Models\Project;
+use App\Models\Task;
 use App\Services\TaskService;
 use Carbon\Carbon;
 use Livewire\Form;
@@ -36,15 +35,16 @@ class TaskForm extends Form
     {
         $validated = $this->validate();
 
-        if($validated['priority_id'])
+        if ($validated['priority_id']) {
 
-        return $taskService->create(
-            CreateTaskDTO::from([
-                'user' =>  auth()->user(),
-                'project' => $this->project,
-                ...$validated,
-            ])
-        );
+            return $taskService->create(
+                CreateTaskDTO::from([
+                    'user' => auth()->user(),
+                    'project' => $this->project,
+                    ...$validated,
+                ])
+            );
+        }
     }
 
     // public function edit(TaskService $taskService)
@@ -78,6 +78,6 @@ class TaskForm extends Form
     public function resetForm()
     {
         $this->reset('id', 'name', 'description', 'due_date');
-        $this->priority_id  = $this->defaultPriorityId;
+        $this->priority_id = $this->defaultPriorityId;
     }
 }
