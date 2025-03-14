@@ -4,6 +4,7 @@ use App\Actions\Organization\CreateOrganization;
 use App\Actions\Task\CloseTask;
 use App\Actions\Task\CreateTask;
 use App\Actions\Task\OpenTask;
+use App\Actions\Task\UpdateTask;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\CloseTaskDTO;
 use App\DTO\Task\CreateTaskDTO;
@@ -28,8 +29,8 @@ beforeEach(function () {
     $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
     /** @var CreateTask */
     $this->mockCreateTask = Mockery::mock(CreateTask::class);
-    // /** @var UpdateMeeting */
-    // $this->mockUpdateMeeting = Mockery::mock(UpdateMeeting::class);
+    /** @var UpdateTask */
+    $this->mockUpdateTask = Mockery::mock(UpdateTask::class);
     // /** @var DeleteMeeting */
     // $this->mockDeleteMeeting = Mockery::mock(DeleteMeeting::class);
 
@@ -41,7 +42,13 @@ beforeEach(function () {
 
     /** @var OpenTask */
     $this->mockOpenTask = Mockery::mock(OpenTask::class);
-    $this->service = new TaskService(organizationService: app(OrganizationService::class), closeTask: $this->mockCloseTask, openTask: $this->mockOpenTask, createTask: $this->mockCreateTask);
+    $this->service = new TaskService(
+        organizationService: app(OrganizationService::class),
+        closeTask: $this->mockCloseTask,
+        openTask: $this->mockOpenTask,
+        createTask: $this->mockCreateTask,
+        updateTask: $this->mockUpdateTask
+    );
 });
 
 afterEach(function () {
@@ -76,11 +83,11 @@ afterEach(function () {
 //     expect($task)->toBe($mockMeeting);
 // });
 
-// it('updates a task using UpdateMeeting action', function () {
+// it('updates a task using UpdateTask action', function () {
 //     /** @var Project */
 //     $project = Mockery::mock(Project::class);
 
-//     $dto = new UpdateMeetingDTO(
+//     $dto = new UpdateTask(
 //         $project,
 //         1,
 //         'Updated Meeting',
@@ -90,8 +97,8 @@ afterEach(function () {
 
 //     $mockMeeting = Mockery::mock(Meeting::class);
 
-//     // Expect the UpdateMeeting action to be called with these parameters
-//     $this->mockUpdateMeeting
+//     // Expect the UpdateTask action to be called with these parameters
+//     $this->mockUpdateTask
 //         ->shouldReceive('__invoke')
 //         ->once()
 //         ->with($dto)
@@ -104,12 +111,12 @@ afterEach(function () {
 //     expect($task)->toBe($mockMeeting);
 // });
 
-// it('deletes a task using UpdateMeeting action', function () {
+// it('deletes a task using UpdateTask action', function () {
 //     $project = Mockery::mock(Project::class);
 //     /** @var Meeting */
 //     $mockMeeting = Mockery::mock(Meeting::class);
 //     $dto = new DeleteMeetingDTO($mockMeeting);
-//     // Expect the UpdateMeeting action to be called with these parameters
+//     // Expect the UpdateTask action to be called with these parameters
 //     $this->mockDeleteMeeting
 //         ->shouldReceive('__invoke')
 //         ->once()

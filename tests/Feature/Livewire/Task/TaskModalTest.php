@@ -152,21 +152,23 @@ it('created a task', function () {
     expect($task->due_date->toDateString())->toBe($date->toDateString());
 });
 
-// it('updates a task', function () {
-//     $date = Carbon::now();
-//     Livewire::actingAs($this->user)
-//         ->test(TaskModal::class, [
-//             'project' => $this->project,
-//         ])
-//         ->call('load', taskId: $this->task->id)
-//         ->set('form.name', 'New Task Name 123')
-//         ->set('form.description', 'this is the new description')
-//         ->set('form.date', $date)
-//         ->call('save');
+it('updates a task', function () {
+    $date = Carbon::now();
+    Livewire::actingAs($this->user)
+        ->test(TaskModal::class, [
+            'project' => $this->project,
+        ])
+        ->call('load', taskId: $this->task->id)
+        ->set('form.name', 'New Task Name 123')
+        ->set('form.description', 'this is the new description')
+        ->set('form.priority_id', 6)
+        ->set('form.due_date', $date)
+        ->call('save');
 
-//     $this->task->refresh();
+    $this->task->refresh();
 
-//     expect($this->task->name)->toBe('New Task Name 123');
-//     expect($this->task->description)->toBe('this is the new description');
-//     expect($this->task->date->toDateString())->toBe($date->toDateString());
-// });
+    expect($this->task->name)->toBe('New Task Name 123');
+    expect($this->task->description)->toBe('this is the new description');
+    expect($this->task->priority_id)->toBe(6);
+    expect($this->task->due_date->toDateString())->toBe($date->toDateString());
+});
