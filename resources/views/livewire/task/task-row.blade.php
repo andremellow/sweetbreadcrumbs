@@ -20,7 +20,7 @@
         <div class="mt-1 block md:hidden">
             <x-priority-badge :priority="$task->priority" size="sm" iconOnly />
         </div>
-        <div class="{{ $task->is_completed ? 'line-through' : '' }} {{ $task->is_late? 'text-red-300' : '' }}">{{ $task->name }}</div>
+        <div class="{{ $task->is_completed ? 'is-completed line-through' : '' }} {{ $task->is_late? 'is-late text-red-300' : '' }}">{{ $task->name }}</div>
     </flux:table.cell>
     <flux:table.cell class="hidden md:table-cell">
         <x-priority-badge :priority="$task->priority" />

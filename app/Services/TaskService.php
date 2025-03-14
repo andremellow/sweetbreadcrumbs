@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Actions\Meeting\CreateMeeting;
-use App\Actions\Meeting\DeleteMeeting;
-use App\Actions\Meeting\UpdateMeeting;
+use App\Actions\Task\CloseTask;
+use App\Actions\Task\OpenTask;
 use App\DTO\Meeting\CreateMeetingDTO;
 use App\DTO\Meeting\DeleteMeetingDTO;
 use App\DTO\Meeting\UpdateMeetingDTO;
+use App\DTO\Task\CloseTaskDTO;
+use App\DTO\Task\OpenTaskDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Project;
@@ -18,6 +20,16 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TaskService
 {
+    /**
+     * MeetingService Construct.
+     *
+     * @param CreateMeeting $createMeeting
+     *
+     * @return MeetingService
+     */
+    public function __construct(protected CloseTask $closeTask, protected OpenTask $openTask) {}
+    // public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting, protected DeleteMeeting $deleteMeeting) {}
+
     public function list(
         Project $project,
         ?string $search = null,
@@ -66,16 +78,6 @@ class TaskService
             ->paginate(config('app.pagination_items'));
     }
 
-    public function open(User $user, int $taskId): void
-    {
-        Task::find($taskId)->update(['completed_at' => null]);
-    }
-
-    public function close(User $user, int $taskId): void
-    {
-        Task::find($taskId)->update(['completed_at' => Carbon::now()]);
-    }
-
     // public function lastMeeings(
     //     Project $project,
     //     int $take = 5
@@ -86,16 +88,6 @@ class TaskService
     //             ->take($take)
     //             ->get();
     // }
-
-    /**
-     * MeetingService Construct.
-     *
-     * @param CreateMeeting $createMeeting
-     *
-     * @return MeetingService
-     */
-    public function __construct() {}
-    // public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting, protected DeleteMeeting $deleteMeeting) {}
 
     /**
      * Creates a new meeting.
@@ -127,6 +119,36 @@ class TaskService
     //         $updateMeetingDTO
     //     );
     // }
+
+    /**
+     * Close a Task.
+     *
+     * @param CloseTaskDTO $closeTaskDTO
+     *
+     * @return Task
+     */
+    public function close(
+        CloseTaskDTO $closeTaskDTO
+    ): Task {
+        return ($this->closeTask)(
+            $closeTaskDTO
+        );
+    }
+
+    /**
+     * Open a Task.
+     *
+     * @param OpenTaskDTO $openTaskDTO
+     *
+     * @return Task
+     */
+    public function open(
+        OpenTaskDTO $openTaskDTO
+    ): Task {
+        return ($this->openTask)(
+            $openTaskDTO
+        );
+    }
 
     /**
      * Delete a new meeting.

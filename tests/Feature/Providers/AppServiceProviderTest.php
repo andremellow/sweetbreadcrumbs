@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
 });
 
-it('it binds the Logged user to UserService', function () {
+it('binds the Logged user to UserService', function () {
     actingAs($this->user);
 
     $userService = app(UserService::class);

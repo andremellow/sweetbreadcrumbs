@@ -17,7 +17,7 @@ class Task extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['completed_at'];
+    protected $fillable = ['name', 'description', 'priority_id', 'due_date', 'completed_at'];
 
     /**
      * The attributes hidden from json.
@@ -25,6 +25,13 @@ class Task extends Model
      * @var string[]
      */
     protected $hidden = ['updated_at', 'deleted_at'];
+
+        /**
+     * The attributes hidden from json.
+     *
+     * @var string[]
+     */
+    protected $appends = ['is_completed', 'is_late'];
 
     /**
      * Get the attributes that should be cast.
@@ -37,23 +44,19 @@ class Task extends Model
 
         return [
             'due_date' => "date:$format",
+            'completed_at' => "date:$format",
             'created_at' => 'date',
         ];
     }
 
-    protected function isCompleted(): Attribute
+    protected function getIsCompletedAttribute(): bool
     {
-        return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['completed_at'] !== null,
-        );
+        return $this->completed_at !== null;
     }
 
-    protected function isLate(): Attribute
+    protected function getIsLateAttribute(): bool
     {
-
-        return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['completed_at'] === null && $this->due_date->isPast(),
-        );
+        return $this->completed_at === null && $this->due_date->isPast();
     }
 
     /**
