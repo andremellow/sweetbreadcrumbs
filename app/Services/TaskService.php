@@ -47,7 +47,8 @@ class TaskService
         ?Carbon $dateStart = null,
         ?Carbon $dateEnd = null,
         ?string $sortBy = 'due_date',
-        ?SortDirection $sortDirection = SortDirection::DESC
+        ?SortDirection $sortDirection = SortDirection::DESC,
+        ?int $pageSize = null
     ): LengthAwarePaginator {
 
         if (! in_array($sortBy, ['name', 'due_date', 'priority'])) {
@@ -84,7 +85,45 @@ class TaskService
             })
             ->orderBy($sortBy, $sortDirection->value)
             ->select('tasks.*') // make sure to select projects columns
-            ->paginate(config('app.pagination_items'));
+            ->paginate($pageSize ?? config('app.pagination_items'));
+    }
+
+    public function listForCard(
+        Project $project,
+        ?int $priorityId = null,
+        ?Carbon $dateStart = null,
+        ?Carbon $dateEnd = null,
+        // ?string $sortBy = 'due_date',
+        // ?SortDirection $sortDirection = SortDirection::DESC,
+        ?int $pageSize = null
+    ): LengthAwarePaginator {
+
+        // if (! in_array($sortBy, ['name', 'due_date', 'priority'])) {
+        //     $sortBy = 'name';
+        // }
+
+        // switch ($sortBy) {
+        //     case 'priority':
+        //         $sortBy = 'priorities.order';
+        //         break;
+        // }
+
+        return $project->tasks()->with('priority')
+            ->leftJoin('priorities', 'tasks.priority_id', '=', 'priorities.id')
+            ->when($priorityId, function ($query, $priorityId) {
+                return $query->where('tasks.priority_id', '=', $priorityId);
+            })
+            ->whereNull('tasks.completed_at')
+            // ->when($dateStart, function ($query, $dateStart) {
+            //     return $query->whereDate('tasks.due_date', '>=', $dateStart);
+            // })
+            // ->when($dateEnd, function ($query, $dateEnd) {
+            //     return $query->whereDate('tasks.due_date', '<=', $dateEnd);
+            // })
+            ->orderBy('priorities.order')
+            ->orderBy('due_date')
+            ->select('tasks.*') // make sure to select projects columns
+            ->paginate($pageSize ?? config('app.pagination_items'));
     }
 
     // public function lastMeeings(
