@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Actions\Task\CloseTask;
 use App\Actions\Task\CreateTask;
 use App\Actions\Task\OpenTask;
+use App\Actions\Task\UpdateTask;
 use App\DTO\Task\CloseTaskDTO;
 use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\DeleteTaskDTO;
@@ -26,12 +27,14 @@ class TaskService
      * @param CloseTask           $closeTask
      * @param OpenTask            $openTask
      * @param CreateTask          $createTask
+     * @param UpdateTask          $updateTask
      */
     public function __construct(
         protected OrganizationService $organizationService,
         protected CloseTask $closeTask,
         protected OpenTask $openTask,
-        protected CreateTask $createTask
+        protected CreateTask $createTask,
+        protected UpdateTask $updateTask,
     ) {}
 
     public function list(
@@ -114,14 +117,13 @@ class TaskService
      *
      * @return Task
      */
-    // public function update(
-    //     User $user,
-    //     UpdateTaskDTO $updateTaskDTO
-    // ): Task {
-    //     return ($this->updateTask)(
-    //         $updateTaskDTO
-    //     );
-    // }
+    public function update(
+        UpdateTaskDTO $updateTaskDTO
+    ): Task {
+        return ($this->updateTask)(
+            $updateTaskDTO
+        );
+    }
 
     /**
      * Close a Task.

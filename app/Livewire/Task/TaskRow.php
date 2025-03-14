@@ -6,12 +6,18 @@ use App\DTO\Task\CloseTaskDTO;
 use App\DTO\Task\OpenTaskDTO;
 use App\Models\Task;
 use App\Services\TaskService;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class TaskRow extends Component
 {
     public Task $task;
 
+    #[On('task-updated.{task.id}')] 
+    public function refreshTask()
+    {
+        $this->task->refresh();
+    }
     public function open(TaskService $taskService)
     {
         $taskService->open(new OpenTaskDTO(

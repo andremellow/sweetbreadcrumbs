@@ -29,15 +29,7 @@ afterEach(function () {
     Mockery::close();
 });
 
-it('renders a open task', function () {
-    Livewire::actingAs($this->user)
-        ->test(TaskRow::class, ['task' => $this->task])
-        ->assertSee($this->task->name)
-        ->assertSee($this->task->priority->name)
-        ->assertSee($this->task->due_date->format('m/d/Y'))
-        ->assertSeeHtml('wire:click="close')
-        ->assertStatus(200);
-});
+
 
 it('renders a late task', function () {
     $this->task->update(['due_date' => Carbon::now()->addDay(-1)]);
@@ -50,6 +42,39 @@ it('renders a late task', function () {
         ->assertSee($this->task->due_date->format('m/d/Y'))
         ->assertSeeHtml('wire:click="close')
         ->assertSeeHtml('is-late text-red-300')
+        ->assertStatus(200);
+});
+
+it('refreshes task', function () {
+    $date = Carbon::now()->addDay(9);
+    $this->task->refresh();
+
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->assertSee($this->task->name)
+        ->assertSee($this->task->priority->name)
+        ->assertSee($this->task->due_date->format('m/d/Y'))
+        ->tap(function() use ($date) {
+            $this->task->update([
+                'name' => 'new name',
+                'description' => '',
+                'priority_id' => 6,
+                'due_date' => $date,
+            ]);
+        })
+        ->dispatch("task-updated.{$this->task->id}")
+        ->assertSee('new name')
+        ->assertSee($date->format('m/d/Y'))
+        ->assertStatus(200);
+});
+
+it('renders a open task', function () {
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->assertSee($this->task->name)
+        ->assertSee($this->task->priority->name)
+        ->assertSee($this->task->due_date->format('m/d/Y'))
+        ->assertSeeHtml('wire:click="close')
         ->assertStatus(200);
 });
 
