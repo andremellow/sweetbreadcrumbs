@@ -56,7 +56,7 @@ class Task extends Model
 
     protected function getIsLateAttribute(): bool
     {
-        return $this->completed_at === null && $this->due_date->isPast();
+        return $this->completed_at === null && $this->due_date && $this->due_date->isPast();
     }
 
     /**

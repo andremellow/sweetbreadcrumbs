@@ -2,16 +2,15 @@
 
 namespace App\Services;
 
-use App\Actions\Meeting\CreateMeeting;
 use App\Actions\Task\CloseTask;
+use App\Actions\Task\CreateTask;
 use App\Actions\Task\OpenTask;
-use App\DTO\Meeting\CreateMeetingDTO;
-use App\DTO\Meeting\DeleteMeetingDTO;
-use App\DTO\Meeting\UpdateMeetingDTO;
+use App\DTO\Task\DeleteTaskDTO;
+use App\DTO\Task\UpdateTaskDTO;
 use App\DTO\Task\CloseTaskDTO;
+use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\OpenTaskDTO;
 use App\Enums\SortDirection;
-use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -21,15 +20,20 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class TaskService
 {
     /**
-     * MeetingService Construct.
+     * Task Service
      *
-     * @param CreateMeeting $createMeeting
-     *
-     * @return MeetingService
+     * @param OrganizationService $organizationService
+     * @param CloseTask $closeTask
+     * @param OpenTask $openTask
+     * @param CreateTask $createTask
      */
-    public function __construct(protected CloseTask $closeTask, protected OpenTask $openTask) {}
-    // public function __construct(protected CreateMeeting $createMeeting, protected UpdateMeeting $updateMeeting, protected DeleteMeeting $deleteMeeting) {}
-
+    public function __construct(
+            protected OrganizationService $organizationService, 
+            protected CloseTask $closeTask, 
+            protected OpenTask $openTask, 
+            protected CreateTask $createTask
+        ) {}
+        
     public function list(
         Project $project,
         ?string $search = null,
@@ -83,40 +87,39 @@ class TaskService
     //     int $take = 5
     // ) {
 
-    //     return $project->meetings()
+    //     return $project->tasks()
     //             ->orderBy('date', SortDirection::DESC->value)
     //             ->take($take)
     //             ->get();
     // }
 
     /**
-     * Creates a new meeting.
+     * Creates a new task.
      *
      * @param User             $user,
-     * @param CreateMeetingDTO $createMeetingDTO,
+     * @param CreateTaskDTO $createTaskDTO,
      *
-     * @return Meeting
+     * @return Task
      */
-    // public function create(
-    //     User $user,
-    //     CreateMeetingDTO $createMeetingDTO
-    // ): Meeting {
-    //     return ($this->createMeeting)($createMeetingDTO);
-    // }
+    public function create(
+        CreateTaskDTO $createTaskDTO
+    ): Task {
+        return ($this->createTask)($createTaskDTO);
+    }
 
     /**
-     * Update an existing meeting.
+     * Update an existing task.
      *
-     * @param UpdateMeetingDTO $updateMeetingDTO
+     * @param UpdateTaskDTO $updateTaskDTO
      *
-     * @return Meeting
+     * @return Task
      */
     // public function update(
     //     User $user,
-    //     UpdateMeetingDTO $updateMeetingDTO
-    // ): Meeting {
-    //     return ($this->updateMeeting)(
-    //         $updateMeetingDTO
+    //     UpdateTaskDTO $updateTaskDTO
+    // ): Task {
+    //     return ($this->updateTask)(
+    //         $updateTaskDTO
     //     );
     // }
 
@@ -151,17 +154,17 @@ class TaskService
     }
 
     /**
-     * Delete a new meeting.
+     * Delete a new task.
      *
      * @param User             $user,
-     * @param DeleteMeetingDTO $deleteMeetingDTO,
+     * @param DeleteTaskDTO $deleteTaskDTO,
      *
      * @return void
      */
     // public function delete(
     //     User $user,
-    //     DeleteMeetingDTO $deleteMeetingDTO
+    //     DeleteTaskDTO $deleteTaskDTO
     // ): void {
-    //     ($this->deleteMeeting)($deleteMeetingDTO);
+    //     ($this->deleteTask)($deleteTaskDTO);
     // }
 }

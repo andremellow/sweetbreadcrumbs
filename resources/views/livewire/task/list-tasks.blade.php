@@ -1,9 +1,9 @@
 <section class="w-full">
-    <x-tasks.heading >
-        <flux:modal.trigger name="taslk-form-modal">
+    <x-heading heading="{{  __('Tasks') }}" subheading="{{ __('Turning To-Dos into Dones—One Task at a Time!') }}" >
+        <flux:modal.trigger name="task-form-modal">
             <flux:button>{{ __('Create task') }}</flux:button>
         </flux:modal.trigger>
-    </x-tasks.heading>
+    </x-heading>
     <x-projects.layout :$project >
         <x-form.filter-form wire:submit="applyFilter" :isFiltred="$this->isFiltred"  >
             <x-form.filter-column span="2">
@@ -34,5 +34,5 @@
             <x-table-no-data />
         @endif
     </x-projects.layout>
-    
+    <livewire:task.task-modal :$project />
 </section>
