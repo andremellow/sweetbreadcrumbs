@@ -43,7 +43,7 @@ class Task extends Model
         $format = config('app.save_date_format');
 
         return [
-            'priority_id' => "integer",
+            'priority_id' => 'integer',
             'due_date' => "date:$format",
             'completed_at' => "date:$format",
             'created_at' => 'date',

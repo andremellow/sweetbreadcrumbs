@@ -4,8 +4,8 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\ConfigEnum;
 use App\Livewire\Task\TaskModal;
-use App\Models\Task;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use App\Services\ConfigService;
 use App\Services\OrganizationService;
@@ -24,7 +24,6 @@ beforeEach(function () {
         );
     });
 
-
     $this->configService = app(ConfigService::class);
 
     // Create test projects
@@ -32,7 +31,6 @@ beforeEach(function () {
     $this->task = Task::factory()->for($this->project, 'taskable')->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
-
 
 });
 

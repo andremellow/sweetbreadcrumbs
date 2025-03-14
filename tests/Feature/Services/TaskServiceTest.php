@@ -153,10 +153,10 @@ it('closes a task using Close action', function () {
 
 it('creates a task using Create action', function () {
     $dto = new CreateTaskDTO(
-            user: $this->user, 
-            project: $this->project,
-            name: 'My task',
-            priority_id: 6
+        user: $this->user,
+        project: $this->project,
+        name: 'My task',
+        priority_id: 6
     );
 
     // Expect the Close action to be called with these parameters

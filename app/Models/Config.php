@@ -13,7 +13,7 @@ class Config extends Model
      * @var string[]
      */
     protected $fillable = ['config_default_id', 'organization_id', 'value'];
-    
+
     public function casts()
     {
         return [

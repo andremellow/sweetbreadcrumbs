@@ -5,7 +5,6 @@ use App\Actions\Task\CreateTask;
 use App\Actions\Task\OpenTask;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\CreateTaskDTO;
-use App\DTO\Task\OpenTaskDTO;
 use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\Task;
@@ -41,7 +40,6 @@ it('Create a meeting with required fields only', function () {
     expect($task->due_date)->toBeNull();
     expect($task->completed_at)->toBeNull();
 });
-
 
 it('Create a meeting', function () {
     // Call OpenTask action

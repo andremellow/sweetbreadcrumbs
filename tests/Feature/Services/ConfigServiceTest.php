@@ -3,11 +3,7 @@
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\ConfigEnum;
-use App\Enums\PriorityEnum;
 use App\Models\Config;
-use App\Models\ConfigDefault;
-use App\Models\Organization;
-use App\Models\Project;
 use App\Models\User;
 use App\Services\ConfigService;
 use App\Services\OrganizationService;
@@ -33,17 +29,17 @@ afterEach(function () {
 });
 
 it('gets default value if organization does have it set', function () {
-    expect(intval($this->configService->get(ConfigEnum::PAGINATION_ITEMS)))->toBe(15); //Default value
+    expect(intval($this->configService->get(ConfigEnum::PAGINATION_ITEMS)))->toBe(15); // Default value
 });
 
 it('gets organization value if set', function () {
     Config::create([
         'organization_id' => $this->organization->id,
         'config_default_id' => ConfigEnum::PAGINATION_ITEMS,
-        'value' => 10
+        'value' => 10,
     ]);
 
-    expect(intval($this->configService->get(ConfigEnum::PAGINATION_ITEMS)))->toBe(10); //Default value
+    expect(intval($this->configService->get(ConfigEnum::PAGINATION_ITEMS)))->toBe(10); // Default value
 });
 
 it('call getTaskDefaultPriorityId for TASK_DEFAULT_PRIORITY_ID when company config is not set', function () {
@@ -55,10 +51,10 @@ it('call getTaskDefaultPriorityId for TASK_DEFAULT_PRIORITY_ID when company conf
         ->once()
         ->with($config->default);
 
-        $this->mockConfigService->valueOrDefault( 
-            ConfigEnum::TASK_DEFAULT_PRIORITY_ID,
-            $config
-        );
+    $this->mockConfigService->valueOrDefault(
+        ConfigEnum::TASK_DEFAULT_PRIORITY_ID,
+        $config
+    );
 });
 
 it('get first priority if default value is invalid', function () {
