@@ -1,0 +1,52 @@
+<?php
+
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
+use App\Models\Project;
+use App\Models\Task;
+use App\Models\User;
+use Carbon\Carbon;
+
+beforeEach(function () {
+    // Create user and organization
+    $this->user = User::factory()->create();
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+
+    // Create project and meeting
+    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
+   
+});
+
+it('has isCompleted attribute working as expected', function () {
+    $this->task = Task::factory()->for($this->project)->create([
+        'name' => 'Initial Meeting',
+        'description' => 'Initial Description',
+        'priority_id' => 6,
+    ]);
+
+    expect($this->task->is_completed)->toBe(false);
+    $this->task->update(['completed_at' => Carbon::now()]);
+    $this->task->refresh();
+    expect($this->task->is_completed)->toBe(true);
+});
+
+it('has isLate attribute working as expected', function () {
+    $this->task = Task::factory()->for($this->project)->create([
+        'name' => 'Initial Meeting',
+        'description' => 'Initial Description',
+        'priority_id' => 6,
+        'due_date' => Carbon::now()->addDay(1)
+    ]);
+
+    expect($this->task->is_late)->toBe(false);
+
+    //Make it late
+    $this->task->update(['due_date' => Carbon::now()->addDay(-1)]);
+    $this->task->refresh();
+    expect($this->task->is_late)->toBe(true);
+
+    //Make it completed. Completed task are not late
+    $this->task->update(['completed_at' => Carbon::now()->addDay(-1)]);
+    $this->task->refresh();
+    expect($this->task->is_late)->toBe(false);
+});

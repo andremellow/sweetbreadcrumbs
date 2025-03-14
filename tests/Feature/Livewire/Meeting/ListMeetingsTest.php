@@ -60,7 +60,7 @@ it('resets the filter values when resetForm is called', function () {
         ->set('search', 'Filtered Project')
         // ->set('dateRange', new DateRange(now()->subMonth(), now()))
         ->call('resetForm')
-        ->assertSet('name', null)
+        ->assertSet('search', null)
         ->assertSet('dateRange', null);
 });
 

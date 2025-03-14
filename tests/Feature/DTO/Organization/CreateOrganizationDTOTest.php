@@ -5,11 +5,11 @@ use Illuminate\Validation\ValidationException;
 
 covers(CreateOrganizationDTO::class);
 
-it('it validates required fields', function () {
+it('validates required fields', function () {
     CreateOrganizationDTO::from(['name' => '']);
 })->throws(ValidationException::class, 'The name field is required.');
 
-it('it validates the rules', function () {
+it('validates the rules', function () {
     expect(CreateOrganizationDTO::rules())->toBe([
         'name' => ['required', 'string', 'min:2', 'max:50'],
     ]);

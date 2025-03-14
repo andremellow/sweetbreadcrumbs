@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Livewire\Task;
+
+use App\DTO\Task\CloseTaskDTO;
+use App\DTO\Task\OpenTaskDTO;
+use App\Models\Task;
+use App\Services\TaskService;
+use Livewire\Component;
+
+class TaskRow extends Component
+{
+    public Task $task;
+
+    public function open(TaskService $taskService)
+    {
+        $taskService->open(new OpenTaskDTO(
+            user: auth()->user(),
+            task_id: $this->task->id
+        ));
+
+        $this->task->refresh();
+
+        $this->dispatch('task-opened', taskId: $this->task->id);
+    }
+
+    public function close(TaskService $taskService)
+    {
+        $taskService->close(new CloseTaskDTO(
+            user: auth()->user(),
+            task_id: $this->task->id
+        ));
+
+        $this->task->refresh();
+
+        $this->dispatch('task-closed', taskId: $this->task->id);
+    }
+
+    public function render()
+    {
+        return view('livewire.task.task-row');
+    }
+}

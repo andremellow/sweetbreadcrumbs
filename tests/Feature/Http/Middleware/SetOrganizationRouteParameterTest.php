@@ -26,7 +26,7 @@ afterEach(function () {
     Mockery::close();
 });
 
-it('It sets URL and VIEW default when organization is present as string', function () {
+it('sets URL and VIEW default when organization is present as string', function () {
     actingAs($this->user);
     $request = Request::create(route('projects.index', ['organization' => $this->anotherOrganization->slug]));
 
@@ -61,7 +61,7 @@ it('It sets URL and VIEW default when organization is present as string', functi
 
 });
 
-it('It sets URL and VIEW default when organization is present as Model', function () {
+it('sets URL and VIEW default when organization is present as Model', function () {
     actingAs($this->user);
     $request = Request::create(route('projects.index', ['organization' => $this->anotherOrganization->slug]));
 
@@ -96,7 +96,7 @@ it('It sets URL and VIEW default when organization is present as Model', functio
 
 });
 
-it('It sets URL and VIEW default when organization is NOT present', function () {
+it('sets URL and VIEW default when organization is NOT present', function () {
     actingAs($this->user);
     $request = Request::create(route('settings.profile'));
 

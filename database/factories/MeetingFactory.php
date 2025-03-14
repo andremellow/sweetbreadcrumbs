@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,7 @@ class MeetingFactory extends Factory
         return [
             'name' => fake()->company(),
             'description' => fake()->text(),
-            'date' => fake()->date(),
+            'date' => Carbon::now()->addDays(rand(-1, -30)),
         ];
     }
 }

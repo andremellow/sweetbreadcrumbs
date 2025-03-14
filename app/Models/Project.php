@@ -85,13 +85,23 @@ class Project extends Model
     // }
 
     /**
-     * Project blockers.
+     * Project Meetings.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
     public function meetings()
     {
         return $this->hasMany(Meeting::class);
+    }
+
+    /**
+     * Project's Tasks.
+     *
+     * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 
     // /**

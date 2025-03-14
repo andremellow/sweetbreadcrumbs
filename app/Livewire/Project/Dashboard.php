@@ -4,7 +4,6 @@ namespace App\Livewire\Project;
 
 use App\Models\Project;
 use App\Services\MeetingService;
-use App\Services\OrganizationService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -16,7 +15,7 @@ class Dashboard extends Component
     public function render(MeetingService $meetingService)
     {
         return view('livewire.project.dashboard', [
-            'meetings' => $meetingService->lastMeeings($this->project, 5)
+            'meetings' => $meetingService->lastMeeings($this->project, 5),
         ]);
     }
 }
