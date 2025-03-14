@@ -29,7 +29,7 @@ it('slugs are unique', function () {
     expect($this->organization->slug)->toBe('new-organization-name-2');
 });
 
-it('it attaches the user', function () {
+it('attaches the user', function () {
     expect($this->organization->users()->first()->id)->toBe($this->user->id);
 });
 

@@ -22,6 +22,13 @@ beforeEach(function () {
     $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
+
+    app()->bind(OrganizationService::class, function () {
+        return new OrganizationService(
+            app(CreateOrganization::class),
+            $this->organization
+        );
+    });
 });
 
 afterEach(function () {
@@ -43,7 +50,7 @@ it('renders the ProjectModal component successfully', function () {
         ->assertSeeHtml('Save');
 });
 
-it('it loads a project', function () {
+it('loads a project', function () {
     Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
             'organization' => $this->organization,
@@ -54,7 +61,7 @@ it('it loads a project', function () {
         ->assertSet('showProjectFormModal', true);
 });
 
-it('it resets the form if a project id null is given', function () {
+it('resets the form if a project id null is given', function () {
     Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
             'organization' => $this->organization,
@@ -66,7 +73,7 @@ it('it resets the form if a project id null is given', function () {
         ->assertSet('form.name', '');
 });
 
-it('it is listeing for load-project-form-modal event', function () {
+it('is listeing for load-project-form-modal event', function () {
     $projectModal = Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
             'organization' => $this->organization,
@@ -80,7 +87,7 @@ it('it is listeing for load-project-form-modal event', function () {
         ->assertSet('showProjectFormModal', true);
 });
 
-it('it resets form when modal is closed', function () {
+it('resets form when modal is closed', function () {
     Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
             'organization' => $this->organization,
@@ -94,7 +101,7 @@ it('it resets form when modal is closed', function () {
         ->assertSet('form.priority_id', null);
 });
 
-it('it validates', function () {
+it('validates', function () {
 
     Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
@@ -126,7 +133,7 @@ it('created a project', function () {
     expect($project->priority_id)->toBe($this->priorities[0]);
 });
 
-it('it updates a project', function () {
+it('updates a project', function () {
     Livewire::actingAs($this->user)
         ->test(ProjectModal::class, [
             'organization' => $this->organization,

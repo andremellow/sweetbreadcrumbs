@@ -22,7 +22,7 @@ afterEach(function () {
     Mockery::close();
 });
 
-it('it sets and get an organization', function () {
+it('sets and get an organization', function () {
     expect($this->organizationService->getOrganization())->toBeNull();
 
     $organization = Organization::factory()->create();
@@ -32,7 +32,7 @@ it('it sets and get an organization', function () {
 
 });
 
-it('it calls CreateOrganization when creating an new organization', function () {
+it('calls CreateOrganization when creating an new organization', function () {
     $mockOrganization = Mockery::mock(Organization::class);
     $createOrganizationDTO = new CreateOrganizationDTO('My new organization');
 
@@ -50,7 +50,7 @@ it('it calls CreateOrganization when creating an new organization', function () 
     expect($organization)->toBe($mockOrganization);
 });
 
-it('it returns only organization proirity dropdown data', function () {
+it('returns only organization proirity dropdown data', function () {
     $this->organizationService = app(OrganizationService::class);
     $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 1'));
     $organization = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 2'));
@@ -68,7 +68,7 @@ it('it returns only organization proirity dropdown data', function () {
     expect($priorities[15])->toBe('Lowest');
 });
 
-it('it returns only organization release dropdown data', function () {
+it('returns only organization release dropdown data', function () {
     $this->organizationService = app(OrganizationService::class);
     $organization1 = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 1'));
     $organization2 = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 2'));

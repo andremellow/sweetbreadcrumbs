@@ -206,7 +206,7 @@ describe('list meetings', function () {
         expect($meetings[0]->name)->toBe('Stand up 3');
     });
 
-    it('it paginates', function () {
+    it('paginates', function () {
         Config::set('app.pagination_items', 2);
         Request::merge(['page' => 5]);
 

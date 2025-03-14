@@ -4,6 +4,7 @@
         <flux:navlist>
             <flux:navlist.item :href="route('projects.dashboard', [ 'organization' => $currentOrganizationSlug, 'project' => $project->id ])" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
             <flux:navlist.item :href="route('projects.meetings.index', [ 'organization' => $currentOrganizationSlug, 'project' => $project->id ])" wire:navigate>{{ __('Meetings') }}</flux:navlist.item>
+            <flux:navlist.item :href="route('projects.tasks.index', [ 'organization' => $currentOrganizationSlug, 'project' => $project->id ])" wire:navigate>{{ __('Tasks') }}</flux:navlist.item>
         </flux:navlist>
     </div>
 

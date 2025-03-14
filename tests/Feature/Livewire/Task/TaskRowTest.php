@@ -1,0 +1,94 @@
+<?php
+
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
+use App\Livewire\Task\TaskRow;
+use App\Models\Project;
+use App\Models\Task;
+use App\Models\User;
+use App\Services\TaskService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
+use Livewire\Livewire;
+
+beforeEach(function () {
+    // Create test user and organization
+    $this->user = User::factory()->create();
+    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+
+    // Create test projects
+    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->task = Task::factory()->for($this->project, 'taskable')->withPriority($this->organization)->create();
+
+    URL::defaults(['organization' => $this->organization->slug]);
+    View::share('currentOrganizationSlug', $this->organization->slug);
+});
+
+afterEach(function () {
+    Mockery::close();
+});
+
+it('renders a open task', function () {
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->assertSee($this->task->name)
+        ->assertSee($this->task->priority->name)
+        ->assertSee($this->task->due_date->format('m/d/Y'))
+        ->assertSeeHtml('wire:click="close')
+        ->assertStatus(200);
+});
+
+it('renders a late task', function () {
+    $this->task->update(['due_date' => Carbon::now()->addDay(-1)]);
+    $this->task->refresh();
+
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->assertSee($this->task->name)
+        ->assertSee($this->task->priority->name)
+        ->assertSee($this->task->due_date->format('m/d/Y'))
+        ->assertSeeHtml('wire:click="close')
+        ->assertSeeHtml('is-late text-red-300')
+        ->assertStatus(200);
+});
+
+it('renders a closed task', function () {
+    $this->task->update(['completed_at' => Carbon::now()->addDay(-1)]);
+    $this->task->refresh();
+
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->assertSee($this->task->name)
+        ->assertSee($this->task->priority->name)
+        ->assertSee($this->task->due_date->format('m/d/Y'))
+        ->assertSeeHtml('wire:click="open')
+        ->assertSeeHtml('is-completed line-through')
+        ->assertStatus(200);
+});
+
+it('opens a task successfully and dispatches event', function () {
+    $this->task->update(['completed_at' => Carbon::now()]);
+    $this->task->refresh();
+    expect($this->task->completed_at->toDateString())->toBe(Carbon::now()->toDateString());
+
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->call('open', app(TaskService::class), $this->task->id)
+        ->assertDispatched('task-opened', taskId: $this->task->id);
+
+    $this->task->refresh();
+
+    expect($this->task->completed_at)->toBeNull();
+});
+
+it('closes a task successfully and dispatches event', function () {
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->call('close', app(TaskService::class), $this->task->id)
+        ->assertDispatched('task-closed', taskId: $this->task->id);
+
+    $this->task->refresh();
+
+    expect($this->task->completed_at->toDateString())->toBe(Carbon::now()->toDateString());
+});

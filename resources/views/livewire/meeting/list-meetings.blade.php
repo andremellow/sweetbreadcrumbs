@@ -1,9 +1,9 @@
 <section class="w-full">
-    <x-meetings.heading >
+    <x-heading heading="{{ __('Meetings') }}" subheading="{!! __('You don\'t need to remember everything.')  !!}" >
         <flux:modal.trigger name="meeting-form-modal">
             <flux:button>{{ __('Create meeting') }}</flux:button>
         </flux:modal.trigger>
-    </x-meetings.heading>
+    </x-heading>
     <x-projects.layout :$project >
         <x-form.filter-form wire:submit="applyFilter" :isFiltred="$this->isFiltred"  >
             <x-form.filter-column span="3">

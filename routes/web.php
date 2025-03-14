@@ -4,6 +4,7 @@ use App\Http\Middleware\SetOrganizationRouteParameter;
 use App\Livewire\Meeting\ListMeetings;
 use App\Livewire\Project\Dashboard as ProjectDashboard;
 use App\Livewire\Project\ListProjects;
+use App\Livewire\Task\ListTasks;
 use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 use Livewire\Livewire;
@@ -26,6 +27,7 @@ Route::middleware([
         Route::get('/projects', ListProjects::class)->name('projects.index');
         Route::get('/projects/{project}/dashboard', ProjectDashboard::class)->name('projects.dashboard');
         Route::get('/projects/{project}/meetings', ListMeetings::class)->name('projects.meetings.index');
+        Route::get('/projects/{project}/tasks', ListTasks::class)->name('projects.tasks.index');
 
         Route::view('dashboard', 'dashboard')->name('dashboard');
 

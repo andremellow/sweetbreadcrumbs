@@ -26,7 +26,7 @@ it('renders the Profile component successfully', function () {
         ->assertSet('email', $this->user->email);
 });
 
-it('it validates', function () {
+it('validates', function () {
 
     Livewire::actingAs($this->user)
         ->test(Profile::class)
@@ -38,7 +38,7 @@ it('it validates', function () {
         ]);
 });
 
-it('it updates', function () {
+it('updates', function () {
     $email = $this->user->email;
     Livewire::actingAs($this->user)
         ->test(Profile::class)
