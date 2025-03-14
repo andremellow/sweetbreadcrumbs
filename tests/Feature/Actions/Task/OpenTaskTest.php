@@ -1,9 +1,7 @@
 <?php
 
-use App\Actions\Meeting\UpdateMeeting;
 use App\Actions\Organization\CreateOrganization;
 use App\Actions\Task\OpenTask;
-use App\DTO\Meeting\UpdateMeetingDTO;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\OpenTaskDTO;
 use App\Models\Meeting;
@@ -19,7 +17,7 @@ beforeEach(function () {
 
     // Create project and meeting
     $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->task = Task::factory()->for($this->project)->create([
+    $this->task = Task::factory()->for($this->project, 'taskable')->create([
         'name' => 'Initial Meeting',
         'description' => 'Initial Description',
         'priority_id' => 6,
@@ -42,7 +40,6 @@ it('Open a meeting ', function () {
     // Assertions
     expect($updatedTask)->toBeInstanceOf(Task::class);
     expect($updatedTask->id)->toBe($this->task->id);
-    expect($updatedTask->project_id)->toBe($this->project->id);
+    expect($updatedTask->taskable->id)->toBe($this->project->id);
     expect($updatedTask->completed_at)->toBeNull();
-
 });

@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Actions\Organization\CreateOrganization;
 use App\Models\Organization;
+use App\Models\User;
 use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Console\Application;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,7 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**

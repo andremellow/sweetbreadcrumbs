@@ -6,7 +6,7 @@
             <flux:input wire:model="name" :label="__('Name')" type="text" />
         </x-form.filter-column>
         <x-form.filter-column span="2">
-            <livewire:priority-dropdown wire:model.live="priorityId" :$organization/>
+            <livewire:priority-dropdown wire:model.live="priorityId"/>
         </x-form.filter-column>
         <x-form.filter-column span="1" class="hidden sm:flex" />
     </x-form.filter-form>

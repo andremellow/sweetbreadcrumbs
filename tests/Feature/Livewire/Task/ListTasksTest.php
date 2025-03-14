@@ -4,13 +4,11 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\SortDirection;
 use App\Livewire\Task\ListTasks;
-use App\Livewire\Task\TaskRow;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\MeetingService;
-use App\Services\TaskService;
-use Carbon\Carbon;
+use App\Services\OrganizationService;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -22,10 +20,17 @@ beforeEach(function () {
 
     // Create test projects
     $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->tasks = Task::factory(3)->for($this->project)->withPriority($this->organization)->create();
+    $this->tasks = Task::factory(3)->for($this->project, 'taskable')->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
     View::share('currentOrganizationSlug', $this->organization->slug);
+
+    app()->bind(OrganizationService::class, function () {
+        return new OrganizationService(
+            app(CreateOrganization::class),
+            $this->organization
+        );
+    });
 });
 
 afterEach(function () {
@@ -56,9 +61,9 @@ it('filters tasks by name', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['project' => $this->project, 'organization' => $this->organization])
         ->set('search', $this->tasks[1]->name)
-        ->assertViewHas('tasks', function ($tasks) { 
+        ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 1 && $tasks[0]->name === $this->tasks[1]->name;
-         });
+        });
 });
 
 it('resets the filter values when resetForm is called', function () {
@@ -107,12 +112,11 @@ it('toggles isLate filter', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['project' => $this->project, 'organization' => $this->organization])
         ->assertSet('onlyLates', false)
-        ->call('toggleLate') 
+        ->call('toggleLate')
         ->assertSet('onlyLates', true)
-        ->call('toggleLate') 
+        ->call('toggleLate')
         ->assertSet('onlyLates', false);
 });
-
 
 // it('deletes a meeting successfully and dispatches event', function () {
 //     $meetingToDelete = $this->tasks->first();
@@ -132,7 +136,7 @@ it('applyFilter reload with right data', function () {
         ->test(ListTasks::class, ['project' => $this->project, 'organization' => $this->organization])
         ->set('search', $this->tasks[1]->name)
         ->call('applyFilter')
-        ->assertViewHas('tasks', function ($tasks) { 
+        ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 1 && $tasks[0]->name === $this->tasks[1]->name;
-         });
+        });
 });

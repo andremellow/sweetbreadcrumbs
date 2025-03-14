@@ -7,6 +7,7 @@ use App\Livewire\Project\ListProjects;
 use App\Models\Organization;
 use App\Models\Project;
 use App\Models\User;
+use App\Services\OrganizationService;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
@@ -20,6 +21,13 @@ beforeEach(function () {
     $this->projects = Project::factory(3)->for($this->organization)->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
+
+    app()->bind(OrganizationService::class, function () {
+        return new OrganizationService(
+            app(CreateOrganization::class),
+            $this->organization
+        );
+    });
 });
 
 afterEach(function () {

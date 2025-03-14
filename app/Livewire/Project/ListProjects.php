@@ -4,7 +4,6 @@ namespace App\Livewire\Project;
 
 use App\DTO\Project\DeleteProjectDTO;
 use App\Livewire\Traits\WithSorting;
-use App\Models\Organization;
 use App\Models\Project;
 use App\Services\OrganizationService;
 use App\Services\ProjectService;
@@ -25,8 +24,6 @@ class ListProjects extends Component
     public ?int $priorityId = null;
 
     public bool $isFiltred = false;
-
-    public Organization $organization;
 
     public function applyFilter() {}
 
@@ -63,10 +60,6 @@ class ListProjects extends Component
 
     public function render(OrganizationService $organizationService, ProjectService $projectService)
     {
-        if ($organizationService->getOrganization() === null && isset($this->organization)) {
-            $organizationService->setOrganization($this->organization);
-        }
-
         $this->isFiltred = ! empty($this->name) || ! empty($this->priorityId);
 
         return view('livewire.project.list-projects', [

@@ -97,11 +97,11 @@ class Project extends Model
     /**
      * Project's Tasks.
      *
-     * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
+     * @return MorphMany
      */
-    public function tasks()
+    public function tasks(): MorphMany
     {
-        return $this->hasMany(Task::class);
+        return $this->morphMany(Task::class, 'taskable');
     }
 
     // /**
