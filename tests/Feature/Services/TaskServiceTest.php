@@ -3,14 +3,16 @@
 use App\Actions\Organization\CreateOrganization;
 use App\Actions\Task\CloseTask;
 use App\Actions\Task\CreateTask;
+use App\Actions\Task\DeleteTask;
 use App\Actions\Task\OpenTask;
 use App\Actions\Task\UpdateTask;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\CloseTaskDTO;
 use App\DTO\Task\CreateTaskDTO;
+use App\DTO\Task\DeleteTaskDTO;
 use App\DTO\Task\OpenTaskDTO;
+use App\DTO\Task\UpdateTaskDTO;
 use App\Enums\SortDirection;
-use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -31,8 +33,9 @@ beforeEach(function () {
     $this->mockCreateTask = Mockery::mock(CreateTask::class);
     /** @var UpdateTask */
     $this->mockUpdateTask = Mockery::mock(UpdateTask::class);
-    // /** @var DeleteMeeting */
-    // $this->mockDeleteMeeting = Mockery::mock(DeleteMeeting::class);
+
+    /** @var DeleteTask */
+    $this->mockDeleteTask = Mockery::mock(DeleteTask::class);
 
     /** @var CloseTask */
     $this->mockCloseTask = Mockery::mock(CloseTask::class);
@@ -47,88 +50,14 @@ beforeEach(function () {
         closeTask: $this->mockCloseTask,
         openTask: $this->mockOpenTask,
         createTask: $this->mockCreateTask,
-        updateTask: $this->mockUpdateTask
+        updateTask: $this->mockUpdateTask,
+        deleteTask: $this->mockDeleteTask,
     );
 });
 
 afterEach(function () {
     Mockery::close();
 });
-
-// it('creates a task using CreateTask action', function () {
-//     /** @var Project $project */
-//     $project = Mockery::mock(Project::class);
-//     $name = 'Team Sync';
-//     $description = 'Weekly team task';
-//     $date = '2024-03-01 10:00:00';
-//     $carbonDate = Carbon::parse($date);
-
-//     $mockMeeting = Mockery::mock(Meeting::class);
-
-//     // Expect the CreateTask action to be called with these parameters
-//     $this->mockCreateTask
-//         ->shouldReceive('__invoke')
-//         ->once()
-//         ->with(CreateTaskDTO::class)
-//         ->andReturn($mockMeeting);
-
-//     // Call the method
-//     $task = $this->service->create(
-//         $this->user,
-//         new CreateTaskDTO(
-//             $project, $name, $description, $carbonDate
-//         )
-//     );
-
-//     expect($task)->toBe($mockMeeting);
-// });
-
-// it('updates a task using UpdateTask action', function () {
-//     /** @var Project */
-//     $project = Mockery::mock(Project::class);
-
-//     $dto = new UpdateTask(
-//         $project,
-//         1,
-//         'Updated Meeting',
-//         'Updated description',
-//         Carbon::now()
-//     );
-
-//     $mockMeeting = Mockery::mock(Meeting::class);
-
-//     // Expect the UpdateTask action to be called with these parameters
-//     $this->mockUpdateTask
-//         ->shouldReceive('__invoke')
-//         ->once()
-//         ->with($dto)
-
-//         ->andReturn($mockMeeting);
-
-//     // Call the method
-//     $task = $this->service->update($this->user, $dto);
-
-//     expect($task)->toBe($mockMeeting);
-// });
-
-// it('deletes a task using UpdateTask action', function () {
-//     $project = Mockery::mock(Project::class);
-//     /** @var Meeting */
-//     $mockMeeting = Mockery::mock(Meeting::class);
-//     $dto = new DeleteMeetingDTO($mockMeeting);
-//     // Expect the UpdateTask action to be called with these parameters
-//     $this->mockDeleteMeeting
-//         ->shouldReceive('__invoke')
-//         ->once()
-//         ->with($dto);
-
-//     // Call the method
-//     $this->service->delete(
-//         $this->user,
-//         $dto
-//     );
-
-// });
 
 it('opens a task using OpenTask action', function () {
     $dto = new OpenTaskDTO(user: $this->user, task_id: 10);
@@ -161,7 +90,7 @@ it('closes a task using Close action', function () {
 it('creates a task using Create action', function () {
     $dto = new CreateTaskDTO(
         user: $this->user,
-        project: $this->project,
+        taskable: $this->project,
         name: 'My task',
         priority_id: 6
     );
@@ -174,6 +103,46 @@ it('creates a task using Create action', function () {
 
     // Call the method
     $this->service->create(
+        $dto
+    );
+});
+
+it('updates a task using UpdateTask action', function () {
+    $task = Task::factory()->for($this->project, 'taskable')->create(['priority_id' => 6]);
+    $dto = new UpdateTaskDTO(
+        user: $this->user,
+        task_id: $task->id,
+        name: 'My task',
+        priority_id: 6
+    );
+
+    // Expect the Close action to be called with these parameters
+    $this->mockUpdateTask
+        ->shouldReceive('__invoke')
+        ->once()
+        ->with($dto);
+
+    // Call the method
+    $this->service->update(
+        $dto
+    );
+});
+
+it('deletes a task using DeleteTask action', function () {
+    $task = Task::factory()->for($this->project, 'taskable')->create(['priority_id' => 6]);
+    $dto = new DeleteTaskDTO(
+        user: $this->user,
+        task_id: $task->id,
+    );
+
+    // Expect the Close action to be called with these parameters
+    $this->mockDeleteTask
+        ->shouldReceive('__invoke')
+        ->once()
+        ->with($dto);
+
+    // Call the method
+    $this->service->delete(
         $dto
     );
 });

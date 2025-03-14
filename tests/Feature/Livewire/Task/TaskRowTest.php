@@ -29,8 +29,6 @@ afterEach(function () {
     Mockery::close();
 });
 
-
-
 it('renders a late task', function () {
     $this->task->update(['due_date' => Carbon::now()->addDay(-1)]);
     $this->task->refresh();
@@ -116,4 +114,17 @@ it('closes a task successfully and dispatches event', function () {
     $this->task->refresh();
 
     expect($this->task->completed_at->toDateString())->toBe(Carbon::now()->toDateString());
+});
+
+
+it('deletes a task successfully and dispatches event', function () {
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->call('delete', app(TaskService::class), $this->task->id)
+        ->assertDispatched('task-deleted', taskId: $this->task->id)
+        ->assertDispatched('task-deleted.'.$this->task->id);
+
+    $this->task->refresh();
+
+    expect($this->task->deleted_at)->not->toBeNull();
 });

@@ -10,7 +10,7 @@ class CreateTaskDTO extends Data
 {
     public function __construct(
         public User $user,
-        public Project $project,
+        public Project $taskable,
         public string $name,
         public string $priority_id,
         public ?string $description = null,

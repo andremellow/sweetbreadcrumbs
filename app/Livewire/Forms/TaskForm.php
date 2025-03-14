@@ -39,7 +39,7 @@ class TaskForm extends Form
         return $taskService->create(
             CreateTaskDTO::from([
                 'user' => auth()->user(),
-                'project' => $this->project,
+                'taskable' => $this->project,
                 ...$validated,
             ])
         );
@@ -53,7 +53,6 @@ class TaskForm extends Form
         return $taskService->update(
             UpdateTaskDTO::from([
                 'user' => auth()->user(),
-                'project' => $this->project,
                 'task_id' => $this->id,
                 ...$validated,
             ])

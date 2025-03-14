@@ -5,7 +5,6 @@ use App\Actions\Task\CreateTask;
 use App\Actions\Task\OpenTask;
 use App\Actions\Task\UpdateTask;
 use App\DTO\Organization\CreateOrganizationDTO;
-use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
 use App\Models\Meeting;
 use App\Models\Project;
@@ -18,17 +17,16 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 
-    // Create project and meeting
+    // Create project and task
     $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
     $this->task = Task::factory()->for($this->project, 'taskable')->withPriority($this->organization)->create();
 });
 
-it('Create a meeting with required fields only', function () {
+it('Create a task with required fields only', function () {
     // Call OpenTask action
      app(UpdateTask::class)(
         new UpdateTaskDTO(
             user: $this->user,
-            project: $this->project,
             task_id: $this->task->id,
             name: 'My new New task',
             priority_id: 10,
@@ -47,11 +45,10 @@ it('Create a meeting with required fields only', function () {
     expect($this->task->completed_at)->toBeNull();
 });
 
-it('Create a meeting', function () {
+it('Create a task', function () {
     app(UpdateTask::class)(
         new UpdateTaskDTO(
             user: $this->user,
-            project: $this->project,
             task_id: $this->task->id,
             name: 'My New task updated',
             description: 'My task description updated',
