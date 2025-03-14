@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
@@ -26,7 +26,7 @@ class Task extends Model
      */
     protected $hidden = ['updated_at', 'deleted_at'];
 
-        /**
+    /**
      * The attributes hidden from json.
      *
      * @var string[]
@@ -43,6 +43,7 @@ class Task extends Model
         $format = config('app.save_date_format');
 
         return [
+            'priority_id' => 'integer',
             'due_date' => "date:$format",
             'completed_at' => "date:$format",
             'created_at' => 'date',
@@ -56,18 +57,26 @@ class Task extends Model
 
     protected function getIsLateAttribute(): bool
     {
-        return $this->completed_at === null && $this->due_date->isPast();
+        return $this->completed_at === null && $this->due_date && $this->due_date->isPast();
     }
 
     /**
-     * Task Project.
-     *
-     * @return BelongsTo
+     * Get the parent taskable model.
      */
-    public function project(): BelongsTo
+    public function taskable(): MorphTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->morphTo();
     }
+
+    // /**
+    //  * Task Project.
+    //  *
+    //  * @return BelongsTo
+    //  */
+    // public function project(): BelongsTo
+    // {
+    //     return $this->belongsTo(Project::class);
+    // }
 
     /**
      * Task Priority.

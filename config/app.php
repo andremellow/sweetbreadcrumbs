@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\PriorityEnum;
+
 return [
 
     'demo_organization_id' => env('DEMO_ORGANIZATION_ID', 1),
@@ -7,6 +9,8 @@ return [
     'pagination_items' => env('PAGINATION_ITEMS', 15),
 
     'save_date_format' => 'Y/m/d',
+
+    'default_task_priority' => env('DEFAULT_TASK_PRIORITY', PriorityEnum::MIDIUM->value),
 
     /*
     |--------------------------------------------------------------------------

@@ -51,7 +51,9 @@ it('loads a meeting', function () {
         ->assertSet('form.id', $this->meeting->id)
         ->assertSet('form.name', $this->meeting->name)
         ->assertSet('form.description', $this->meeting->description)
-        // ->assertSet('form.date', $this->meeting->date)  TODO: Search about Framework issue
+        ->assertSet('form.date', function ($date) {
+            return $date->toDateString() === $this->meeting->date->toDateString();
+        })
         ->assertSet('showMeetingFormModal', true);
 });
 

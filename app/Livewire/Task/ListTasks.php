@@ -4,7 +4,6 @@ namespace App\Livewire\Task;
 
 use App\Enums\SortDirection;
 use App\Livewire\Traits\WithSorting;
-use App\Models\Organization;
 use App\Models\Project;
 use App\Services\OrganizationService;
 use App\Services\TaskService;
@@ -37,8 +36,6 @@ class ListTasks extends Component
     public bool $isFiltred = false;
 
     public Project $project;
-
-    public Organization $organization;
 
     public function mount(Project $project)
     {
@@ -115,10 +112,6 @@ class ListTasks extends Component
 
     public function render(OrganizationService $organizationService, TaskService $taskService)
     {
-        if ($organizationService->getOrganization() === null && isset($this->organization)) {
-            $organizationService->setOrganization($this->organization);
-        }
-
         $this->isFiltred = $this->isFiltered();
 
         return view('livewire.task.list-tasks', [

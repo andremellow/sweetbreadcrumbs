@@ -1,16 +1,16 @@
 <section class="w-full">
-    <x-tasks.heading >
-        <flux:modal.trigger name="taslk-form-modal">
+    <x-heading heading="{{  __('Tasks') }}" subheading="{{ __('Turning To-Dos into Dones—One Task at a Time!') }}" >
+        <flux:modal.trigger name="task-form-modal">
             <flux:button>{{ __('Create task') }}</flux:button>
         </flux:modal.trigger>
-    </x-tasks.heading>
+    </x-heading>
     <x-projects.layout :$project >
         <x-form.filter-form wire:submit="applyFilter" :isFiltred="$this->isFiltred"  >
             <x-form.filter-column span="2">
                 <flux:input wire:model="search" :label="__('Name or Description')" type="text" />
             </x-form.filter-column>
             <x-form.filter-column span="2">
-                <livewire:priority-dropdown wire:model.live="priorityId" :$organization/>
+                <livewire:priority-dropdown wire:model.live="priorityId"/>
             </x-form.filter-column>
             <x-form.filter-column span="2">
                 <flux:date-picker wire:model.live="dateRange"  :label="__('Due date')" mode="range" with-presets />
@@ -34,5 +34,5 @@
             <x-table-no-data />
         @endif
     </x-projects.layout>
-    
+    <livewire:task.task-modal :$project />
 </section>

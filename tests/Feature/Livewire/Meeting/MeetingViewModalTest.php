@@ -25,7 +25,7 @@ afterEach(function () {
     Mockery::close();
 });
 
-it('it loads a meeting', function () {
+it('loads a meeting', function () {
     Livewire::actingAs($this->user)
         ->test(MeetingViewModal::class)
         ->call('load', $this->meeting->id)
