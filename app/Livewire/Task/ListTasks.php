@@ -13,7 +13,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[On(['task-created', 'task-updated'])]
+#[On(['task-created', 'task-updated', 'task-deleted'])]
 class ListTasks extends Component
 {
     use WithPagination, WithSorting;
@@ -64,18 +64,6 @@ class ListTasks extends Component
     {
         $this->reset(['search', 'status', 'dateRange', 'priorityId', 'onlyLates']);
     }
-
-    // public function delete(TaskService $taskService, int $taskId)
-    // {
-    //     $taskService->delete(
-    //         auth()->user(),
-    //         new DeleteTaskDTO(
-    //             meeting: Task::findOrFail($taskId)
-    //         )
-    //     );
-
-    //     $this->dispatch('task-deleted', taskId: $taskId);
-    // }
 
     protected function list(TaskService $taskService)
     {

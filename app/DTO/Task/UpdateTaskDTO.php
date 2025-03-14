@@ -10,7 +10,6 @@ class UpdateTaskDTO extends Data
 {
     public function __construct(
         public User $user,
-        public Project $project,
         public int $task_id,
         public string $name,
         public string $priority_id,

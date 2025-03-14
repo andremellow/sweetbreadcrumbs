@@ -25,7 +25,7 @@ it('Create a meeting with required fields only', function () {
     $task = app(CreateTask::class)(
         new CreateTaskDTO(
             user: $this->user,
-            project: $this->project,
+            taskable: $this->project,
             name: 'My New task',
             priority_id: 7,
         )
@@ -46,7 +46,7 @@ it('Create a meeting', function () {
     $task = app(CreateTask::class)(
         new CreateTaskDTO(
             user: $this->user,
-            project: $this->project,
+            taskable: $this->project,
             name: 'My New task',
             description: 'My task descriptioni',
             priority_id: 7,

@@ -7,7 +7,7 @@ covers(UpdateTaskDTO::class);
 
 it('validates required fields', function () {
     UpdateTaskDTO::from(['user' => '']);
-})->throws(ValidationException::class, 'The user field is required. (and 4 more errors)');
+})->throws(ValidationException::class, 'The user field is required. (and 3 more errors)');
 
 it('validates the rules', function () {
     expect(UpdateTaskDTO::rules())->toBe([

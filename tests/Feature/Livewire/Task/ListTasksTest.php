@@ -118,18 +118,6 @@ it('toggles isLate filter', function () {
         ->assertSet('onlyLates', false);
 });
 
-// it('deletes a meeting successfully and dispatches event', function () {
-//     $meetingToDelete = $this->tasks->first();
-
-//     Livewire::actingAs($this->user)
-//         ->test(ListTasks::class, ['project' => $this->project, 'organization' => $this->organization])
-//         ->call('delete', app(MeetingService::class), $meetingToDelete->id)
-//         ->assertDispatched('meeting-deleted', meetingId: $meetingToDelete->id);
-
-//     $meetingToDelete->refresh();
-
-//     expect($meetingToDelete->deleted_at)->not->toBeNull();
-// });
 
 it('applyFilter reload with right data', function () {
     Livewire::actingAs($this->user)
@@ -139,4 +127,48 @@ it('applyFilter reload with right data', function () {
         ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 1 && $tasks[0]->name === $this->tasks[1]->name;
         });
+});
+
+it('it listerning for task-deleted', function () {
+    Livewire::actingAs($this->user)
+        ->test(ListTasks::class, ['project' => $this->project, 'organization' => $this->organization])
+        ->assertViewHas('tasks', function ($tasks) { 
+            return count($tasks) === 3;
+         })
+         ->tap(function() {
+            $this->tasks[1]->delete();
+         })
+        ->dispatch('task-deleted')
+        ->assertViewHas('tasks', function ($tasks) { 
+            return count($tasks) === 2;
+         });
+        
+});
+
+it('it listerning for task-created', function () {
+    Livewire::actingAs($this->user)
+        ->test(ListTasks::class, ['project' => $this->project, 'organization' => $this->organization])
+        ->assertViewHas('tasks', function ($tasks) { 
+            return count($tasks) === 3;
+         })
+         ->tap(function() {
+            Task::factory()->for($this->project, 'taskable')->withPriority($this->organization)->create();
+         })
+        ->dispatch('task-created')
+        ->assertViewHas('tasks', function ($tasks) { 
+            return count($tasks) === 4;
+         });
+});
+
+it('it listerning for task-updated', function () {
+    Livewire::actingAs($this->user)
+        ->test(ListTasks::class, ['project' => $this->project, 'organization' => $this->organization])
+        ->assertViewHas('tasks', function ($tasks) { 
+            return count($tasks) === 3;
+         })
+         ->tap(function() {
+            $this->tasks[1]->update(['name' => 'AA task']);
+         })
+        ->dispatch('task-updated')
+        ->assertViewHas('tasks', fn ($tasks) => $tasks->contains(fn ($item) => $item->name === 'AA task'));
 });
