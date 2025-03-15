@@ -10,6 +10,7 @@ use App\DTO\Meeting\DeleteMeetingDTO;
 use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
+use App\Models\Organization;
 use App\Models\Project;
 use App\Models\User;
 use Carbon\Carbon;
@@ -18,7 +19,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class MeetingService
 {
     public function list(
-        Project $project,
+        Organization | Project $source,
         ?string $search = null,
         ?Carbon $dateStart = null,
         ?Carbon $dateEnd = null,
@@ -30,7 +31,8 @@ class MeetingService
             $sortBy = 'name';
         }
 
-        return $project->meetings()
+        return $source->meetings()
+            ->with('project')
             ->when($search, function ($query, $search) {
                 $query->whereLike('meetings.name', "%$search%")
                     ->orWhereLike('meetings.description', "%$search%");
@@ -46,11 +48,11 @@ class MeetingService
     }
 
     public function lastMeeings(
-        Project $project,
+        Organization | Project $source,
         int $take = 5
     ) {
 
-        return $project->meetings()
+        return $source->meetings()->with('project')
             ->orderBy('date', SortDirection::DESC->value)
             ->take($take)
             ->get();

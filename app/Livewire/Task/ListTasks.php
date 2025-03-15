@@ -22,7 +22,7 @@ class ListTasks extends Component
     public ?string $search = null;
 
     #[Url()]
-    public ?string $status = null;
+    public ?string $status = 'open';
 
     #[Url()]
     public ?int $priorityId = null;
@@ -77,7 +77,7 @@ class ListTasks extends Component
                 ? Carbon::parse($this->dateRange['start']) : null;
 
         return $taskService->list(
-            project: $this->project,
+            taskable: $this->project,
             search: $this->search,
             priorityId: $this->priorityId,
             status: $this->onlyLates ? 'open' : $this->status,

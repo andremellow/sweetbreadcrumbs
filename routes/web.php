@@ -3,6 +3,7 @@
 use App\Http\Middleware\SetOrganizationRouteParameter;
 use App\Livewire\Meeting\ListMeetings;
 use App\Livewire\Project\Dashboard as ProjectDashboard;
+use App\Livewire\Organization\Dashboard as OrganizationDashboard;
 use App\Livewire\Project\ListProjects;
 use App\Livewire\Task\ListTasks;
 use Illuminate\Support\Facades\Route;
@@ -29,7 +30,7 @@ Route::middleware([
         Route::get('/projects/{project}/meetings', ListMeetings::class)->name('projects.meetings.index');
         Route::get('/projects/{project}/tasks', ListTasks::class)->name('projects.tasks.index');
 
-        Route::view('dashboard', 'dashboard')->name('dashboard');
+        Route::get('dashboard', OrganizationDashboard::class)->name('dashboard');
 
     });
     require __DIR__.'/settings.php';

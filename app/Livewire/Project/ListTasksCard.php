@@ -30,7 +30,7 @@ class ListTasksCard extends Component
     {
         return view('livewire.project.list-tasks-card', [
             'tasks' => $taskService->listForCard(
-                project: $this->project,
+                taskable: $this->project,
                 pageSize: 5
             )
         ]);

@@ -13,6 +13,7 @@ use App\DTO\Task\DeleteTaskDTO;
 use App\DTO\Task\OpenTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
 use App\Enums\SortDirection;
+use App\Models\Organization;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -40,7 +41,7 @@ class TaskService
     ) {}
 
     public function list(
-        Project $project,
+        Project | Organization $taskable,
         ?string $search = null,
         ?int $priorityId = null,
         ?string $status = null,
@@ -61,7 +62,7 @@ class TaskService
                 break;
         }
 
-        return $project->tasks()->with('priority')
+        return $taskable->tasks()->with('priority', 'taskable')
             ->leftJoin('priorities', 'tasks.priority_id', '=', 'priorities.id')
             ->when($search, function ($query, $search) {
                 $query->whereLike('tasks.name', "%$search%")
@@ -89,53 +90,21 @@ class TaskService
     }
 
     public function listForCard(
-        Project $project,
+        Project | Organization $taskable,
         ?int $priorityId = null,
-        ?Carbon $dateStart = null,
-        ?Carbon $dateEnd = null,
-        // ?string $sortBy = 'due_date',
-        // ?SortDirection $sortDirection = SortDirection::DESC,
         ?int $pageSize = null
     ): LengthAwarePaginator {
-
-        // if (! in_array($sortBy, ['name', 'due_date', 'priority'])) {
-        //     $sortBy = 'name';
-        // }
-
-        // switch ($sortBy) {
-        //     case 'priority':
-        //         $sortBy = 'priorities.order';
-        //         break;
-        // }
-
-        return $project->tasks()->with('priority')
+        return $taskable->tasks()->with('priority', 'taskable')
             ->leftJoin('priorities', 'tasks.priority_id', '=', 'priorities.id')
             ->when($priorityId, function ($query, $priorityId) {
                 return $query->where('tasks.priority_id', '=', $priorityId);
             })
             ->whereNull('tasks.completed_at')
-            // ->when($dateStart, function ($query, $dateStart) {
-            //     return $query->whereDate('tasks.due_date', '>=', $dateStart);
-            // })
-            // ->when($dateEnd, function ($query, $dateEnd) {
-            //     return $query->whereDate('tasks.due_date', '<=', $dateEnd);
-            // })
             ->orderBy('priorities.order')
             ->orderBy('due_date')
             ->select('tasks.*') // make sure to select projects columns
             ->paginate($pageSize ?? config('app.pagination_items'));
     }
-
-    // public function lastMeeings(
-    //     Project $project,
-    //     int $take = 5
-    // ) {
-
-    //     return $project->tasks()
-    //             ->orderBy('date', SortDirection::DESC->value)
-    //             ->take($take)
-    //             ->get();
-    // }
 
     /**
      * Creates a new task.

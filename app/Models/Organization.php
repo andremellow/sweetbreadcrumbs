@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organization extends Model
@@ -95,5 +96,24 @@ class Organization extends Model
     public function users()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function tasks()
+    {
+        return Task::whereHasMorph(
+            'taskable',
+            [Project::class], // Add more models here
+            function ($query) {
+                $query->where('organization_id', $this->id);
+            }
+        );
+    }
+
+    /**
+     * Get all of the meetings for the organization.
+     */
+    public function meetings(): HasManyThrough
+    {
+        return $this->hasManyThrough(Meeting::class, Project::class);
     }
 }
