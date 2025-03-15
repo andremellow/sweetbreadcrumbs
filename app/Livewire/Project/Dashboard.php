@@ -12,10 +12,8 @@ class Dashboard extends Component
 {
     public Project $project;
 
-    public function render(MeetingService $meetingService)
+    public function render()
     {
-        return view('livewire.project.dashboard', [
-            'meetings' => $meetingService->lastMeeings($this->project, 5),
-        ]);
+        return view('livewire.project.dashboard');
     }
 }
