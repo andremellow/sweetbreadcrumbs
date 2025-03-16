@@ -162,7 +162,7 @@ describe('list tasks', function () {
 
     it('lists tasks default sort by name if invalid argument is given', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             sortBy: 'any_invalid_sort_fields',
             sortDirection: SortDirection::ASC
         );
@@ -185,7 +185,7 @@ describe('list tasks', function () {
 
     it('lists tasks with default ask sorting', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             sortBy: 'due_date',
             sortDirection: SortDirection::ASC
         );
@@ -198,7 +198,7 @@ describe('list tasks', function () {
 
     it('lists tasks with date range sorting', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             dateStart: Carbon::now()->addDays(-1),
             dateEnd: Carbon::now()->addDays(5),
             sortBy: 'due_date',
@@ -214,7 +214,7 @@ describe('list tasks', function () {
 
     it('lists tasks with priority sorting', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             sortBy: 'priority',
             sortDirection: SortDirection::ASC
         );
@@ -232,7 +232,7 @@ describe('list tasks', function () {
 
     it('lists late tasks', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             dateEnd: Carbon::now(),
             status: 'open',
             sortBy: 'due_date',
@@ -245,7 +245,7 @@ describe('list tasks', function () {
 
     it('lists open tasks', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             status: 'open',
             sortBy: 'due_date',
             sortDirection: SortDirection::DESC
@@ -259,7 +259,7 @@ describe('list tasks', function () {
 
     it('lists closed tasks', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             status: 'closed',
             sortBy: 'due_date',
             sortDirection: SortDirection::DESC
@@ -272,7 +272,7 @@ describe('list tasks', function () {
 
     it('lists tasks by priorities', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             priorityId: 6,
             sortDirection: SortDirection::DESC
         );
@@ -285,7 +285,7 @@ describe('list tasks', function () {
 
     it('lists tasks with partial name', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             search: 'TD desc'
         );
 
@@ -297,7 +297,7 @@ describe('list tasks', function () {
 
     it('lists tasks with matching name', function () {
         $tasks = $this->service->list(
-            project: $this->project,
+            taskable: $this->project,
             search: 'Stand up 3'
         );
 

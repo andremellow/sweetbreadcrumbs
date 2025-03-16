@@ -20,6 +20,8 @@ class Project extends Model
 
     protected $hidden = ['updated_at', 'deleted_at'];
 
+    protected $appends = ['identification'];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -32,6 +34,11 @@ class Project extends Model
             'needs_to_deployed_by' => 'datetime:Y-m-d',
             'created_at' => 'datetime:Y-m-d',
         ];
+    }
+
+    public function getIdentificationAttribute()
+    {
+        return "Project: {$this->name}";
     }
 
     /**

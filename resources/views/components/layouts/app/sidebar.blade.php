@@ -1,3 +1,7 @@
+@use(App\Services\OrganizationService)
+@php
+    $organization = app(OrganizationService::class)->getOrganization();
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
@@ -13,7 +17,9 @@
             </a>
 
             <flux:navlist variant="outline">
-                
+                <flux:navlist.group heading="{{ $organization->name }}" expandable>
+                    <flux:navlist.item href="{{ route('dashboard', [ 'organization' => $organization->slug ]) }}">Dashboard</flux:navlist.item>
+                </flux:navlist.group>
                     @livewire(Sidebar\FeaturedProjects::class)
                 
             </flux:navlist>

@@ -13,7 +13,17 @@
                     @foreach ($meetings as $meeting)
                     <flux:table.row :key="$meeting->id" >
                         <flux:table.cell variant="strong" class="whitespace-nowrap">
-                            <div>{{ $meeting->name }}</div>
+                            <div class="flex flex-col gap-1">
+                                <div>{{ $meeting->name }}</div>
+                                <div>
+                                    <flux:button 
+                                        href="{{ route('projects.dashboard', [ 'project' => $meeting->project ]) }}"
+                                        size="xs"
+                                        variant="primary"
+                                        wire:navigation
+                                    >{{ $meeting->project->name }}</flux:button>
+                                </div>
+                            </div>
                         </flux:table.cell>
                         <flux:table.cell class="hidden sm:table-cell">{{ $meeting->date->format('m/d/Y') }}</flux:table.cell>
                         <flux:table.cell>
@@ -24,7 +34,7 @@
                                 icon="eye"
                                 variant="ghost"
                                 class="cursor-pointer"
-                            />
+                            />    
                         </flux:table.cell>
                     </flux:table.row>
                     @endforeach

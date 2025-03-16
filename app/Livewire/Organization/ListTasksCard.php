@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Livewire\Project;
+namespace App\Livewire\Organization;
 
 use App\Livewire\Traits\CloseTask;
-use App\Models\Project;
-use App\Services\MeetingService;
+use App\Services\OrganizationService;
 use App\Services\TaskService;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -14,13 +13,11 @@ class ListTasksCard extends Component
 {
     use CloseTask;
 
-    public Project $project;
-
-    public function render(TaskService $taskService)
+    public function render(OrganizationService $organizationService, TaskService $taskService)
     {
-        return view('livewire.project.list-tasks-card', [
+        return view('livewire.organization.list-tasks-card', [
             'tasks' => $taskService->listForCard(
-                taskable: $this->project,
+                taskable: $organizationService->getOrganization(),
                 pageSize: 5
             )
         ]);
