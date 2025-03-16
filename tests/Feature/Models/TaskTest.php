@@ -2,7 +2,7 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -12,13 +12,13 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 
-    // Create project and meeting
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
+    // Create workstream and meeting
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
 
 });
 
 it('has isCompleted attribute working as expected', function () {
-    $this->task = Task::factory()->for($this->project, 'taskable')->create([
+    $this->task = Task::factory()->for($this->workstream, 'taskable')->create([
         'name' => 'Initial Meeting',
         'description' => 'Initial Description',
         'priority_id' => 6,
@@ -31,7 +31,7 @@ it('has isCompleted attribute working as expected', function () {
 });
 
 it('has isLate attribute working as expected', function () {
-    $this->task = Task::factory()->for($this->project, 'taskable')->create([
+    $this->task = Task::factory()->for($this->workstream, 'taskable')->create([
         'name' => 'Initial Meeting',
         'description' => 'Initial Description',
         'priority_id' => 6,

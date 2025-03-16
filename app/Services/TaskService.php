@@ -14,7 +14,7 @@ use App\DTO\Task\OpenTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
 use App\Enums\SortDirection;
 use App\Models\Organization;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -41,7 +41,7 @@ class TaskService
     ) {}
 
     public function list(
-        Project | Organization $taskable,
+        Workstream | Organization $taskable,
         ?string $search = null,
         ?int $priorityId = null,
         ?string $status = null,
@@ -85,12 +85,12 @@ class TaskService
                 return $query->whereDate('tasks.due_date', '<=', $dateEnd);
             })
             ->orderBy($sortBy, $sortDirection->value)
-            ->select('tasks.*') // make sure to select projects columns
+            ->select('tasks.*') // make sure to select workstreams columns
             ->paginate($pageSize ?? config('app.pagination_items'));
     }
 
     public function listForCard(
-        Project | Organization $taskable,
+        Workstream | Organization $taskable,
         ?int $pageSize = null
     ): LengthAwarePaginator {
         return $taskable->tasks()->with('priority', 'taskable')
@@ -98,7 +98,7 @@ class TaskService
             ->whereNull('tasks.completed_at')
             ->orderBy('priorities.order')
             ->orderBy('due_date')
-            ->select('tasks.*') // make sure to select projects columns
+            ->select('tasks.*') // make sure to select projeworkstreamscts columns
             ->paginate($pageSize ?? config('app.pagination_items'));
     }
 

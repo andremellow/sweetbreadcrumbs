@@ -3,7 +3,7 @@
 namespace App\Livewire\Meeting;
 
 use App\Livewire\Forms\MeetingForm;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Services\MeetingService;
 use Illuminate\Http\Request;
 use Livewire\Attributes\On;
@@ -15,9 +15,9 @@ class MeetingModal extends Component
 
     public $showMeetingFormModal = false;
 
-    public function mount(Project $project)
+    public function mount(Workstream $workstream)
     {
-        $this->form->project = $project;
+        $this->form->workstream = $workstream;
     }
 
     #[On(['load-meeting-form-modal'])]

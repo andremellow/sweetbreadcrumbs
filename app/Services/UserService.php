@@ -87,13 +87,13 @@ class UserService
     }
 
     /**
-     * Get all user's projects.
+     * Get all user's workstreams.
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
      */
-    public function getProjects()
+    public function getWorkstreams()
     {
-        return $this->getCurrentOrganization()?->projects()->orderBy('name')->get();
+        return $this->getCurrentOrganization()?->workstreams()->orderBy('name')->get();
     }
 
     public static function getOrganizationBySlug(User $user, $slug): ?Organization

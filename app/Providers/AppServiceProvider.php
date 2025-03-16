@@ -45,11 +45,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(OrganizationService::class, function () {
             $organization = request()->route('organization');
-
             if (($organization instanceof Organization) === false) {
                 $organization = Organization::whereSlug($organization)->first();
             }
-
+            
             return new OrganizationService(
                 app(CreateOrganization::class),
                 $organization

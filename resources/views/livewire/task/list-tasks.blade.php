@@ -4,7 +4,7 @@
             <flux:button>{{ __('Create task') }}</flux:button>
         </flux:modal.trigger>
     </x-heading>
-    <x-projects.layout :$project >
+    <x-workstreams.layout :$workstream >
         <x-form.filter-form wire:submit="applyFilter" :isFiltred="$this->isFiltred"  >
             <x-form.filter-column span="2">
                 <flux:input wire:model="search" :label="__('Name or Description')" type="text" />
@@ -33,6 +33,6 @@
         @else
             <x-table-no-data />
         @endif
-    </x-projects.layout>
-    <livewire:task.task-modal :$project />
+    </x-workstreams.layout>
+    <livewire:task.task-modal :$workstream />
 </section>

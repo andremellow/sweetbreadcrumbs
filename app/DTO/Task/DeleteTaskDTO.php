@@ -2,7 +2,6 @@
 
 namespace App\DTO\Task;
 
-use App\Models\Project;
 use App\Models\User;
 use Spatie\LaravelData\Data;
 

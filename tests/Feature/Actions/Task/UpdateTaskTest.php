@@ -7,7 +7,7 @@ use App\Actions\Task\UpdateTask;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\UpdateTaskDTO;
 use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -17,9 +17,9 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 
-    // Create project and task
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->task = Task::factory()->for($this->project, 'taskable')->withPriority($this->organization)->create();
+    // Create workstream and task
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->task = Task::factory()->for($this->workstream, 'taskable')->withPriority($this->organization)->create();
 });
 
 it('Create a task with required fields only', function () {
@@ -37,7 +37,7 @@ it('Create a task with required fields only', function () {
 
     // Assertions
     expect($this->task)->toBeInstanceOf(Task::class);
-    expect($this->task->taskable->id)->toBe($this->project->id);
+    expect($this->task->taskable->id)->toBe($this->workstream->id);
     expect($this->task->name)->toBe('My new New task');
     expect($this->task->description)->toBeNull();
     expect($this->task->priority_id)->toBe(10);
@@ -60,7 +60,7 @@ it('Create a task', function () {
 
     // Assertions
     expect($this->task)->toBeInstanceOf(Task::class);
-    expect($this->task->taskable->id)->toBe($this->project->id);
+    expect($this->task->taskable->id)->toBe($this->workstream->id);
     expect($this->task->name)->toBe('My New task updated');
     expect($this->task->description)->toBe('My task description updated');
     expect($this->task->priority_id)->toBe(8);

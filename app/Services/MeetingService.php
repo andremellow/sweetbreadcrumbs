@@ -11,7 +11,7 @@ use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Organization;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -19,7 +19,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class MeetingService
 {
     public function list(
-        Organization | Project $source,
+        Organization | Workstream $source,
         ?string $search = null,
         ?Carbon $dateStart = null,
         ?Carbon $dateEnd = null,
@@ -32,7 +32,7 @@ class MeetingService
         }
 
         return $source->meetings()
-            ->with('project')
+            ->with('workstream')
             ->when($search, function ($query, $search) {
                 $query->whereLike('meetings.name', "%$search%")
                     ->orWhereLike('meetings.description', "%$search%");
@@ -48,11 +48,11 @@ class MeetingService
     }
 
     public function lastMeeings(
-        Organization | Project $source,
+        Organization | Workstream $source,
         int $take = 5
     ) {
 
-        return $source->meetings()->with('project')
+        return $source->meetings()->with('workstream')
             ->orderBy('date', SortDirection::DESC->value)
             ->take($take)
             ->get();

@@ -8,7 +8,7 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <livewire:project.project-modal />
+        <livewire:workstream.workstream-modal />
         <flux:sidebar sticky stashable class="border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
@@ -20,20 +20,20 @@
                 <flux:navlist.group heading="{{ $organization->name }}" expandable>
                     <flux:navlist.item href="{{ route('dashboard', [ 'organization' => $organization->slug ]) }}">Dashboard</flux:navlist.item>
                 </flux:navlist.group>
-                    @livewire(Sidebar\FeaturedProjects::class)
+                    @livewire(Sidebar\FeaturedWorkstreams::class)
                 
             </flux:navlist>
 
             <flux:spacer />
 
             <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="{{ route('projects.index') }}" wire:navigate>
-                    {{ __('Manage Projects') }}
+                <flux:navlist.item icon="folder-git-2" href="{{ route('workstreams.index') }}" wire:navigate>
+                    {{ __('Manage Workstreams') }}
                 </flux:navlist.item>
 
-                <flux:modal.trigger name="project-form-modal">
+                <flux:modal.trigger name="workstream-form-modal">
                     <flux:navlist.item icon="folder-git-2">
-                        {{ __('Add Project') }}
+                        {{ __('Add Workstream') }}
                     </flux:navlist.item>
                 </flux:modal.trigger>
             </flux:navlist>

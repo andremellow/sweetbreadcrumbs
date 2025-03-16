@@ -3,7 +3,6 @@
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Http\Middleware\SetOrganizationRouteParameter;
-use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,8 +17,6 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
     $this->anotherOrganization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('Another Organization'));
-
-    // $this->project = Project::factory()->for($this->anotherOrganization)->withPriority($this->anotherOrganization)->create();
 });
 
 afterEach(function () {
@@ -28,7 +25,7 @@ afterEach(function () {
 
 it('sets URL and VIEW default when organization is present as string', function () {
     actingAs($this->user);
-    $request = Request::create(route('projects.index', ['organization' => $this->anotherOrganization->slug]));
+    $request = Request::create(route('workstreams.index', ['organization' => $this->anotherOrganization->slug]));
 
     // ✅ Create a Fake Route Object
     $fakeRoute = new class($this->anotherOrganization)
@@ -63,7 +60,7 @@ it('sets URL and VIEW default when organization is present as string', function 
 
 it('sets URL and VIEW default when organization is present as Model', function () {
     actingAs($this->user);
-    $request = Request::create(route('projects.index', ['organization' => $this->anotherOrganization->slug]));
+    $request = Request::create(route('workstreams.index', ['organization' => $this->anotherOrganization->slug]));
 
     // ✅ Create a Fake Route Object
     $fakeRoute = new class($this->anotherOrganization)

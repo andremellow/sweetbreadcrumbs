@@ -3,7 +3,7 @@
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Organization\ListTasksCard;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\MeetingService;
@@ -17,9 +17,9 @@ beforeEach(function () {
     // Create test user and organization
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->tasks = Task::factory(2)->for($this->project, 'taskable')->withPriority($this->organization)->create();
-    Task::factory(5)->for($this->project, 'taskable')->withPriority($this->organization)->create();
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->tasks = Task::factory(2)->for($this->workstream, 'taskable')->withPriority($this->organization)->create();
+    Task::factory(5)->for($this->workstream, 'taskable')->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
     View::share('currentOrganizationSlug', $this->organization->slug);
@@ -46,7 +46,7 @@ it('loads meeting card', function () {
     $taskService = app(TaskService::class);
 
     $tasks = $taskService->listForCard(
-        taskable: $this->project,
+        taskable: $this->workstream,
         pageSize: 5
     );
 

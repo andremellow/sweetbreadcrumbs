@@ -10,7 +10,7 @@ use App\DTO\Meeting\UpdateMeetingDTO;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\User;
 use App\Services\MeetingService;
 use Carbon\Carbon;
@@ -23,7 +23,7 @@ covers(MeetingService::class);
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
     /** @var CreateMeeting */
     $this->mockCreateMeeting = Mockery::mock(CreateMeeting::class);
     /** @var UpdateMeeting */
@@ -38,8 +38,8 @@ afterEach(function () {
 });
 
 it('creates a meeting using CreateMeeting action', function () {
-    /** @var Project $project */
-    $project = Mockery::mock(Project::class);
+    /** @var Workstream $workstream */
+    $workstream = Mockery::mock(Workstream::class);
     $name = 'Team Sync';
     $description = 'Weekly team meeting';
     $date = '2024-03-01 10:00:00';
@@ -58,7 +58,7 @@ it('creates a meeting using CreateMeeting action', function () {
     $meeting = $this->service->create(
         $this->user,
         new CreateMeetingDTO(
-            $project, $name, $description, $carbonDate
+            $workstream, $name, $description, $carbonDate
         )
     );
 
@@ -66,11 +66,11 @@ it('creates a meeting using CreateMeeting action', function () {
 });
 
 it('updates a meeting using UpdateMeeting action', function () {
-    /** @var Project */
-    $project = Mockery::mock(Project::class);
+    /** @var Workstream */
+    $workstream = Mockery::mock(Workstream::class);
 
     $dto = new UpdateMeetingDTO(
-        $project,
+        $workstream,
         1,
         'Updated Meeting',
         'Updated description',
@@ -94,7 +94,7 @@ it('updates a meeting using UpdateMeeting action', function () {
 });
 
 it('deletes a meeting using UpdateMeeting action', function () {
-    $project = Mockery::mock(Project::class);
+    $workstream = Mockery::mock(Workstream::class);
     /** @var Meeting */
     $mockMeeting = Mockery::mock(Meeting::class);
     $dto = new DeleteMeetingDTO($mockMeeting);
@@ -114,20 +114,20 @@ it('deletes a meeting using UpdateMeeting action', function () {
 
 describe('list meetings', function () {
     beforeEach(function () {
-        Meeting::factory()->for($this->project)->create(['name' => 'Stand up 1', 'description' => 'Description for Stand up 1', 'date' => Carbon::now()->addDays(9)]);
-        Meeting::factory()->for($this->project)->create(['name' => 'Stand up 2', 'description' => 'Description for Stand up 2', 'date' => Carbon::now()->addDays(8)]);
-        Meeting::factory()->for($this->project)->create(['name' => 'Stand up 3', 'description' => 'Description for Stand up 3', 'date' => Carbon::now()->addDays(7)]);
-        Meeting::factory()->for($this->project)->create(['name' => 'TD descusion 1', 'description' => 'Description for TD descusion 1', 'date' => Carbon::now()->addDays(6)]);
-        Meeting::factory()->for($this->project)->create(['name' => 'TD descusion 2', 'description' => 'Description for TD descusion 2', 'date' => Carbon::now()->addDays(5)]);
-        Meeting::factory()->for($this->project)->create(['name' => 'TD descusion 3', 'description' => 'Description for TD descusion 3', 'date' => Carbon::now()->addDays(4)]);
-        Meeting::factory()->for($this->project)->create(['name' => 'Sprint planing 1', 'description' => 'Description for Sprint planing 1', 'date' => Carbon::now()->addDays(3)]);
-        Meeting::factory()->for($this->project)->create(['name' => 'Sprint planing 2', 'description' => 'Description for Sprint planing 2', 'date' => Carbon::now()->addDays(2)]);
-        Meeting::factory()->for($this->project)->create(['name' => 'Sprint planing 3', 'description' => 'Description for Sprint planing 3', 'date' => Carbon::now()->addDays(1)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'Stand up 1', 'description' => 'Description for Stand up 1', 'date' => Carbon::now()->addDays(9)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'Stand up 2', 'description' => 'Description for Stand up 2', 'date' => Carbon::now()->addDays(8)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'Stand up 3', 'description' => 'Description for Stand up 3', 'date' => Carbon::now()->addDays(7)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'TD descusion 1', 'description' => 'Description for TD descusion 1', 'date' => Carbon::now()->addDays(6)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'TD descusion 2', 'description' => 'Description for TD descusion 2', 'date' => Carbon::now()->addDays(5)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'TD descusion 3', 'description' => 'Description for TD descusion 3', 'date' => Carbon::now()->addDays(4)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'Sprint planing 1', 'description' => 'Description for Sprint planing 1', 'date' => Carbon::now()->addDays(3)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'Sprint planing 2', 'description' => 'Description for Sprint planing 2', 'date' => Carbon::now()->addDays(2)]);
+        Meeting::factory()->for($this->workstream)->create(['name' => 'Sprint planing 3', 'description' => 'Description for Sprint planing 3', 'date' => Carbon::now()->addDays(1)]);
     });
 
     it('lists meetings default sort by name if invalid argument is given', function () {
         $meetings = $this->service->list(
-            $this->project,
+            $this->workstream,
             null,
             null,
             null,
@@ -141,7 +141,7 @@ describe('list meetings', function () {
 
     it('lists meetings with default sorting', function () {
         $meetings = $this->service->list(
-            $this->project
+            $this->workstream
         );
 
         expect($meetings)->toHaveCount(9);
@@ -153,7 +153,7 @@ describe('list meetings', function () {
 
     it('lists meetings with default desc sorting', function () {
         $meetings = $this->service->list(
-            $this->project,
+            $this->workstream,
             null,
             null,
             null,
@@ -169,7 +169,7 @@ describe('list meetings', function () {
 
     it('lists meetings with date range sorting', function () {
         $meetings = $this->service->list(
-            $this->project,
+            $this->workstream,
             null,
             Carbon::now()->today(),
             Carbon::now()->addDays(7),
@@ -186,7 +186,7 @@ describe('list meetings', function () {
 
     it('lists meetings with partial name', function () {
         $meetings = $this->service->list(
-            $this->project,
+            $this->workstream,
             'TD desc'
         );
 
@@ -198,7 +198,7 @@ describe('list meetings', function () {
 
     it('lists meetings with matching name', function () {
         $meetings = $this->service->list(
-            $this->project,
+            $this->workstream,
             'Stand up 3'
         );
 
@@ -211,7 +211,7 @@ describe('list meetings', function () {
         Request::merge(['page' => 5]);
 
         $meetings = $this->service->list(
-            $this->project
+            $this->workstream
         );
 
         expect($meetings)->toHaveCount(1);

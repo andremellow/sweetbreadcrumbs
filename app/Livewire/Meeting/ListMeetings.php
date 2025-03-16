@@ -5,7 +5,7 @@ namespace App\Livewire\Meeting;
 use App\DTO\Meeting\DeleteMeetingDTO;
 use App\Livewire\Traits\WithSorting;
 use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Services\MeetingService;
 use App\Services\OrganizationService;
 use Flux\DateRange;
@@ -27,11 +27,11 @@ class ListMeetings extends Component
 
     public bool $isFiltred = false;
 
-    public Project $project;
+    public Workstream $workstream;
 
-    public function mount(Project $project)
+    public function mount(Workstream $workstream)
     {
-        $this->project = $project;
+        $this->workstream = $workstream;
         $this->sortBy = 'name';
     }
 
@@ -46,7 +46,7 @@ class ListMeetings extends Component
     protected function list(OrganizationService $organizationService, MeetingService $meetingService)
     {
         return $meetingService->list(
-            $this->project,
+            $this->workstream,
             $this->search,
             isset($this->dateRange) ? $this->dateRange->start() : null,
             isset($this->dateRange) ? $this->dateRange->end() : null,
@@ -72,7 +72,7 @@ class ListMeetings extends Component
         $this->isFiltred = ! empty($this->search) || isset($this->dateRange);
 
         return view('livewire.meeting.list-meetings', [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
             'meetings' => $this->list($organizationService, $meetingService),
         ]);
     }

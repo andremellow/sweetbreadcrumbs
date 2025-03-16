@@ -9,7 +9,7 @@
     <form wire:submit="save">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">Meeting for {{ $this->form->project->name }}</flux:heading>
+                <flux:heading size="lg">Meeting for {{ $this->form->workstream->name }}</flux:heading>
                 <flux:subheading>Log It Before You Forget It—Because Meetings Deserve a Paper Trail!</flux:subheading>
             </div>
 

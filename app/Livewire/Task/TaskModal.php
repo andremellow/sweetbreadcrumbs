@@ -4,7 +4,7 @@ namespace App\Livewire\Task;
 
 use App\Enums\ConfigEnum;
 use App\Livewire\Forms\TaskForm;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Services\ConfigService;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
@@ -17,9 +17,9 @@ class TaskModal extends Component
 
     public $showTaskFormModal = false;
 
-    public function mount(ConfigService $configService, Project $project)
+    public function mount(ConfigService $configService, Workstream $workstream)
     {
-        $this->form->project = $project;
+        $this->form->workstream = $workstream;
         $this->form->priority_id = $this->form->defaultPriorityId = $configService->get(ConfigEnum::TASK_DEFAULT_PRIORITY_ID);
     }
 

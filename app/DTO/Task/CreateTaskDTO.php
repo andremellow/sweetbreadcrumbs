@@ -2,7 +2,7 @@
 
 namespace App\DTO\Task;
 
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\User;
 use Spatie\LaravelData\Data;
 
@@ -10,7 +10,7 @@ class CreateTaskDTO extends Data
 {
     public function __construct(
         public User $user,
-        public Project $taskable,
+        public Workstream $taskable,
         public string $name,
         public string $priority_id,
         public ?string $description = null,

@@ -17,7 +17,7 @@ class UpdateMeeting
     public function __invoke(
         UpdateMeetingDTO $updateMeetingDTO
     ): Meeting {
-        $meeting = $updateMeetingDTO->project->meetings()->findOrFail($updateMeetingDTO->meeting_id);
+        $meeting = $updateMeetingDTO->workstream->meetings()->findOrFail($updateMeetingDTO->meeting_id);
 
         $meeting->update([
             'name' => $updateMeetingDTO->name,

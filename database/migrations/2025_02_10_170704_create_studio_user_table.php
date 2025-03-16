@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_release', function (Blueprint $table) {
+        Schema::create('workstream_release', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->nullable()->constrained();
+            $table->foreignId('workstream_id')->nullable()->constrained();
             $table->foreignId('release_id')->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('project_release');
+        Schema::dropIfExists('workstream_release');
     }
 };

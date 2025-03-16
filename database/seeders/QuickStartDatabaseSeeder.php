@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -49,12 +49,12 @@ class QuickStartDatabaseSeeder extends Seeder
         $organization->releases()->create(['name' => '5.35']);
         $organization->releases()->create(['name' => '5.36']);
 
-        Project::factory()->count(30)->for($organization)->withPriority($organization)->create();
+        Workstream::factory()->count(30)->for($organization)->withPriority($organization)->create();
 
-        $project = $organization->projects()->first();
-        $project->update(['name' => 'AA First Project']);
+        $workstream = $organization->workstreams()->first();
+        $workstream->update(['name' => 'AA First Workstream']);
 
-        Meeting::factory()->count(30)->for($project)->create();
-        Task::factory()->count(30)->for($project, 'taskable')->withPriority($organization)->create();
+        Meeting::factory()->count(30)->for($workstream)->create();
+        Task::factory()->count(30)->for($workstream, 'taskable')->withPriority($organization)->create();
     }
 }
