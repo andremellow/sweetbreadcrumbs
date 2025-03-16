@@ -39,6 +39,9 @@ class ConfigService
             case ConfigEnum::TASK_DEFAULT_PRIORITY_ID:
                 return $this->getTaskDefaultPriorityId($config->default);
                 break;
+            case ConfigEnum::WORKSTREAM_DEFAULT_PRIORITY_ID:
+                    return $this->getTaskDefaultPriorityId($config->default);
+                    break;
 
             default:
                 return $config->default;

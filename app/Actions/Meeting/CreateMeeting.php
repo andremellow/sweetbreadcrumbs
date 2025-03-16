@@ -16,7 +16,7 @@ class CreateMeeting
      */
     public function __invoke(CreateMeetingDTO $createMeetingDTO
     ): Meeting {
-        return $createMeetingDTO->project->meetings()->create([
+        return $createMeetingDTO->workstream->meetings()->create([
             'name' => $createMeetingDTO->name,
             'description' => $createMeetingDTO->description,
             'date' => $createMeetingDTO->date,

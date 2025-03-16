@@ -17,11 +17,11 @@
                                 <div>{{ $meeting->name }}</div>
                                 <div>
                                     <flux:button 
-                                        href="{{ route('projects.dashboard', [ 'project' => $meeting->project ]) }}"
+                                        href="{{ route('workstreams.dashboard', [ 'workstream' => $meeting->workstream ]) }}"
                                         size="xs"
                                         variant="primary"
                                         wire:navigation
-                                    >{{ $meeting->project->name }}</flux:button>
+                                    >{{ $meeting->workstream->name }}</flux:button>
                                 </div>
                             </div>
                         </flux:table.cell>
@@ -44,6 +44,6 @@
         </div>
         @else
             <div class="h-3/4 flex justify-center items-center">
-                <div class="text-center">No meeting logged for this project</div>
+                <div class="text-center">No meeting logged for this workstream</div>
             </div>
         @endif

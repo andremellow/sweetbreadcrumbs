@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->date('date');
-            $table->foreignId('project_id')->nullable()->constrained();
+            $table->foreignId('workstream_id')->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

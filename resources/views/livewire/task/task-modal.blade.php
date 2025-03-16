@@ -8,7 +8,7 @@
     <form wire:submit="save">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">Task for {{ $this->form->project->name }}</flux:heading>
+                <flux:heading size="lg">Task for {{ $this->form->workstream->name }}</flux:heading>
                 <flux:subheading>Small Steps, Big Wins—Let’s Tackle It!</flux:subheading>
             </div>
 

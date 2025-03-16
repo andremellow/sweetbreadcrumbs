@@ -13,7 +13,7 @@ use App\DTO\Task\DeleteTaskDTO;
 use App\DTO\Task\OpenTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
 use App\Enums\SortDirection;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\OrganizationService;
@@ -28,7 +28,7 @@ covers(TaskService::class);
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
     /** @var CreateTask */
     $this->mockCreateTask = Mockery::mock(CreateTask::class);
     /** @var UpdateTask */
@@ -90,7 +90,7 @@ it('closes a task using Close action', function () {
 it('creates a task using Create action', function () {
     $dto = new CreateTaskDTO(
         user: $this->user,
-        taskable: $this->project,
+        taskable: $this->workstream,
         name: 'My task',
         priority_id: 6
     );
@@ -108,7 +108,7 @@ it('creates a task using Create action', function () {
 });
 
 it('updates a task using UpdateTask action', function () {
-    $task = Task::factory()->for($this->project, 'taskable')->create(['priority_id' => 6]);
+    $task = Task::factory()->for($this->workstream, 'taskable')->create(['priority_id' => 6]);
     $dto = new UpdateTaskDTO(
         user: $this->user,
         task_id: $task->id,
@@ -129,7 +129,7 @@ it('updates a task using UpdateTask action', function () {
 });
 
 it('deletes a task using DeleteTask action', function () {
-    $task = Task::factory()->for($this->project, 'taskable')->create(['priority_id' => 6]);
+    $task = Task::factory()->for($this->workstream, 'taskable')->create(['priority_id' => 6]);
     $dto = new DeleteTaskDTO(
         user: $this->user,
         task_id: $task->id,
@@ -149,20 +149,20 @@ it('deletes a task using DeleteTask action', function () {
 
 describe('list tasks', function () {
     beforeEach(function () {
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'Stand up 1',           'description' => 'Description for Stand up 1',          'priority_id' => 6,  /* Highest */ 'due_date' => Carbon::now()->addDays(9), 'completed_at' => Carbon::now()->addDays(9)]);
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'Stand up 2',           'description' => 'Description for Stand up 2',          'priority_id' => 6,  /* Highest */ 'due_date' => Carbon::now()->addDays(8)]);
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'Stand up 3',           'description' => 'Description for Stand up 3',          'priority_id' => 7,  /* High */ 'due_date' => Carbon::now()->addDays(7)]);
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'TD descusion 1',       'description' => 'Description for TD descusion 1',      'priority_id' => 7,  /* High */ 'due_date' => Carbon::now()->addDays(6)]);
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'TD descusion 2',       'description' => 'Description for TD descusion 2',      'priority_id' => 8,  /* Midium */ 'due_date' => Carbon::now()->addDays(5)]);
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'TD descusion 3',       'description' => 'Description for TD descusion 3',      'priority_id' => 6,  /* Highest */ 'due_date' => Carbon::now()->addDays(4)]);
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'Sprint planing 1',     'description' => 'Description for Sprint planing 1',    'priority_id' => 9,  /* Low */ 'due_date' => Carbon::now()->addDays(3)]);
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'Sprint planing 2',     'description' => 'Description for Sprint planing 2',    'priority_id' => 10, /* Lowest */ 'due_date' => Carbon::now()->addDays(-1)]);
-        Task::factory()->for($this->project, 'taskable')->create(['name' => 'Sprint planing 3',     'description' => 'Description for Sprint planing 3',    'priority_id' => 10, /* Lowest */ 'due_date' => Carbon::now()->addDays(-2), 'completed_at' => Carbon::now()->addDays(1)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'Stand up 1',           'description' => 'Description for Stand up 1',          'priority_id' => 6,  /* Highest */ 'due_date' => Carbon::now()->addDays(9), 'completed_at' => Carbon::now()->addDays(9)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'Stand up 2',           'description' => 'Description for Stand up 2',          'priority_id' => 6,  /* Highest */ 'due_date' => Carbon::now()->addDays(8)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'Stand up 3',           'description' => 'Description for Stand up 3',          'priority_id' => 7,  /* High */ 'due_date' => Carbon::now()->addDays(7)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'TD descusion 1',       'description' => 'Description for TD descusion 1',      'priority_id' => 7,  /* High */ 'due_date' => Carbon::now()->addDays(6)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'TD descusion 2',       'description' => 'Description for TD descusion 2',      'priority_id' => 8,  /* Midium */ 'due_date' => Carbon::now()->addDays(5)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'TD descusion 3',       'description' => 'Description for TD descusion 3',      'priority_id' => 6,  /* Highest */ 'due_date' => Carbon::now()->addDays(4)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'Sprint planing 1',     'description' => 'Description for Sprint planing 1',    'priority_id' => 9,  /* Low */ 'due_date' => Carbon::now()->addDays(3)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'Sprint planing 2',     'description' => 'Description for Sprint planing 2',    'priority_id' => 10, /* Lowest */ 'due_date' => Carbon::now()->addDays(-1)]);
+        Task::factory()->for($this->workstream, 'taskable')->create(['name' => 'Sprint planing 3',     'description' => 'Description for Sprint planing 3',    'priority_id' => 10, /* Lowest */ 'due_date' => Carbon::now()->addDays(-2), 'completed_at' => Carbon::now()->addDays(1)]);
     });
 
     it('lists tasks default sort by name if invalid argument is given', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             sortBy: 'any_invalid_sort_fields',
             sortDirection: SortDirection::ASC
         );
@@ -173,7 +173,7 @@ describe('list tasks', function () {
 
     it('lists tasks with default sorting - due date', function () {
         $tasks = $this->service->list(
-            $this->project
+            $this->workstream
         );
 
         expect($tasks)->toHaveCount(9);
@@ -185,7 +185,7 @@ describe('list tasks', function () {
 
     it('lists tasks with default ask sorting', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             sortBy: 'due_date',
             sortDirection: SortDirection::ASC
         );
@@ -198,7 +198,7 @@ describe('list tasks', function () {
 
     it('lists tasks with date range sorting', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             dateStart: Carbon::now()->addDays(-1),
             dateEnd: Carbon::now()->addDays(5),
             sortBy: 'due_date',
@@ -214,7 +214,7 @@ describe('list tasks', function () {
 
     it('lists tasks with priority sorting', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             sortBy: 'priority',
             sortDirection: SortDirection::ASC
         );
@@ -232,7 +232,7 @@ describe('list tasks', function () {
 
     it('lists late tasks', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             dateEnd: Carbon::now(),
             status: 'open',
             sortBy: 'due_date',
@@ -245,7 +245,7 @@ describe('list tasks', function () {
 
     it('lists open tasks', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             status: 'open',
             sortBy: 'due_date',
             sortDirection: SortDirection::DESC
@@ -259,7 +259,7 @@ describe('list tasks', function () {
 
     it('lists closed tasks', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             status: 'closed',
             sortBy: 'due_date',
             sortDirection: SortDirection::DESC
@@ -272,7 +272,7 @@ describe('list tasks', function () {
 
     it('lists tasks by priorities', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             priorityId: 6,
             sortDirection: SortDirection::DESC
         );
@@ -285,7 +285,7 @@ describe('list tasks', function () {
 
     it('lists tasks with partial name', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             search: 'TD desc'
         );
 
@@ -297,7 +297,7 @@ describe('list tasks', function () {
 
     it('lists tasks with matching name', function () {
         $tasks = $this->service->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             search: 'Stand up 3'
         );
 
@@ -310,7 +310,7 @@ describe('list tasks', function () {
         Request::merge(['page' => 5]);
 
         $tasks = $this->service->list(
-            $this->project
+            $this->workstream
         );
 
         expect($tasks)->toHaveCount(1);

@@ -2,14 +2,14 @@
 
 namespace App\DTO\Meeting;
 
-use App\Models\Project;
+use App\Models\Workstream;
 use Carbon\Carbon;
 use Spatie\LaravelData\Data;
 
 class CreateMeetingDTO extends Data
 {
     public function __construct(
-        public Project $project,
+        public Workstream $workstream,
         public string $name,
         public string $description,
         public Carbon $date,

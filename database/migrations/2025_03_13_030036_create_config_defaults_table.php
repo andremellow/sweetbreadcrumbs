@@ -21,6 +21,7 @@ return new class extends Migration
         });
 
         ConfigDefault::create(['id' => ConfigEnum::TASK_DEFAULT_PRIORITY_ID, 'value' => PriorityEnum::MIDIUM]);
+        ConfigDefault::create(['id' => ConfigEnum::WORKSTREAM_DEFAULT_PRIORITY_ID, 'value' => PriorityEnum::MIDIUM]);
         ConfigDefault::create(['id' => ConfigEnum::PAGINATION_ITEMS, 'value' => 15]);
     }
 

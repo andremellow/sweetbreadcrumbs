@@ -2,11 +2,9 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\Actions\Task\CreateTask;
-use App\Actions\Task\OpenTask;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\CreateTaskDTO;
-use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -16,8 +14,8 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 
-    // Create project and meeting
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
+    // Create workstream and meeting
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
 });
 
 it('Create a meeting with required fields only', function () {
@@ -25,7 +23,7 @@ it('Create a meeting with required fields only', function () {
     $task = app(CreateTask::class)(
         new CreateTaskDTO(
             user: $this->user,
-            taskable: $this->project,
+            taskable: $this->workstream,
             name: 'My New task',
             priority_id: 7,
         )
@@ -33,7 +31,7 @@ it('Create a meeting with required fields only', function () {
 
     // Assertions
     expect($task)->toBeInstanceOf(Task::class);
-    expect($task->taskable->id)->toBe($this->project->id);
+    expect($task->taskable->id)->toBe($this->workstream->id);
     expect($task->name)->toBe('My New task');
     expect($task->description)->toBeNull();
     expect($task->priority_id)->toBe(7);
@@ -46,7 +44,7 @@ it('Create a meeting', function () {
     $task = app(CreateTask::class)(
         new CreateTaskDTO(
             user: $this->user,
-            taskable: $this->project,
+            taskable: $this->workstream,
             name: 'My New task',
             description: 'My task descriptioni',
             priority_id: 7,
@@ -56,7 +54,7 @@ it('Create a meeting', function () {
 
     // Assertions
     expect($task)->toBeInstanceOf(Task::class);
-    expect($task->taskable->id)->toBe($this->project->id);
+    expect($task->taskable->id)->toBe($this->workstream->id);
     expect($task->name)->toBe('My New task');
     expect($task->description)->toBe('My task descriptioni');
     expect($task->priority_id)->toBe(7);

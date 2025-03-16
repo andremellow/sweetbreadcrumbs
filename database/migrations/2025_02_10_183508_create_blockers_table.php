@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('ticket_number')->nullable();
             $table->date('resolved_at')->nullable();
-            $table->foreignId('project_id')->nullable()->constrained();
+            $table->foreignId('workstream_id')->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

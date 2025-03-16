@@ -5,7 +5,6 @@ use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Organization\Dashboard;
 use App\Livewire\Organization\ListMeetingsCard;
 use App\Livewire\Organization\ListTasksCard;
-use App\Models\Project;
 use App\Models\User;
 use App\Services\OrganizationService;
 use Illuminate\Support\Facades\URL;

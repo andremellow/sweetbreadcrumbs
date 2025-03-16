@@ -5,7 +5,7 @@ namespace App\Livewire\Forms;
 use App\DTO\Meeting\CreateMeetingDTO;
 use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Services\MeetingService;
 use Carbon\Carbon;
 use Livewire\Form;
@@ -20,7 +20,7 @@ class MeetingForm extends Form
 
     public ?Carbon $date;
 
-    public Project $project;
+    public Workstream $workstream;
 
     protected function rules()
     {
@@ -34,7 +34,7 @@ class MeetingForm extends Form
         return $meetingService->create(
             auth()->user(),
             CreateMeetingDTO::from([
-                'project' => $this->project,
+                'workstream' => $this->workstream,
                 ...$validated,
             ])
         );
@@ -47,7 +47,7 @@ class MeetingForm extends Form
         $meetingService->update(
             auth()->user(),
             UpdateMeetingDTO::from([
-                'project' => $this->project,
+                'workstream' => $this->workstream,
                 'meeting_id' => $this->id,
                 ...$validated,
             ])

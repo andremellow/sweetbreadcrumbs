@@ -4,8 +4,7 @@ namespace App\Livewire\Forms;
 
 use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
-// use App\DTO\Task\UpdateTaskDTO;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Services\TaskService;
 use Carbon\Carbon;
@@ -23,7 +22,7 @@ class TaskForm extends Form
 
     public ?Carbon $due_date;
 
-    public Project $project;
+    public Workstream $workstream;
 
     public int $defaultPriorityId;
 
@@ -39,7 +38,7 @@ class TaskForm extends Form
         return $taskService->create(
             CreateTaskDTO::from([
                 'user' => auth()->user(),
-                'taskable' => $this->project,
+                'taskable' => $this->workstream,
                 ...$validated,
             ])
         );

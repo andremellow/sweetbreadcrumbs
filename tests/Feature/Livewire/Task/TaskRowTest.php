@@ -3,7 +3,7 @@
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Task\TaskRow;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskService;
@@ -17,9 +17,9 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
 
-    // Create test projects
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->task = Task::factory()->for($this->project, 'taskable')->withPriority($this->organization)->create();
+    // Create test workstreams
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->task = Task::factory()->for($this->workstream, 'taskable')->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
     View::share('currentOrganizationSlug', $this->organization->slug);

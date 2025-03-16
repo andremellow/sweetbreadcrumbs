@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Organization;
 
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Services\MeetingService;
 use App\Services\OrganizationService;
 use Livewire\Attributes\On;

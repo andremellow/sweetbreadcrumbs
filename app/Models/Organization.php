@@ -49,13 +49,13 @@ class Organization extends Model
     // }
 
     /**
-     * Organization's Projects.
+     * Organization's Workstreams.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function projects()
+    public function workstreams()
     {
-        return $this->hasMany(project::class);
+        return $this->hasMany(Workstream::class);
     }
 
     /**
@@ -79,7 +79,7 @@ class Organization extends Model
     }
 
     /**
-     * Organization's Projects.
+     * Organization's Workstreams.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
@@ -102,7 +102,7 @@ class Organization extends Model
     {
         return Task::whereHasMorph(
             'taskable',
-            [Project::class], // Add more models here
+            [Workstream::class], // Add more models here
             function ($query) {
                 $query->where('organization_id', $this->id);
             }
@@ -114,6 +114,6 @@ class Organization extends Model
      */
     public function meetings(): HasManyThrough
     {
-        return $this->hasManyThrough(Meeting::class, Project::class);
+        return $this->hasManyThrough(Meeting::class, Workstream::class);
     }
 }

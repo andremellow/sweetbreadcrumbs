@@ -13,7 +13,7 @@ class CreateOrganizationDTO extends Data
     public static function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:2', 'max:50'],
+            'name' => ['required', 'string', 'min:2', 'max:50', 'unique:organizations'],
         ];
     }
 }

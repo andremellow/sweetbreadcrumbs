@@ -4,7 +4,7 @@
             <flux:button>{{ __('Create meeting') }}</flux:button>
         </flux:modal.trigger>
     </x-heading>
-    <x-projects.layout :$project >
+    <x-workstreams.layout :$workstream >
         <x-form.filter-form wire:submit="applyFilter" :isFiltred="$this->isFiltred"  >
             <x-form.filter-column span="3">
                 <flux:input wire:model="search" :label="__('Name or Description')" type="text" />
@@ -18,6 +18,6 @@
         @else
             <x-table-no-data />
         @endif
-    </x-projects.layout>
-    <livewire:meeting.meeting-modal :$project />
+    </x-workstreams.layout>
+    <livewire:meeting.meeting-modal :$workstream />
 </section>

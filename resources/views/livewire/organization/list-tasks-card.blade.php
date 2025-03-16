@@ -33,7 +33,7 @@
         </div>
         @else
             <div class="h-3/4 flex justify-center items-center">
-                <div class="text-center">No task logged for this project</div>
+                <div class="text-center">No task logged for this workstream</div>
             </div>
         @endif
 </div>

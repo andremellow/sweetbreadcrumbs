@@ -5,7 +5,7 @@ use App\Actions\Task\CloseTask;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\CloseTaskDTO;
 use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -15,9 +15,9 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
 
-    // Create project and meeting
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->task = Task::factory()->for($this->project, 'taskable')->create([
+    // Create workstream and meeting
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->task = Task::factory()->for($this->workstream, 'taskable')->create([
         'name' => 'Initial Meeting',
         'description' => 'Initial Description',
         'priority_id' => 6,
@@ -41,7 +41,7 @@ it('Close a meeting ', function () {
     // Assertions
     expect($updatedTask)->toBeInstanceOf(Task::class);
     expect($updatedTask->id)->toBe($this->task->id);
-    expect($updatedTask->taskable->id)->toBe($this->project->id);
+    expect($updatedTask->taskable->id)->toBe($this->workstream->id);
     expect($updatedTask->completed_at->toDateString())->toBe(Carbon::now()->toDateString());
 
 });

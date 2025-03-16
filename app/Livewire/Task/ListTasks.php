@@ -4,7 +4,7 @@ namespace App\Livewire\Task;
 
 use App\Enums\SortDirection;
 use App\Livewire\Traits\WithSorting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Services\OrganizationService;
 use App\Services\TaskService;
 use Carbon\Carbon;
@@ -35,11 +35,11 @@ class ListTasks extends Component
 
     public bool $isFiltred = false;
 
-    public Project $project;
+    public Workstream $workstream;
 
-    public function mount(Project $project)
+    public function mount(Workstream $workstream)
     {
-        $this->project = $project;
+        $this->workstream = $workstream;
         $this->sortBy = 'due_date';
         $this->sortDirection = SortDirection::DESC;
 
@@ -77,7 +77,7 @@ class ListTasks extends Component
                 ? Carbon::parse($this->dateRange['start']) : null;
 
         return $taskService->list(
-            taskable: $this->project,
+            taskable: $this->workstream,
             search: $this->search,
             priorityId: $this->priorityId,
             status: $this->onlyLates ? 'open' : $this->status,
@@ -103,7 +103,7 @@ class ListTasks extends Component
         $this->isFiltred = $this->isFiltered();
 
         return view('livewire.task.list-tasks', [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
             'organization' => $organizationService->getOrganization(),
             'tasks' => $this->list($taskService),
         ]);
