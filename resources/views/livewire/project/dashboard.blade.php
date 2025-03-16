@@ -7,7 +7,6 @@
                 <div class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 p-5">
                     <flux:subheading size="lg" class="mb-6 text-bold">{{ __('Last meetings') }}</flux:subheading>
                     <livewire:project.list-meetings-card :$project />
-                    <livewire:meeting.meeting-view-modal/>
                 </div>
                 <div class="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 p-5">
                     <flux:subheading size="lg" class="mb-6 text-bold">{{ __('Meeska, Mooska, Taskadoer') }}</flux:subheading>

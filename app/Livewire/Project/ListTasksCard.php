@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Project;
 
-use App\DTO\Task\CloseTaskDTO;
+use App\Livewire\Traits\CloseTask;
 use App\Models\Project;
 use App\Services\MeetingService;
 use App\Services\TaskService;
@@ -12,19 +12,9 @@ use Livewire\Component;
 #[On(['tasks-created', 'tasks-updated', 'tasks-completed'])]
 class ListTasksCard extends Component
 {
-    public Project $project;
+    use CloseTask;
 
-    public function close($taskId)
-    {
-        
-        $taskService = app(TaskService::class);
-        $taskService->close(new CloseTaskDTO(
-            user: auth()->user(),
-            task_id: $taskId
-        ));
-        
-        $this->dispatch('task-closed', taskId: $taskId);
-    }
+    public Project $project;
 
     public function render(TaskService $taskService)
     {

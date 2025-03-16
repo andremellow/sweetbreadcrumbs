@@ -91,14 +91,10 @@ class TaskService
 
     public function listForCard(
         Project | Organization $taskable,
-        ?int $priorityId = null,
         ?int $pageSize = null
     ): LengthAwarePaginator {
         return $taskable->tasks()->with('priority', 'taskable')
             ->leftJoin('priorities', 'tasks.priority_id', '=', 'priorities.id')
-            ->when($priorityId, function ($query, $priorityId) {
-                return $query->where('tasks.priority_id', '=', $priorityId);
-            })
             ->whereNull('tasks.completed_at')
             ->orderBy('priorities.order')
             ->orderBy('due_date')

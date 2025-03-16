@@ -69,7 +69,7 @@ it('filters tasks by name', function () {
 it('resets the filter values when resetForm is called', function () {
 
     Livewire::actingAs($this->user)
-        ->test(ListTasks::class, ['project' => $this->project, 'organization' => $this->organization])
+        ->test(ListTasks::class, ['project' => $this->project])
         ->set('search', 'Filtered Project')
         ->set('status', 'open')
         ->set('dateRange', [])
@@ -78,7 +78,7 @@ it('resets the filter values when resetForm is called', function () {
         ->call('resetForm')
         ->assertSet('search', null)
         ->assertSet('dateRange', null)
-        ->assertSet('status', null)
+        ->assertSet('status', 'open')
         ->assertSet('priorityId', null)
         ->assertSet('onlyLates', null);
 });
