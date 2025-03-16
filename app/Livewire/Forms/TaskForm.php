@@ -3,8 +3,8 @@
 namespace App\Livewire\Forms;
 
 use App\DTO\Task\CreateTaskDTO;
-// use App\DTO\Task\UpdateTaskDTO;
-use App\Models\Project;
+use App\DTO\Task\UpdateTaskDTO;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Services\TaskService;
 use Carbon\Carbon;
@@ -22,7 +22,7 @@ class TaskForm extends Form
 
     public ?Carbon $due_date;
 
-    public Project $project;
+    public Workstream $workstream;
 
     public int $defaultPriorityId;
 
@@ -31,35 +31,32 @@ class TaskForm extends Form
         return CreateTaskDTO::rules();
     }
 
-    public function add(TaskService $taskService)
+    public function add(TaskService $taskService): Task
     {
         $validated = $this->validate();
 
-        if ($validated['priority_id']) {
-
-            return $taskService->create(
-                CreateTaskDTO::from([
-                    'user' => auth()->user(),
-                    'project' => $this->project,
-                    ...$validated,
-                ])
-            );
-        }
+        return $taskService->create(
+            CreateTaskDTO::from([
+                'user' => auth()->user(),
+                'taskable' => $this->workstream,
+                ...$validated,
+            ])
+        );
+        
     }
 
-    // public function edit(TaskService $taskService)
-    // {
-    //     $validated = $this->validate();
+    public function edit(TaskService $taskService): task
+    {
+        $validated = $this->validate();
 
-    //     $taskService->update(
-    //         auth()->user(),
-    //         UpdateTaskDTO::from([
-    //             'project' => $this->project,
-    //             'task_id' => $this->id,
-    //             ...$validated,
-    //         ])
-    //     );
-    // }
+        return $taskService->update(
+            UpdateTaskDTO::from([
+                'user' => auth()->user(),
+                'task_id' => $this->id,
+                ...$validated,
+            ])
+        );
+    }
 
     public function maybeLoadTask(?int $taskId)
     {

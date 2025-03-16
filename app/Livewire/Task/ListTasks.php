@@ -4,7 +4,7 @@ namespace App\Livewire\Task;
 
 use App\Enums\SortDirection;
 use App\Livewire\Traits\WithSorting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Services\OrganizationService;
 use App\Services\TaskService;
 use Carbon\Carbon;
@@ -13,7 +13,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[On(['task-created', 'task-updated'])]
+#[On(['task-created', 'task-updated', 'task-deleted'])]
 class ListTasks extends Component
 {
     use WithPagination, WithSorting;
@@ -22,7 +22,7 @@ class ListTasks extends Component
     public ?string $search = null;
 
     #[Url()]
-    public ?string $status = null;
+    public ?string $status = 'open';
 
     #[Url()]
     public ?int $priorityId = null;
@@ -35,11 +35,11 @@ class ListTasks extends Component
 
     public bool $isFiltred = false;
 
-    public Project $project;
+    public Workstream $workstream;
 
-    public function mount(Project $project)
+    public function mount(Workstream $workstream)
     {
-        $this->project = $project;
+        $this->workstream = $workstream;
         $this->sortBy = 'due_date';
         $this->sortDirection = SortDirection::DESC;
 
@@ -65,18 +65,6 @@ class ListTasks extends Component
         $this->reset(['search', 'status', 'dateRange', 'priorityId', 'onlyLates']);
     }
 
-    // public function delete(TaskService $taskService, int $taskId)
-    // {
-    //     $taskService->delete(
-    //         auth()->user(),
-    //         new DeleteTaskDTO(
-    //             meeting: Task::findOrFail($taskId)
-    //         )
-    //     );
-
-    //     $this->dispatch('task-deleted', taskId: $taskId);
-    // }
-
     protected function list(TaskService $taskService)
     {
         if ($this->onlyLates) {
@@ -89,7 +77,7 @@ class ListTasks extends Component
                 ? Carbon::parse($this->dateRange['start']) : null;
 
         return $taskService->list(
-            project: $this->project,
+            taskable: $this->workstream,
             search: $this->search,
             priorityId: $this->priorityId,
             status: $this->onlyLates ? 'open' : $this->status,
@@ -115,7 +103,7 @@ class ListTasks extends Component
         $this->isFiltred = $this->isFiltered();
 
         return view('livewire.task.list-tasks', [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
             'organization' => $organizationService->getOrganization(),
             'tasks' => $this->list($taskService),
         ]);

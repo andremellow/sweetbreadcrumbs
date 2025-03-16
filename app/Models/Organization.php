@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organization extends Model
@@ -48,13 +49,13 @@ class Organization extends Model
     // }
 
     /**
-     * Organization's Projects.
+     * Organization's Workstreams.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function projects()
+    public function workstreams()
     {
-        return $this->hasMany(project::class);
+        return $this->hasMany(Workstream::class);
     }
 
     /**
@@ -78,7 +79,7 @@ class Organization extends Model
     }
 
     /**
-     * Organization's Projects.
+     * Organization's Workstreams.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
@@ -95,5 +96,24 @@ class Organization extends Model
     public function users()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function tasks()
+    {
+        return Task::whereHasMorph(
+            'taskable',
+            [Workstream::class], // Add more models here
+            function ($query) {
+                $query->where('organization_id', $this->id);
+            }
+        );
+    }
+
+    /**
+     * Get all of the meetings for the organization.
+     */
+    public function meetings(): HasManyThrough
+    {
+        return $this->hasManyThrough(Meeting::class, Workstream::class);
     }
 }

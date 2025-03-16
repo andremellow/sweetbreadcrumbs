@@ -11,6 +11,6 @@ it('validates required fields', function () {
 
 it('validates the rules', function () {
     expect(CreateOrganizationDTO::rules())->toBe([
-        'name' => ['required', 'string', 'min:2', 'max:50'],
+        'name' => ['required', 'string', 'min:2', 'max:50', 'unique:organizations'],
     ]);
 });

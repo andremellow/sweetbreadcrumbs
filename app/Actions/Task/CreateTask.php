@@ -16,7 +16,7 @@ class CreateTask
      */
     public function __invoke(CreateTaskDTO $createTaskDTO
     ): Task {
-        return $createTaskDTO->project->tasks()->create([
+        return $createTaskDTO->taskable->tasks()->create([
             'name' => $createTaskDTO->name,
             'description' => $createTaskDTO->description,
             'priority_id' => $createTaskDTO->priority_id,

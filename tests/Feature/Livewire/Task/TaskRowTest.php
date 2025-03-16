@@ -3,7 +3,7 @@
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Task\TaskRow;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskService;
@@ -17,9 +17,9 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
 
-    // Create test projects
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->task = Task::factory()->for($this->project, 'taskable')->withPriority($this->organization)->create();
+    // Create test workstreams
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->task = Task::factory()->for($this->workstream, 'taskable')->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
     View::share('currentOrganizationSlug', $this->organization->slug);
@@ -27,16 +27,6 @@ beforeEach(function () {
 
 afterEach(function () {
     Mockery::close();
-});
-
-it('renders a open task', function () {
-    Livewire::actingAs($this->user)
-        ->test(TaskRow::class, ['task' => $this->task])
-        ->assertSee($this->task->name)
-        ->assertSee($this->task->priority->name)
-        ->assertSee($this->task->due_date->format('m/d/Y'))
-        ->assertSeeHtml('wire:click="close')
-        ->assertStatus(200);
 });
 
 it('renders a late task', function () {
@@ -50,6 +40,39 @@ it('renders a late task', function () {
         ->assertSee($this->task->due_date->format('m/d/Y'))
         ->assertSeeHtml('wire:click="close')
         ->assertSeeHtml('is-late text-red-300')
+        ->assertStatus(200);
+});
+
+it('refreshes task', function () {
+    $date = Carbon::now()->addDay(9);
+    $this->task->refresh();
+
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->assertSee($this->task->name)
+        ->assertSee($this->task->priority->name)
+        ->assertSee($this->task->due_date->format('m/d/Y'))
+        ->tap(function() use ($date) {
+            $this->task->update([
+                'name' => 'new name',
+                'description' => '',
+                'priority_id' => 6,
+                'due_date' => $date,
+            ]);
+        })
+        ->dispatch("task-updated.{$this->task->id}")
+        ->assertSee('new name')
+        ->assertSee($date->format('m/d/Y'))
+        ->assertStatus(200);
+});
+
+it('renders a open task', function () {
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->assertSee($this->task->name)
+        ->assertSee($this->task->priority->name)
+        ->assertSee($this->task->due_date->format('m/d/Y'))
+        ->assertSeeHtml('wire:click="close')
         ->assertStatus(200);
 });
 
@@ -91,4 +114,17 @@ it('closes a task successfully and dispatches event', function () {
     $this->task->refresh();
 
     expect($this->task->completed_at->toDateString())->toBe(Carbon::now()->toDateString());
+});
+
+
+it('deletes a task successfully and dispatches event', function () {
+    Livewire::actingAs($this->user)
+        ->test(TaskRow::class, ['task' => $this->task])
+        ->call('delete', app(TaskService::class), $this->task->id)
+        ->assertDispatched('task-deleted', taskId: $this->task->id)
+        ->assertDispatched('task-deleted.'.$this->task->id);
+
+    $this->task->refresh();
+
+    expect($this->task->deleted_at)->not->toBeNull();
 });

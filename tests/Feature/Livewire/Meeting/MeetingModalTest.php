@@ -4,7 +4,7 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Meeting\MeetingModal;
 use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
@@ -15,9 +15,9 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
 
-    // Create test projects
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->meeting = Meeting::factory()->for($this->project)->create();
+    // Create test workstreams
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->meeting = Meeting::factory()->for($this->workstream)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
 });
@@ -28,10 +28,10 @@ afterEach(function () {
 
 it('renders the MeetingModal component successfully', function () {
     Livewire::actingAs($this->user)
-        ->test(MeetingModal::class, ['project' => $this->project])
+        ->test(MeetingModal::class, ['workstream' => $this->workstream])
         ->assertStatus(200)
         ->assertSee('Log It Before You Forget It—Because Meetings Deserve a Paper Trail!')
-        ->assertSee($this->project->name)
+        ->assertSee($this->workstream->name)
         ->assertSee('Name')
         ->assertSee('Description')
         ->assertSee('Meeting date')
@@ -45,7 +45,7 @@ it('renders the MeetingModal component successfully', function () {
 it('loads a meeting', function () {
     Livewire::actingAs($this->user)
         ->test(MeetingModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->call('load', $this->meeting->id)
         ->assertSet('form.id', $this->meeting->id)
@@ -60,7 +60,7 @@ it('loads a meeting', function () {
 it('resets the form if a meeting id null is given', function () {
     Livewire::actingAs($this->user)
         ->test(MeetingModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->call('load', $this->meeting->id)
         ->assertSet('form.name', $this->meeting->name)
@@ -70,12 +70,12 @@ it('resets the form if a meeting id null is given', function () {
 });
 
 it('is listeing for load-meeting-form-modal event', function () {
-    $projectModal = Livewire::actingAs($this->user)
+    $workstreamModal = Livewire::actingAs($this->user)
         ->test(MeetingModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ]);
 
-    $projectModal
+    $workstreamModal
         ->dispatch('load-meeting-form-modal', meetingId: $this->meeting->id)
         ->assertSet('form.id', $this->meeting->id)
         ->assertSet('form.name', $this->meeting->name)
@@ -87,7 +87,7 @@ it('is listeing for load-meeting-form-modal event', function () {
 it('resets form when modal is closed', function () {
     Livewire::actingAs($this->user)
         ->test(MeetingModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->set('form.id', $this->meeting->id)
         ->set('form.name', $this->meeting->name)
@@ -104,7 +104,7 @@ it('validates', function () {
 
     Livewire::actingAs($this->user)
         ->test(MeetingModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->call('save')
         ->assertHasErrors([
@@ -115,20 +115,20 @@ it('validates', function () {
 });
 
 it('created a meeting', function () {
-    $meeting = $this->project->meetings()->where('name', 'New Meeting Name 123')->first();
+    $meeting = $this->workstream->meetings()->where('name', 'New Meeting Name 123')->first();
     expect($meeting)->toBeNull();
 
     $date = Carbon::now();
     Livewire::actingAs($this->user)
         ->test(MeetingModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->set('form.name', 'New Meeting Name 123')
         ->set('form.description', 'Description of the meeting')
         ->set('form.date', $date)
         ->call('save');
 
-    $meeting = $this->project->meetings()->where('name', 'New Meeting Name 123')->first();
+    $meeting = $this->workstream->meetings()->where('name', 'New Meeting Name 123')->first();
 
     expect($meeting->name)->toBe('New Meeting Name 123');
     expect($meeting->description)->toBe('Description of the meeting');
@@ -139,7 +139,7 @@ it('updates a meeting', function () {
     $date = Carbon::now();
     Livewire::actingAs($this->user)
         ->test(MeetingModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->call('load', meetingId: $this->meeting->id)
         ->set('form.name', 'New Meeting Name 123')

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('risk_status_id')->constrained();
             $table->foreignId('risk_level_id')->constrained();
             $table->foreignId('probability_id')->constrained();
-            $table->foreignId('project_id')->constrained();
+            $table->foreignId('workstream_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
 

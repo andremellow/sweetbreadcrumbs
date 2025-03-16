@@ -4,7 +4,7 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\ConfigEnum;
 use App\Livewire\Task\TaskModal;
-use App\Models\Project;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\ConfigService;
@@ -26,9 +26,9 @@ beforeEach(function () {
 
     $this->configService = app(ConfigService::class);
 
-    // Create test projects
-    $this->project = Project::factory()->for($this->organization)->withPriority($this->organization)->create();
-    $this->task = Task::factory()->for($this->project, 'taskable')->withPriority($this->organization)->create();
+    // Create test workstreams
+    $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
+    $this->task = Task::factory()->for($this->workstream, 'taskable')->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
 
@@ -40,10 +40,10 @@ afterEach(function () {
 
 it('renders the TaskModal component successfully', function () {
     Livewire::actingAs($this->user)
-        ->test(TaskModal::class, ['project' => $this->project])
+        ->test(TaskModal::class, ['workstream' => $this->workstream])
         ->assertStatus(200)
         ->assertSee('Small Steps, Big Wins—Let’s Tackle It!')
-        ->assertSee($this->project->name)
+        ->assertSee($this->workstream->name)
         ->assertSee('Name')
         ->assertSee('Description')
         ->assertSee('Priority')
@@ -58,7 +58,7 @@ it('renders the TaskModal component successfully', function () {
 it('loads a task', function () {
     Livewire::actingAs($this->user)
         ->test(TaskModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->call('load', $this->task->id)
         ->assertSet('form.id', $this->task->id)
@@ -74,7 +74,7 @@ it('loads a task', function () {
 it('resets the form if a task id null is given', function () {
     Livewire::actingAs($this->user)
         ->test(TaskModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->call('load', $this->task->id)
         ->assertSet('form.name', $this->task->name)
@@ -87,12 +87,12 @@ it('resets the form if a task id null is given', function () {
 });
 
 it('is listeing for load-task-form-modal event', function () {
-    $projectModal = Livewire::actingAs($this->user)
+    $workstreamModal = Livewire::actingAs($this->user)
         ->test(TaskModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ]);
 
-    $projectModal
+    $workstreamModal
         ->dispatch('load-task-form-modal', taskId: $this->task->id)
         ->assertSet('form.id', $this->task->id)
         ->assertSet('form.name', $this->task->name)
@@ -103,7 +103,7 @@ it('is listeing for load-task-form-modal event', function () {
 it('resets form when modal is closed', function () {
     Livewire::actingAs($this->user)
         ->test(TaskModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->set('form.id', $this->task->id)
         ->set('form.name', $this->task->name)
@@ -119,7 +119,7 @@ it('validates', function () {
 
     Livewire::actingAs($this->user)
         ->test(TaskModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->set('form.priority_id', null)
         ->call('save')
@@ -130,13 +130,13 @@ it('validates', function () {
 });
 
 it('created a task', function () {
-    $task = $this->project->tasks()->where('name', 'New Task Name 123')->first();
+    $task = $this->workstream->tasks()->where('name', 'New Task Name 123')->first();
     expect($task)->toBeNull();
 
     $date = Carbon::now();
     Livewire::actingAs($this->user)
         ->test(TaskModal::class, [
-            'project' => $this->project,
+            'workstream' => $this->workstream,
         ])
         ->set('form.name', 'New Task Name 123')
         ->set('form.description', 'Description of the task')
@@ -144,7 +144,7 @@ it('created a task', function () {
         ->set('form.due_date', $date)
         ->call('save');
 
-    $task = $this->project->tasks()->where('name', 'New Task Name 123')->first();
+    $task = $this->workstream->tasks()->where('name', 'New Task Name 123')->first();
 
     expect($task->name)->toBe('New Task Name 123');
     expect($task->description)->toBe('Description of the task');
@@ -152,21 +152,23 @@ it('created a task', function () {
     expect($task->due_date->toDateString())->toBe($date->toDateString());
 });
 
-// it('updates a task', function () {
-//     $date = Carbon::now();
-//     Livewire::actingAs($this->user)
-//         ->test(TaskModal::class, [
-//             'project' => $this->project,
-//         ])
-//         ->call('load', taskId: $this->task->id)
-//         ->set('form.name', 'New Task Name 123')
-//         ->set('form.description', 'this is the new description')
-//         ->set('form.date', $date)
-//         ->call('save');
+it('updates a task', function () {
+    $date = Carbon::now();
+    Livewire::actingAs($this->user)
+        ->test(TaskModal::class, [
+            'workstream' => $this->workstream,
+        ])
+        ->call('load', taskId: $this->task->id)
+        ->set('form.name', 'New Task Name 123')
+        ->set('form.description', 'this is the new description')
+        ->set('form.priority_id', 6)
+        ->set('form.due_date', $date)
+        ->call('save');
 
-//     $this->task->refresh();
+    $this->task->refresh();
 
-//     expect($this->task->name)->toBe('New Task Name 123');
-//     expect($this->task->description)->toBe('this is the new description');
-//     expect($this->task->date->toDateString())->toBe($date->toDateString());
-// });
+    expect($this->task->name)->toBe('New Task Name 123');
+    expect($this->task->description)->toBe('this is the new description');
+    expect($this->task->priority_id)->toBe(6);
+    expect($this->task->due_date->toDateString())->toBe($date->toDateString());
+});

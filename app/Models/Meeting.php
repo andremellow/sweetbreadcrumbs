@@ -40,9 +40,9 @@ class Meeting extends Model
         ];
     }
 
-    public function project()
+    public function workstream()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Workstream::class);
     }
 
     // /**

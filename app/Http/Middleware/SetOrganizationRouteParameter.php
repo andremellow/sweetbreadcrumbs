@@ -23,7 +23,7 @@ class SetOrganizationRouteParameter
         $organization = $request->route('organization');
 
         if ($organization == null) {
-            $organization = app(UserService::class)->getCurrentOrganization()->slug;
+            $organization = app(UserService::class)->getCurrentOrganization() ? app(UserService::class)->getCurrentOrganization()->slug : '';
         } elseif ($organization instanceof Organization) {
             $organization = $organization->slug;
         }

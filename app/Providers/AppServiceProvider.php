@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Actions\Organization\CreateOrganization;
 use App\Models\Organization;
+use App\Models\User;
 use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Console\Application;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,7 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+         // @codeCoverageIgnoreStart
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -38,11 +45,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(OrganizationService::class, function () {
             $organization = request()->route('organization');
-
             if (($organization instanceof Organization) === false) {
                 $organization = Organization::whereSlug($organization)->first();
             }
-
+            
             return new OrganizationService(
                 app(CreateOrganization::class),
                 $organization

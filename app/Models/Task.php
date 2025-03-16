@@ -69,13 +69,13 @@ class Task extends Model
     }
 
     // /**
-    //  * Task Project.
+    //  * Task Workstream.
     //  *
     //  * @return BelongsTo
     //  */
-    // public function project(): BelongsTo
+    // public function workstream(): BelongsTo
     // {
-    //     return $this->belongsTo(Project::class);
+    //     return $this->belongsTo(Workstream::class);
     // }
 
     /**

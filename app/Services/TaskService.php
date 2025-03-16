@@ -4,14 +4,17 @@ namespace App\Services;
 
 use App\Actions\Task\CloseTask;
 use App\Actions\Task\CreateTask;
+use App\Actions\Task\DeleteTask;
 use App\Actions\Task\OpenTask;
+use App\Actions\Task\UpdateTask;
 use App\DTO\Task\CloseTaskDTO;
 use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\DeleteTaskDTO;
 use App\DTO\Task\OpenTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
 use App\Enums\SortDirection;
-use App\Models\Project;
+use App\Models\Organization;
+use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -26,23 +29,27 @@ class TaskService
      * @param CloseTask           $closeTask
      * @param OpenTask            $openTask
      * @param CreateTask          $createTask
+     * @param DeleteTask          $deleteTask
      */
     public function __construct(
         protected OrganizationService $organizationService,
         protected CloseTask $closeTask,
         protected OpenTask $openTask,
-        protected CreateTask $createTask
+        protected CreateTask $createTask,
+        protected UpdateTask $updateTask,
+        protected DeleteTask $deleteTask,
     ) {}
 
     public function list(
-        Project $project,
+        Workstream | Organization $taskable,
         ?string $search = null,
         ?int $priorityId = null,
         ?string $status = null,
         ?Carbon $dateStart = null,
         ?Carbon $dateEnd = null,
         ?string $sortBy = 'due_date',
-        ?SortDirection $sortDirection = SortDirection::DESC
+        ?SortDirection $sortDirection = SortDirection::DESC,
+        ?int $pageSize = null
     ): LengthAwarePaginator {
 
         if (! in_array($sortBy, ['name', 'due_date', 'priority'])) {
@@ -55,7 +62,7 @@ class TaskService
                 break;
         }
 
-        return $project->tasks()->with('priority')
+        return $taskable->tasks()->with('priority', 'taskable')
             ->leftJoin('priorities', 'tasks.priority_id', '=', 'priorities.id')
             ->when($search, function ($query, $search) {
                 $query->whereLike('tasks.name', "%$search%")
@@ -78,20 +85,22 @@ class TaskService
                 return $query->whereDate('tasks.due_date', '<=', $dateEnd);
             })
             ->orderBy($sortBy, $sortDirection->value)
-            ->select('tasks.*') // make sure to select projects columns
-            ->paginate(config('app.pagination_items'));
+            ->select('tasks.*') // make sure to select workstreams columns
+            ->paginate($pageSize ?? config('app.pagination_items'));
     }
 
-    // public function lastMeeings(
-    //     Project $project,
-    //     int $take = 5
-    // ) {
-
-    //     return $project->tasks()
-    //             ->orderBy('date', SortDirection::DESC->value)
-    //             ->take($take)
-    //             ->get();
-    // }
+    public function listForCard(
+        Workstream | Organization $taskable,
+        ?int $pageSize = null
+    ): LengthAwarePaginator {
+        return $taskable->tasks()->with('priority', 'taskable')
+            ->leftJoin('priorities', 'tasks.priority_id', '=', 'priorities.id')
+            ->whereNull('tasks.completed_at')
+            ->orderBy('priorities.order')
+            ->orderBy('due_date')
+            ->select('tasks.*') // make sure to select projeworkstreamscts columns
+            ->paginate($pageSize ?? config('app.pagination_items'));
+    }
 
     /**
      * Creates a new task.
@@ -114,14 +123,13 @@ class TaskService
      *
      * @return Task
      */
-    // public function update(
-    //     User $user,
-    //     UpdateTaskDTO $updateTaskDTO
-    // ): Task {
-    //     return ($this->updateTask)(
-    //         $updateTaskDTO
-    //     );
-    // }
+    public function update(
+        UpdateTaskDTO $updateTaskDTO
+    ): Task {
+        return ($this->updateTask)(
+            $updateTaskDTO
+        );
+    }
 
     /**
      * Close a Task.
@@ -161,10 +169,9 @@ class TaskService
      *
      * @return void
      */
-    // public function delete(
-    //     User $user,
-    //     DeleteTaskDTO $deleteTaskDTO
-    // ): void {
-    //     ($this->deleteTask)($deleteTaskDTO);
-    // }
+    public function delete(
+        DeleteTaskDTO $deleteTaskDTO
+    ): void {
+        ($this->deleteTask)($deleteTaskDTO);
+    }
 }
