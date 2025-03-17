@@ -12,11 +12,13 @@ Route::get('login', function (AuthKitLoginRequest $request) {
 
 Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
     $request->authenticate();
-
-    $userService = new UserService($request->user());
+    $user = $request->user();
+    $userService = new UserService($user);
     $organization = $userService->getCurrentOrganization();
 
-    if ($organization === null) {
+    if ($user->first_name === null || $user->first_name === '') {
+        return redirect(route('welcome.profile'));
+    } if ($organization === null) {
         return redirect(route('welcome.organization'));
     }
 
