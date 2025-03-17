@@ -38,8 +38,6 @@ class WorkstreamModal extends Component
 
     public function save(OrganizationService $organizationService, WorkstreamService $workstreamService)
     {
-        $organizationService->setOrganization($this->organization);
-
         if ($this->form->id === null) {
             $workstream = $this->form->add($organizationService, $workstreamService);
             $this->dispatch(EventEnum::WORKSTREAM_CREATED->value, workstreamId: $workstream->id);
