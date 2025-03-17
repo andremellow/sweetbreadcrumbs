@@ -17,6 +17,8 @@ beforeEach(function () {
     // Create test user and organization
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    $this->app['session']->start();
+    session(['current_organization_id' => $this->organization->id ]);
 
     // Create test workstreams
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
