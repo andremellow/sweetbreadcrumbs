@@ -2,14 +2,13 @@
 
 use App\Http\Middleware\SetOrganizationRouteParameter;
 use App\Livewire\Meeting\ListMeetings;
-use App\Livewire\Workstream\Dashboard as WorkstreamDashboard;
 use App\Livewire\Organization\Dashboard as OrganizationDashboard;
-use App\Livewire\Organization\Welcome;
-use App\Livewire\Workstream\ListWorkstreams;
 use App\Livewire\Task\ListTasks;
 use App\Livewire\Welcome\Organization as WelcomeOrganization;
 use App\Livewire\Welcome\Profile as WelcomeProfile;
 use App\Livewire\Welcome\Workstream as WelcomeWorkstream;
+use App\Livewire\Workstream\Dashboard as WorkstreamDashboard;
+use App\Livewire\Workstream\ListWorkstreams;
 use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 use Livewire\Livewire;
@@ -23,7 +22,6 @@ Route::middleware([
     ValidateSessionWithWorkOS::class,
     SetOrganizationRouteParameter::class,
 ])->group(function () {
-
 
     // Set Livewire update route (handles multi-tenant URLs)
     Livewire::setUpdateRoute(fn ($handle) => Route::post('livewire/update', $handle));
@@ -44,7 +42,7 @@ Route::middleware([
 
         Route::get('dashboard', OrganizationDashboard::class)->name('dashboard');
     });
-    
+
 });
 
 require __DIR__.'/auth.php';

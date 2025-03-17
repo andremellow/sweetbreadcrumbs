@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Workstream;
 
+use App\Enums\EventEnum;
 use App\Livewire\Forms\WorkstreamForm;
 use App\Models\Organization;
 use App\Services\OrganizationService;
@@ -22,7 +23,7 @@ class WorkstreamModal extends Component
         $this->organization = $organizationService->getOrganization();
     }
 
-    #[On(['load-workstream-form-modal'])]
+    #[On([EventEnum::LOAD_WORKSTREAM_FORM_MODAL->value])]
     public function load(?int $workstreamId = null)
     {
         $this->form->maybeLoadWorkstream($workstreamId);
@@ -37,14 +38,12 @@ class WorkstreamModal extends Component
 
     public function save(OrganizationService $organizationService, WorkstreamService $workstreamService)
     {
-        $organizationService->setOrganization($this->organization);
-
         if ($this->form->id === null) {
             $workstream = $this->form->add($organizationService, $workstreamService);
-            $this->dispatch('workstream-created', workstreamId: $workstream->id);
+            $this->dispatch(EventEnum::WORKSTREAM_CREATED->value, workstreamId: $workstream->id);
         } else {
             $this->form->edit($organizationService, $workstreamService);
-            $this->dispatch('workstream-updated', workstreamId: $this->form->id);
+            $this->dispatch(EventEnum::WORKSTREAM_UPDATED->value, workstreamId: $this->form->id);
         }
 
         $this->reset();

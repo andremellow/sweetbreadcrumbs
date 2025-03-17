@@ -27,7 +27,7 @@
                         <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
                         
                         <flux:menu>
-                            <flux:menu.item wire:click="$dispatch('load-meeting-form-modal', { meetingId: {{ $meeting->id }} })" icon="pencil-square" >{{ __('Edit Meeting') }}</flux:menu.item>
+                            <flux:menu.item wire:click="$dispatch('{{ App\Enums\EventEnum::LOAD_MEETING_FORM_MODAL }}', { meetingId: {{ $meeting->id }} })" icon="pencil-square" >{{ __('Edit Meeting') }}</flux:menu.item>
                             <flux:menu.item 
                             wire:click="delete({{ $meeting->id }})"
                             wire:confirm="Are you sure you want to delete this meeting?"

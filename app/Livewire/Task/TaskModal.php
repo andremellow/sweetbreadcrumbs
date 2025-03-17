@@ -3,6 +3,7 @@
 namespace App\Livewire\Task;
 
 use App\Enums\ConfigEnum;
+use App\Enums\EventEnum;
 use App\Livewire\Forms\TaskForm;
 use App\Models\Workstream;
 use App\Services\ConfigService;
@@ -40,11 +41,11 @@ class TaskModal extends Component
     {
         if ($this->form->id === null) {
             $task = $this->form->add($taskService);
-            $this->dispatch('task-created', taskId: $task->id);
+            $this->dispatch(EventEnum::TASK_CREATED->value, taskId: $task->id);
         } else {
             $task = $this->form->edit($taskService);
-            $this->dispatch('task-updated', taskId: $task->id);
-            $this->dispatch("task-updated.{$task->id}");
+            $this->dispatch(EventEnum::TASK_UPDATED->value, taskId: $task->id);
+            $this->dispatch(EventEnum::TASK_UPDATED->value.".{$task->id}");
         }
 
         $this->form->resetForm();

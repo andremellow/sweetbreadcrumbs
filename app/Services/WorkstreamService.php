@@ -10,8 +10,8 @@ use App\DTO\Workstream\DeleteWorkstreamDTO;
 use App\DTO\Workstream\UpdateWorkstreamDTO;
 use App\Enums\SortDirection;
 use App\Models\Organization;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class WorkstreamService
@@ -61,7 +61,7 @@ class WorkstreamService
     /**
      * Creates a new workstream.
      *
-     * @param Use              $user,
+     * @param Use                 $user,
      * @param CreateWorkstreamDTO $createWorkstreamDTO,
      *
      * @return Workstream
@@ -95,7 +95,7 @@ class WorkstreamService
     /**
      * Delete an existing workstream.
      *
-     * @param User             $user,
+     * @param User                $user,
      * @param DeleteWorkstreamDTO $deleteWorkstreamDTO
      *
      * @return Workstream

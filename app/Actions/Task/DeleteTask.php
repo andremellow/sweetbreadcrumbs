@@ -12,10 +12,10 @@ class DeleteTask
      *
      * @param DeleteTaskDTO $updateTaskDTO,
      *
-     * @return Void
+     * @return void
      */
     public function __invoke(DeleteTaskDTO $updateTaskDTO
-    ): Void {
+    ): void {
         Task::find($updateTaskDTO->task_id)->delete();
     }
 }

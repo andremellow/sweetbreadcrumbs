@@ -2,10 +2,11 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\EventEnum;
 use App\Livewire\Task\TaskRow;
-use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Workstream;
 use App\Services\TaskService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
@@ -52,7 +53,7 @@ it('refreshes task', function () {
         ->assertSee($this->task->name)
         ->assertSee($this->task->priority->name)
         ->assertSee($this->task->due_date->format('m/d/Y'))
-        ->tap(function() use ($date) {
+        ->tap(function () use ($date) {
             $this->task->update([
                 'name' => 'new name',
                 'description' => '',
@@ -60,7 +61,7 @@ it('refreshes task', function () {
                 'due_date' => $date,
             ]);
         })
-        ->dispatch("task-updated.{$this->task->id}")
+        ->dispatch(EventEnum::TASK_UPDATED->value.".{$this->task->id}")
         ->assertSee('new name')
         ->assertSee($date->format('m/d/Y'))
         ->assertStatus(200);
@@ -98,7 +99,7 @@ it('opens a task successfully and dispatches event', function () {
     Livewire::actingAs($this->user)
         ->test(TaskRow::class, ['task' => $this->task])
         ->call('open', app(TaskService::class), $this->task->id)
-        ->assertDispatched('task-opened', taskId: $this->task->id);
+        ->assertDispatched(EventEnum::TASK_OPENED->value, taskId: $this->task->id);
 
     $this->task->refresh();
 
@@ -109,20 +110,19 @@ it('closes a task successfully and dispatches event', function () {
     Livewire::actingAs($this->user)
         ->test(TaskRow::class, ['task' => $this->task])
         ->call('close', app(TaskService::class), $this->task->id)
-        ->assertDispatched('task-closed', taskId: $this->task->id);
+        ->assertDispatched(EventEnum::TASK_CLOSED->value, taskId: $this->task->id);
 
     $this->task->refresh();
 
     expect($this->task->completed_at->toDateString())->toBe(Carbon::now()->toDateString());
 });
 
-
 it('deletes a task successfully and dispatches event', function () {
     Livewire::actingAs($this->user)
         ->test(TaskRow::class, ['task' => $this->task])
         ->call('delete', app(TaskService::class), $this->task->id)
-        ->assertDispatched('task-deleted', taskId: $this->task->id)
-        ->assertDispatched('task-deleted.'.$this->task->id);
+        ->assertDispatched(EventEnum::TASK_DELETED->value, taskId: $this->task->id)
+        ->assertDispatched(EventEnum::TASK_DELETED->value.'.'.$this->task->id);
 
     $this->task->refresh();
 

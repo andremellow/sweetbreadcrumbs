@@ -2,14 +2,14 @@
 
 namespace App\Livewire\Workstream;
 
+use App\Enums\EventEnum;
 use App\Livewire\Traits\CloseTask;
 use App\Models\Workstream;
-use App\Services\MeetingService;
 use App\Services\TaskService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-#[On(['tasks-created', 'tasks-updated', 'tasks-completed'])]
+#[On([EventEnum::TASK_CREATED->value, EventEnum::TASK_DELETED->value, EventEnum::TASK_CLOSED->value])]
 class ListTasksCard extends Component
 {
     use CloseTask;
@@ -22,7 +22,7 @@ class ListTasksCard extends Component
             'tasks' => $taskService->listForCard(
                 taskable: $this->workstream,
                 pageSize: 5
-            )
+            ),
         ]);
     }
 }

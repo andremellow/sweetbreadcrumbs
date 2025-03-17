@@ -2,11 +2,12 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\EventEnum;
 use App\Enums\SortDirection;
 use App\Livewire\Meeting\ListMeetings;
 use App\Models\Meeting;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use App\Services\MeetingService;
 use Flux\DateRange;
 use Illuminate\Support\Facades\URL;
@@ -18,7 +19,7 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
     $this->app['session']->start();
-    session(['current_organization_id' => $this->organization->id ]);
+    session(['current_organization_id' => $this->organization->id]);
 
     // Create test workstreams
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
@@ -73,7 +74,7 @@ it('resets the filter values when reset event dispatched', function () {
         ->set('search', 'Filtered Workstream');
 
     $component
-        ->dispatch('reset')
+        ->dispatch(EventEnum::RESET->value)
         ->assertSet('name', null);
 });
 
@@ -97,7 +98,7 @@ it('deletes a meeting successfully and dispatches event', function () {
     Livewire::actingAs($this->user)
         ->test(ListMeetings::class, ['workstream' => $this->workstream])
         ->call('delete', app(MeetingService::class), $meetingToDelete->id)
-        ->assertDispatched('meeting-deleted', meetingId: $meetingToDelete->id);
+        ->assertDispatched(EventEnum::MEETING_DELETED->value, meetingId: $meetingToDelete->id);
 
     $meetingToDelete->refresh();
 

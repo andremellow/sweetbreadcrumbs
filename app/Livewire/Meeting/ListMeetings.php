@@ -3,6 +3,7 @@
 namespace App\Livewire\Meeting;
 
 use App\DTO\Meeting\DeleteMeetingDTO;
+use App\Enums\EventEnum;
 use App\Livewire\Traits\WithSorting;
 use App\Models\Meeting;
 use App\Models\Workstream;
@@ -14,7 +15,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[On(['meeting-created', 'meeting-updated'])]
+#[On([EventEnum::MEETING_CREATED->value, EventEnum::MEETING_UPDATED->value])]
 class ListMeetings extends Component
 {
     use WithPagination, WithSorting;
@@ -37,7 +38,7 @@ class ListMeetings extends Component
 
     public function applyFilter() {}
 
-    #[On('reset')]
+    #[On(EventEnum::RESET->value)]
     public function resetForm()
     {
         $this->reset('search', 'dateRange');
@@ -64,7 +65,7 @@ class ListMeetings extends Component
             )
         );
 
-        $this->dispatch('meeting-deleted', meetingId: $meetingId);
+        $this->dispatch(EventEnum::MEETING_DELETED->value, meetingId: $meetingId);
     }
 
     public function render(OrganizationService $organizationService, MeetingService $meetingService)

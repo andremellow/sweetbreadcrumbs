@@ -17,7 +17,7 @@ class UpdateTask
     public function __invoke(UpdateTaskDTO $updateTaskDTO
     ): Task {
         $task = Task::findOrFail($updateTaskDTO->task_id);
-        
+
         $task->update([
             'name' => $updateTaskDTO->name,
             'description' => $updateTaskDTO->description,

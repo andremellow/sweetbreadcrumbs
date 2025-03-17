@@ -2,10 +2,11 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\EventEnum;
 use App\Enums\SortDirection;
 use App\Livewire\Workstream\ListWorkstreams;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use App\Services\OrganizationService;
 use App\Services\WorkstreamService;
 use Illuminate\Support\Facades\URL;
@@ -86,7 +87,7 @@ it('deletes a workstream successfully and dispatches event', function () {
     Livewire::actingAs($this->user)
         ->test(ListWorkstreams::class, ['organization' => $this->organization])
         ->call('delete', app(WorkstreamService::class), $workstreamToDelete->id)
-        ->assertDispatched('workstream-deleted', workstreamId: $workstreamToDelete->id);
+        ->assertDispatched(EventEnum::WORKSTREAM_DELETED->value, workstreamId: $workstreamToDelete->id);
 
     $workstreamToDelete->refresh();
 

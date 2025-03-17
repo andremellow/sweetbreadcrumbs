@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Welcome;
 
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Workstream\CreateWorkstreamDTO;
 use App\Enums\ConfigEnum;
 use App\Services\ConfigService;
@@ -32,8 +31,8 @@ class Workstream extends Component
 
     public function create(WorkstreamService $workstreamService)
     {
-        $this->validate(); 
-        
+        $this->validate();
+
         $workstream = $workstreamService->create(
             auth()->user(),
             new CreateWorkstreamDTO(
@@ -42,7 +41,7 @@ class Workstream extends Component
                 priority_id: $this->priority_id
             )
         );
-        $this->redirect(route('workstreams.dashboard', [ 'organization' => $this->organization->slug, 'workstream' => $workstream ]));
+        $this->redirect(route('workstreams.dashboard', ['organization' => $this->organization->slug, 'workstream' => $workstream]));
     }
 
     #[Layout('components.layouts.welcome')]

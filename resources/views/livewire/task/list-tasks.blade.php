@@ -17,7 +17,7 @@
             </x-form.filter-column>
             <x-form.filter-column span="2">
                 <flux:radio.group wire:model.live="status" size="sm" variant="segmented" :label="__('Status')">
-                    <flux:radio label="All" value=""/>
+                    <flux:radio label="All" value="all"/>
                     <flux:radio label="Open" value="open" icon="scan-line" />
                     <flux:radio label="Closed"  value="closed" icon="square-check-big" />
                 </flux:radio.group>
@@ -28,7 +28,7 @@
         </x-form.filter-form>
         @if(count($tasks) > 0)
             <div wire:loading.class="opacity-50">
-                <x-tasks.table :$tasks :$sortBy :$sortDirection />
+                <x-tasks.table :$tasks :$sortBy :$sortDirection/>
             </div>
         @else
             <x-table-no-data />

@@ -14,9 +14,9 @@ use App\DTO\Task\OpenTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
 use App\Enums\SortDirection;
 use App\Models\Organization;
-use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Workstream;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -41,7 +41,7 @@ class TaskService
     ) {}
 
     public function list(
-        Workstream | Organization $taskable,
+        Workstream|Organization $taskable,
         ?string $search = null,
         ?int $priorityId = null,
         ?string $status = null,
@@ -90,7 +90,7 @@ class TaskService
     }
 
     public function listForCard(
-        Workstream | Organization $taskable,
+        Workstream|Organization $taskable,
         ?int $pageSize = null
     ): LengthAwarePaginator {
         return $taskable->tasks()->with('priority', 'taskable')

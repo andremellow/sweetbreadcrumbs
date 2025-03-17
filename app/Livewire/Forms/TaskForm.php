@@ -4,8 +4,8 @@ namespace App\Livewire\Forms;
 
 use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
-use App\Models\Workstream;
 use App\Models\Task;
+use App\Models\Workstream;
 use App\Services\TaskService;
 use Carbon\Carbon;
 use Livewire\Form;
@@ -42,7 +42,7 @@ class TaskForm extends Form
                 ...$validated,
             ])
         );
-        
+
     }
 
     public function edit(TaskService $taskService): task

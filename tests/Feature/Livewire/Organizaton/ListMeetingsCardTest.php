@@ -4,8 +4,8 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Organization\ListMeetingsCard;
 use App\Models\Meeting;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use App\Services\MeetingService;
 use App\Services\OrganizationService;
 use Illuminate\Support\Facades\URL;
@@ -46,8 +46,8 @@ it('loads meeting card', function () {
     $meetingService = app(MeetingService::class);
 
     $meetings = $meetingService->lastMeeings(
-       source: $this->organization, 
-       take: 5
+        source: $this->organization,
+        take: 5
     );
 
     Livewire::actingAs($this->user)
