@@ -4,10 +4,9 @@ use App\Actions\Organization\CreateOrganization;
 use App\Actions\Task\DeleteTask;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\DeleteTaskDTO;
-use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Models\Workstream;
 
 beforeEach(function () {
     // Create user and organization
@@ -20,7 +19,7 @@ beforeEach(function () {
 });
 
 it('deletes a task', function () {
-     app(DeleteTask::class)(
+    app(DeleteTask::class)(
         new DeleteTaskDTO(
             user: $this->user,
             task_id: $this->task->id,

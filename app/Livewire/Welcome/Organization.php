@@ -18,14 +18,14 @@ class Organization extends Component
 
     public function create(OrganizationService $organizationService)
     {
-        $this->validate(); 
+        $this->validate();
 
         $organization = $organizationService->create(
             auth()->user(),
             new CreateOrganizationDTO(name: $this->name)
         );
 
-        $this->redirect(route('welcome.workstream', [ 'organization' => $organization->slug ]));
+        $this->redirect(route('welcome.workstream', ['organization' => $organization->slug]));
     }
 
     #[Layout('components.layouts.welcome')]

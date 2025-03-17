@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Task;
 
+use App\Enums\EventEnum;
 use App\Enums\SortDirection;
 use App\Livewire\Traits\WithSorting;
 use App\Models\Workstream;
@@ -13,7 +14,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[On(['task-created', 'task-updated', 'task-deleted'])]
+#[On([EventEnum::TASK_CREATED->value])]
 class ListTasks extends Component
 {
     use WithPagination, WithSorting;
@@ -57,9 +58,18 @@ class ListTasks extends Component
         $this->onlyLates = ! $this->onlyLates;
     }
 
+    #[On([EventEnum::TASK_CREATED->value, EventEnum::TASK_DELETED->value])]
     public function applyFilter() {}
 
-    #[On('reset')]
+    #[On([EventEnum::TASK_OPENED->value, EventEnum::TASK_CLOSED->value])]
+    public function maybeReload()
+    {
+        if ($this->status === 'all') {
+            $this->skipRender();
+        }
+    }
+
+    #[On(EventEnum::RESET->value)]
     public function resetForm()
     {
         $this->reset(['search', 'status', 'dateRange', 'priorityId', 'onlyLates']);
@@ -84,7 +94,7 @@ class ListTasks extends Component
             dateStart: $startDate,
             dateEnd: $this->onlyLates ? Carbon::now() : $endDate,
             sortBy: $this->sortBy,
-            sortDirection: $this->sortDirection
+            sortDirection: $this->sortDirection,
         );
     }
 

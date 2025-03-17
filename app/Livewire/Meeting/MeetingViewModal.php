@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Meeting;
 
+use App\Enums\EventEnum;
 use App\Models\Meeting;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
@@ -19,7 +20,7 @@ class MeetingViewModal extends Component
 
     public ?Carbon $date = null;
 
-    #[On(['load-meeting-view-modal'])]
+    #[On([EventEnum::LOAD_MEETING_VIEW_MODAL->value])]
     public function load(?int $meetingId = null)
     {
         $meeting = Meeting::findOrFail($meetingId);

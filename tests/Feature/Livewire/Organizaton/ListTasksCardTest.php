@@ -3,10 +3,9 @@
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Organization\ListTasksCard;
-use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
-use App\Services\MeetingService;
+use App\Models\Workstream;
 use App\Services\OrganizationService;
 use App\Services\TaskService;
 use Illuminate\Support\Facades\URL;
@@ -63,7 +62,7 @@ it('loads meeting card', function () {
 });
 
 it('closes a task', function () {
-    
+
     Livewire::actingAs($this->user)
         ->test(ListTasksCard::class)
         ->call('close', $this->tasks[0]->id);

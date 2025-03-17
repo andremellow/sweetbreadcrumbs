@@ -5,8 +5,8 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Meeting\DeleteMeetingDTO;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Meeting;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 
 beforeEach(function () {
     $this->user = User::factory()->create();

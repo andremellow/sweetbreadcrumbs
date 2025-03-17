@@ -5,13 +5,11 @@ use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Workstream\Dashboard;
 use App\Livewire\Workstream\ListMeetingsCard;
 use App\Livewire\Workstream\ListTasksCard;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
-
-
 
 beforeEach(function () {
     // Create test user and organization
@@ -29,7 +27,7 @@ afterEach(function () {
 });
 
 it('renders the Dashboard component successfully', function () {
-    
+
     Livewire::actingAs($this->user)
         ->test(Dashboard::class, [
             'workstream' => $this->workstream,

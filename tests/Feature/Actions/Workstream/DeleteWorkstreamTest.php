@@ -4,8 +4,8 @@ use App\Actions\Organization\CreateOrganization;
 use App\Actions\Workstream\DeleteWorkstream;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Workstream\DeleteWorkstreamDTO;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 
 beforeEach(function () {
     $this->user = User::factory()->create();

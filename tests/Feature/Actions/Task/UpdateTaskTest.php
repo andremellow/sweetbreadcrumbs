@@ -1,15 +1,13 @@
 <?php
 
 use App\Actions\Organization\CreateOrganization;
-use App\Actions\Task\CreateTask;
 use App\Actions\Task\OpenTask;
 use App\Actions\Task\UpdateTask;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\UpdateTaskDTO;
-use App\Models\Meeting;
-use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Workstream;
 use Carbon\Carbon;
 
 beforeEach(function () {
@@ -24,7 +22,7 @@ beforeEach(function () {
 
 it('Create a task with required fields only', function () {
     // Call OpenTask action
-     app(UpdateTask::class)(
+    app(UpdateTask::class)(
         new UpdateTaskDTO(
             user: $this->user,
             task_id: $this->task->id,

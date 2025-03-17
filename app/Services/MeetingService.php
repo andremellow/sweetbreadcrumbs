@@ -11,15 +11,15 @@ use App\DTO\Meeting\UpdateMeetingDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
 use App\Models\Organization;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MeetingService
 {
     public function list(
-        Organization | Workstream $source,
+        Organization|Workstream $source,
         ?string $search = null,
         ?Carbon $dateStart = null,
         ?Carbon $dateEnd = null,
@@ -48,7 +48,7 @@ class MeetingService
     }
 
     public function lastMeeings(
-        Organization | Workstream $source,
+        Organization|Workstream $source,
         int $take = 5
     ) {
 

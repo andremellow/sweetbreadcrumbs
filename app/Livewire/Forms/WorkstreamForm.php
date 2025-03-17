@@ -23,7 +23,7 @@ class WorkstreamForm extends Form
     public function add($organizationService, $workstreamService)
     {
         $validated = $this->validate();
-        
+
         return $workstreamService->create(
             auth()->user(),
             CreateWorkstreamDTO::from([

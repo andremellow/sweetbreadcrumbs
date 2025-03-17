@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Settings;
 
+use App\Enums\EventEnum;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -40,7 +41,7 @@ class Profile extends Component
 
         $user->save();
 
-        $this->dispatch('profile-updated', name: $user->name);
+        $this->dispatch(EventEnum::PROFILE_UPDATED->value, name: $user->name);
     }
 
     #[Layout('components.layouts.no-sidebar-app')]

@@ -2,12 +2,12 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\EventEnum;
 use App\Enums\SortDirection;
 use App\Livewire\Task\ListTasks;
-use App\Models\Workstream;
 use App\Models\Task;
 use App\Models\User;
-use App\Services\MeetingService;
+use App\Models\Workstream;
 use App\Services\OrganizationService;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -89,7 +89,7 @@ it('resets the filter values when reset event dispatched', function () {
         ->set('search', 'Filtered Workstream');
 
     $component
-        ->dispatch('reset')
+        ->dispatch(EventEnum::RESET->value)
         ->assertSet('search', null);
 });
 
@@ -118,7 +118,6 @@ it('toggles isLate filter', function () {
         ->assertSet('onlyLates', false);
 });
 
-
 it('applyFilter reload with right data', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
@@ -132,43 +131,30 @@ it('applyFilter reload with right data', function () {
 it('it listerning for task-deleted', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
-        ->assertViewHas('tasks', function ($tasks) { 
+        ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 3;
-         })
-         ->tap(function() {
+        })
+        ->tap(function () {
             $this->tasks[1]->delete();
-         })
-        ->dispatch('task-deleted')
-        ->assertViewHas('tasks', function ($tasks) { 
+        })
+        ->dispatch(EventEnum::TASK_DELETED->value)
+        ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 2;
-         });
-        
+        });
+
 });
 
 it('it listerning for task-created', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
-        ->assertViewHas('tasks', function ($tasks) { 
+        ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 3;
-         })
-         ->tap(function() {
+        })
+        ->tap(function () {
             Task::factory()->for($this->workstream, 'taskable')->withPriority($this->organization)->create();
-         })
-        ->dispatch('task-created')
-        ->assertViewHas('tasks', function ($tasks) { 
+        })
+        ->dispatch(EventEnum::TASK_CREATED->value)
+        ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 4;
-         });
-});
-
-it('it listerning for task-updated', function () {
-    Livewire::actingAs($this->user)
-        ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
-        ->assertViewHas('tasks', function ($tasks) { 
-            return count($tasks) === 3;
-         })
-         ->tap(function() {
-            $this->tasks[1]->update(['name' => 'AA task']);
-         })
-        ->dispatch('task-updated')
-        ->assertViewHas('tasks', fn ($tasks) => $tasks->contains(fn ($item) => $item->name === 'AA task'));
+        });
 });

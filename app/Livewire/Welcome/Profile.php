@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Welcome;
 
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Services\OrganizationService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -23,8 +22,8 @@ class Profile extends Component
 
     public function create(OrganizationService $organizationService)
     {
-        $validated = $this->validate(); 
-        
+        $validated = $this->validate();
+
         $user = auth()->user();
 
         $user->fill($validated);
@@ -33,11 +32,11 @@ class Profile extends Component
 
         $organization = $organizationService->getOrganization();
 
-        if($organization === null) {
+        if ($organization === null) {
             return $this->redirect(route('welcome.organization'));
         }
 
-        return $this->redirect(route('dashboard', [ 'organization' => $organization->slug]));
+        return $this->redirect(route('dashboard', ['organization' => $organization->slug]));
     }
 
     #[Layout('components.layouts.welcome')]

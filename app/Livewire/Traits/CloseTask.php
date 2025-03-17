@@ -3,9 +3,8 @@
 namespace App\Livewire\Traits;
 
 use App\DTO\Task\CloseTaskDTO;
-use App\Enums\SortDirection;
+use App\Enums\EventEnum;
 use App\Services\TaskService;
-use Livewire\Attributes\Url;
 
 trait CloseTask
 {
@@ -15,7 +14,11 @@ trait CloseTask
             user: auth()->user(),
             task_id: $taskId
         ));
-        
-        $this->dispatch('task-closed', taskId: $taskId);
+
+        if (isset($this->task)) {
+            $this->task->refresh();
+        }
+
+        $this->dispatch(EventEnum::TASK_CLOSED, taskId: $taskId);
     }
 }

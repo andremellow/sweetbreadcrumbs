@@ -5,9 +5,9 @@ use App\Actions\Workstream\UpdateWorkstream;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Workstream\UpdateWorkstreamDTO;
 use App\Models\Priority;
-use App\Models\Workstream;
 use App\Models\Release;
 use App\Models\User;
+use App\Models\Workstream;
 
 beforeEach(function () {
     $this->user = User::factory()->create();

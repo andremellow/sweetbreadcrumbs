@@ -2,10 +2,11 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\EventEnum;
 use App\Livewire\Meeting\MeetingModal;
 use App\Models\Meeting;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
@@ -69,14 +70,14 @@ it('resets the form if a meeting id null is given', function () {
         ->assertSet('form.name', '');
 });
 
-it('is listeing for load-meeting-form-modal event', function () {
+it('is listeing for EventEnum::LOAD_MEETING_FORM_MODAL event', function () {
     $workstreamModal = Livewire::actingAs($this->user)
         ->test(MeetingModal::class, [
             'workstream' => $this->workstream,
         ]);
 
     $workstreamModal
-        ->dispatch('load-meeting-form-modal', meetingId: $this->meeting->id)
+        ->dispatch(EventEnum::LOAD_MEETING_FORM_MODAL->value, meetingId: $this->meeting->id)
         ->assertSet('form.id', $this->meeting->id)
         ->assertSet('form.name', $this->meeting->name)
         ->assertSet('form.description', $this->meeting->description)
