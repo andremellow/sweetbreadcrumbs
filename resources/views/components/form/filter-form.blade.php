@@ -10,7 +10,7 @@
                     <div class="flex-1 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         {{ $slot }}
                     </div>
-                    <div class="flex h-full items-end justify-start gap-x-2 sm:col-span-1 sm:justify-end mt-5 sm:mt-">
+                    <div class="flex h-full items-end justify-start gap-x-2 sm:col-span-1 sm:justify-end mt-5 sm:mt-0">
                         <flux:button type="submit" icon="filter">
                             Filter
                         </flux:button>
