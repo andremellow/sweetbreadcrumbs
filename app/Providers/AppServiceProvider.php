@@ -11,6 +11,7 @@ use Illuminate\Console\Application;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -45,8 +46,24 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(OrganizationService::class, function () {
             $organization = request()->route('organization');
+
+            //If there is no biding on the component mount
+            //Organization is just a string, need to
+            //Get Organization from DB
             if (($organization instanceof Organization) === false) {
                 $organization = Organization::whereSlug($organization)->first();
+            }
+            
+            if (Session::isStarted() && request()->hasSession()) {
+                if($organization) {
+                    //When organiation is present, need to check if session need to be updated
+                    if($organization->id !== intval(request()->session()->get('current_organization_id')) ) {
+                        request()->session()->put('current_organization_id', $organization->id);
+                    }
+                } else if(request()->session()->has('current_organization_id')) {
+                    //If organization is not present, need to get it from the session
+                    $organization = Organization::find(request()->session()->get('current_organization_id'));
+                }
             }
             
             return new OrganizationService(

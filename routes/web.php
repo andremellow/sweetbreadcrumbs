@@ -8,6 +8,7 @@ use App\Livewire\Organization\Welcome;
 use App\Livewire\Workstream\ListWorkstreams;
 use App\Livewire\Task\ListTasks;
 use App\Livewire\Welcome\Organization as WelcomeOrganization;
+use App\Livewire\Welcome\Profile as WelcomeProfile;
 use App\Livewire\Welcome\Workstream as WelcomeWorkstream;
 use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
@@ -28,6 +29,7 @@ Route::middleware([
     Livewire::setUpdateRoute(fn ($handle) => Route::post('livewire/update', $handle));
 
     Route::group(['middleware' => ['verified']], function () {
+        Route::get('welcome/profile', WelcomeProfile::class)->name('welcome.profile')->withoutMiddleware(SetOrganizationRouteParameter::class);
         Route::get('welcome/organization', WelcomeOrganization::class)->name('welcome.organization')->withoutMiddleware(SetOrganizationRouteParameter::class);
         require __DIR__.'/settings.php';
     });

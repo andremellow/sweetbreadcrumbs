@@ -1,5 +1,5 @@
 @props([ 'meetings'])
-
+<div>
     @if(count($meetings) > 0)
         <div>
             <flux:table class="w-full table-auto">
@@ -47,3 +47,4 @@
                 <div class="text-center">No meeting logged for this workstream</div>
             </div>
         @endif
+</div>

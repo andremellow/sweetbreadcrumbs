@@ -78,6 +78,11 @@
         "db-reset": [
             "@php artisan db:wipe",
             "@php artisan migrate",
+            "@php artisan db:seed"
+        ],
+        "db-reset-test": [
+            "@php artisan db:wipe",
+            "@php artisan migrate",
             "@php artisan db:seed",
             "@php artisan db:seed --class=QuickStartDatabaseSeeder"
         ]

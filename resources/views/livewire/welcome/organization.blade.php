@@ -1,13 +1,15 @@
 <flux:card class="space-y-6 min-w-sm md:min-w-md min-h-64 shadow-sm">
     <div>
-        <p class="text-sm font-medium text-gray-900">Let's gets started...</p>
+        <flux:label>Let's gets started...</flux:label>
         <div class="mt-6" aria-hidden="true">
             <div class="overflow-hidden rounded-full bg-gray-200">
-            <div class="h-2 rounded-full bg-gray-600" style="width: 0%"></div>
+            <div class="h-2 rounded-full bg-gray-600" style="width: 33%"></div>
             </div>
-            <div class="mt-3 hidden grid-cols-2 text-sm font-medium text-gray-600 sm:grid">
-            <div class="text-gray-600">Organization</div>
-            <div class="text-center text-gray-600">Workstream</div>
+            <div class="mt-3 hidden grid-cols-3 text-sm font-medium text-gray-600 sm:grid">
+            <flux:label>You</flux:label>
+            <flux:label class="text-center">Organization</flux:label>
+            <flux:label class="text-right">Workstream</flux:label>
+            
             
             </div>
         </div>
