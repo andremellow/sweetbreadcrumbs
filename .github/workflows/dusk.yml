@@ -27,6 +27,12 @@ jobs:
         run: |
           sudo systemctl start mysql
           mysql --user="root" --password="root" -e "CREATE DATABASE \`my-database\` character set UTF8mb4 collate utf8mb4_bin;"
+      - name: Set up authentication for private Flux UI repository
+        env:
+          FLUX_USERNAME: ${{ secrets.FLUX_USERNAME }}
+          FLUX_LICENSE_KEY: ${{ secrets.FLUX_LICENSE_KEY }}
+        run: |
+          composer config http-basic.composer.fluxui.dev "${FLUX_USERNAME}" "${FLUX_LICENSE_KEY}"
       - name: Install Composer Dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
       - name: Generate Application Key
