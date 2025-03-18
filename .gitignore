@@ -9,6 +9,7 @@
 /vendor
 /coverage
 .env
+.env.dusk.local
 .env.backup
 .env.production
 .phpactor.json
