@@ -11,12 +11,13 @@ class PriorityDropdown extends Component
 {
     #[Modelable]
     public ?int $priorityId;
+
     public Organization $organization;
+
     public function mount(OrganizationService $organizationService)
     {
         $this->organization = $organizationService->getOrganization();
     }
-    
 
     public function render(OrganizationService $organizationService)
     {

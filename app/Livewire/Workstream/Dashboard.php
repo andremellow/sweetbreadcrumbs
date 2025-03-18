@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Workstream;
 
+use App\Enums\EventEnum;
 use App\Models\Workstream;
-use App\Services\MeetingService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-#[On(['workstream-created', 'workstream-updated'])]
+#[On([EventEnum::WORKSTREAM_CREATED->value, EventEnum::WORKSTREAM_UPDATED->value])]
 class Dashboard extends Component
 {
     public Workstream $workstream;

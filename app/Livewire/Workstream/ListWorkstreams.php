@@ -3,6 +3,7 @@
 namespace App\Livewire\Workstream;
 
 use App\DTO\Workstream\DeleteWorkstreamDTO;
+use App\Enums\EventEnum;
 use App\Livewire\Traits\WithSorting;
 use App\Models\Workstream;
 use App\Services\OrganizationService;
@@ -12,7 +13,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[On(['workstream-created', 'workstream-updated'])]
+#[On([EventEnum::WORKSTREAM_CREATED->value, EventEnum::WORKSTREAM_UPDATED->value])]
 class ListWorkstreams extends Component
 {
     use WithPagination, WithSorting;
@@ -27,7 +28,7 @@ class ListWorkstreams extends Component
 
     public function applyFilter() {}
 
-    #[On('reset')]
+    #[On(EventEnum::RESET->value)]
     public function resetForm()
     {
         $this->reset('name', 'priorityId');
@@ -55,7 +56,7 @@ class ListWorkstreams extends Component
             )
         );
 
-        $this->dispatch('workstream-deleted', workstreamId: $workstreamId);
+        $this->dispatch(EventEnum::WORKSTREAM_DELETED->value, workstreamId: $workstreamId);
     }
 
     public function render(OrganizationService $organizationService, WorkstreamService $workstreamService)

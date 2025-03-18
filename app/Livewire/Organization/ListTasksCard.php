@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Organization;
 
+use App\Enums\EventEnum;
 use App\Livewire\Traits\CloseTask;
 use App\Services\OrganizationService;
 use App\Services\TaskService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-#[On(['tasks-created', 'tasks-updated', 'tasks-completed'])]
+#[On([EventEnum::TASK_CREATED->value, EventEnum::TASK_DELETED->value, EventEnum::TASK_CLOSED->value])]
 class ListTasksCard extends Component
 {
     use CloseTask;
@@ -19,7 +20,7 @@ class ListTasksCard extends Component
             'tasks' => $taskService->listForCard(
                 taskable: $organizationService->getOrganization(),
                 pageSize: 5
-            )
+            ),
         ]);
     }
 }

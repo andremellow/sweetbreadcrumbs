@@ -29,7 +29,7 @@
                         <flux:table.cell>
                             <flux:button 
                                 type="button"
-                                wire:click="$dispatch('load-meeting-view-modal', { meetingId: {{ $meeting->id }} })"
+                                wire:click="$dispatch('{{ App\Enums\EventEnum::LOAD_MEETING_VIEW_MODAL->value }}', { meetingId: {{ $meeting->id }} })"
                                 size="xs"
                                 icon="eye"
                                 variant="ghost"

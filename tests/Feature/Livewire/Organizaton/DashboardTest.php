@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 
-
-
 beforeEach(function () {
     // Create test user and organization
     $this->user = User::factory()->create();
@@ -29,9 +27,8 @@ beforeEach(function () {
     });
 });
 
-
 it('renders the Dashboard component successfully', function () {
-    
+
     Livewire::actingAs($this->user)
         ->test(Dashboard::class)
         ->assertSeeLivewire(ListMeetingsCard::class)

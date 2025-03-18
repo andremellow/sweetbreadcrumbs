@@ -2,9 +2,10 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\EventEnum;
 use App\Livewire\Workstream\WorkstreamModal;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use App\Services\OrganizationService;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
@@ -73,14 +74,14 @@ it('resets the form if a workstream id null is given', function () {
         ->assertSet('form.name', '');
 });
 
-it('is listeing for load-workstream-form-modal event', function () {
+it('is listeing for EventEnum::LOAD_WORKSTREAM_FORM_MODAL event', function () {
     $workstreamModal = Livewire::actingAs($this->user)
         ->test(WorkstreamModal::class, [
             'organization' => $this->organization,
         ]);
 
     $workstreamModal
-        ->dispatch('load-workstream-form-modal', workstreamId: $this->workstream->id)
+        ->dispatch(EventEnum::LOAD_WORKSTREAM_FORM_MODAL->value, workstreamId: $this->workstream->id)
         ->assertSet('form.id', $this->workstream->id)
         ->assertSet('form.name', $this->workstream->name)
         ->assertSet('form.priority_id', $this->workstream->priority_id)

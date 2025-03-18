@@ -3,8 +3,8 @@
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use App\Services\UserService;
 
 beforeEach(function () {

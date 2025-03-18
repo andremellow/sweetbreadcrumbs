@@ -1,4 +1,4 @@
-@props([ 'tasks', 'sortBy', 'sortDirection' ])
+@props([ 'tasks', 'sortBy', 'sortDirection', 'lastRender' ])
 <div>
     
     <flux:table :paginate="$tasks" class="w-full table-auto mt-5">

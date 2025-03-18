@@ -6,11 +6,9 @@
             <div class="h-2 rounded-full bg-gray-600" style="width: 33%"></div>
             </div>
             <div class="mt-3 hidden grid-cols-3 text-sm font-medium text-gray-600 sm:grid">
-            <flux:label>You</flux:label>
-            <flux:label class="text-center">Organization</flux:label>
-            <flux:label class="text-right">Workstream</flux:label>
-            
-            
+                <flux:label>You</flux:label>
+                <flux:label class="text-center">Organization</flux:label>
+                <flux:label class="text-right">Workstream</flux:label>
             </div>
         </div>
     </div>

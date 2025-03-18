@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Workstream;
 
+use App\Enums\EventEnum;
 use App\Models\Workstream;
 use App\Services\MeetingService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-#[On(['meeting-created', 'meeting-updated'])]
+#[On([EventEnum::MEETING_CREATED->value, EventEnum::MEETING_UPDATED->value])]
 class ListMeetingsCard extends Component
 {
     public Workstream $workstream;

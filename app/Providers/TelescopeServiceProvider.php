@@ -7,8 +7,8 @@ use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
-/** 
- * @codeCoverageIgnore 
+/**
+ * @codeCoverageIgnore
  */
 class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 {
@@ -60,7 +60,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         Gate::define('viewTelescope', function ($user) {
             return in_array($user->email, [
-                'andremellow@gmail.com'
+                'andremellow@gmail.com',
             ]);
         });
     }

@@ -3,11 +3,11 @@
     
     <flux:table :paginate="$workstreams" class="w-full mt-5">
         <flux:table.columns>
-            <flux:table.column>ID</flux:table.column>
-            <flux:table.column sortable :sorted="$sortBy === 'name'" :direction="$sortDirection->value" wire:click="sort('name')">Name</flux:table.column>
-            <flux:table.column sortable :sorted="$sortBy === 'priority'" :direction="$sortDirection->value" wire:click="sort('priority')" class="hidden sm:table-cell">Priority</flux:table.column>
-            <flux:table.column sortable :sorted="$sortBy === 'date'" :direction="$sortDirection->value" wire:click="sort('date')" class="hidden sm:table-cell">Created at</flux:table.column>
-            <flux:table.column />
+            <flux:table.column class="w-1/10">ID</flux:table.column>
+            <flux:table.column class="w-4/10" sortable :sorted="$sortBy === 'name'" :direction="$sortDirection->value" wire:click="sort('name')">Name</flux:table.column>
+            <flux:table.column class="w-2/10 hidden sm:table-cell" sortable :sorted="$sortBy === 'priority'" :direction="$sortDirection->value" wire:click="sort('priority')">Priority</flux:table.column>
+            <flux:table.column class="w-2/10 hidden sm:table-cell" sortable :sorted="$sortBy === 'date'" :direction="$sortDirection->value" wire:click="sort('date')">Created at</flux:table.column>
+            <flux:table.column class="w-1/10 "/>
         </flux:table.columns>
         <flux:table.rows>
             
@@ -23,7 +23,7 @@
                         <div class="mt-1 block sm:hidden">
                             <x-priority-badge :priority="$workstream->priority" size="sm" iconOnly />
                         </div>
-                        <div>{{ $workstream->name }}</div>
+                        <div class="text-wrap">{{ $workstream->name }}</div>
                     </div>
                 </flux:table.cell>
                 <flux:table.cell class="hidden sm:table-cell">
@@ -37,7 +37,7 @@
                         <flux:button   variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
                         
                         <flux:menu>
-                            <flux:menu.item wire:click="$dispatch('load-workstream-form-modal', { workstreamId: {{ $workstream->id }} })" icon="pencil-square" >{{ __('Edit Workstream') }}</flux:menu.item>
+                            <flux:menu.item wire:click="$dispatch('{{ App\Enums\EventEnum::LOAD_WORKSTREAM_FORM_MODAL->value }}', { workstreamId: {{ $workstream->id }} })" icon="pencil-square" >{{ __('Edit Workstream') }}</flux:menu.item>
                             <flux:menu.item 
                             wire:click="delete({{ $workstream->id }})"
                             wire:confirm="Are you sure you want to delete this workstream?"

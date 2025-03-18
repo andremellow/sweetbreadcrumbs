@@ -2,8 +2,8 @@
 
 namespace App\DTO\Task;
 
-use App\Models\Workstream;
 use App\Models\User;
+use App\Models\Workstream;
 use Spatie\LaravelData\Data;
 
 class CreateTaskDTO extends Data

@@ -20,7 +20,7 @@
                 <flux:navlist.group heading="{{ $organization->name }}" expandable>
                     <flux:navlist.item href="{{ route('dashboard', [ 'organization' => $organization->slug ]) }}">Dashboard</flux:navlist.item>
                 </flux:navlist.group>
-                    @livewire(Sidebar\FeaturedWorkstreams::class)
+                <livewire:sidebar.featured-workstreams />
                 
             </flux:navlist>
 

@@ -3,7 +3,7 @@
 namespace App\Livewire\Task;
 
 use App\DTO\Task\DeleteTaskDTO;
-use App\DTO\Task\OpenTaskDTO;
+use App\Enums\EventEnum;
 use App\Livewire\Traits\CloseTask;
 use App\Livewire\Traits\OpenTask;
 use App\Models\Task;
@@ -17,12 +17,11 @@ class TaskRow extends Component
 
     public Task $task;
 
-    #[On('task-updated.{task.id}')] 
+    #[On(EventEnum::TASK_UPDATED->value.'.{task.id}')]
     public function refreshTask()
     {
         $this->task->refresh();
     }
-    
 
     public function delete(TaskService $taskService, int $taskId)
     {
@@ -33,8 +32,8 @@ class TaskRow extends Component
             )
         );
 
-        $this->dispatch('task-deleted', taskId: $taskId);
-        $this->dispatch("task-deleted.{$taskId}", taskId: $taskId);
+        $this->dispatch(EventEnum::TASK_DELETED, taskId: $taskId);
+        $this->dispatch(EventEnum::TASK_DELETED->value.".{$taskId}", taskId: $taskId);
     }
 
     public function render()

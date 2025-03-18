@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Meeting;
 
+use App\Enums\EventEnum;
 use App\Livewire\Forms\MeetingForm;
 use App\Models\Workstream;
 use App\Services\MeetingService;
@@ -20,7 +21,7 @@ class MeetingModal extends Component
         $this->form->workstream = $workstream;
     }
 
-    #[On(['load-meeting-form-modal'])]
+    #[On([EventEnum::LOAD_MEETING_FORM_MODAL->value])]
     public function load(?int $meetingId = null)
     {
         $this->form->maybeLoadMeeting($meetingId);
@@ -37,10 +38,10 @@ class MeetingModal extends Component
     {
         if ($this->form->id === null) {
             $meeting = $this->form->add($meetingService);
-            $this->dispatch('meeting-created', meetingId: $meeting->id);
+            $this->dispatch(EventEnum::MEETING_CREATED->value, meetingId: $meeting->id);
         } else {
             $this->form->edit($meetingService);
-            $this->dispatch('meeting-updated', meetingId: $this->form->id);
+            $this->dispatch(EventEnum::MEETING_UPDATED->value, meetingId: $this->form->id);
         }
 
         $this->form->reset('id', 'name', 'description', 'date');
