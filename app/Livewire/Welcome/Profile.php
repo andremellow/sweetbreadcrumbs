@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Welcome;
 
-use App\Services\OrganizationService;
+use App\Services\UserService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -20,7 +20,7 @@ class Profile extends Component
         ];
     }
 
-    public function create(OrganizationService $organizationService)
+    public function update(UserService $userService)
     {
         $validated = $this->validate();
 
@@ -30,7 +30,7 @@ class Profile extends Component
 
         $user->save();
 
-        $organization = $organizationService->getOrganization();
+        $organization = $userService->getCurrentOrganization();
 
         if ($organization === null) {
             return $this->redirect(route('welcome.organization'));

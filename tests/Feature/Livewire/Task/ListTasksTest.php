@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Workstream;
 use App\Services\OrganizationService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -144,7 +145,7 @@ it('it listerning for task-deleted', function () {
 
 });
 
-it('it listerning for task-created', function () {
+it('listerning for task-created', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
         ->assertViewHas('tasks', function ($tasks) {
@@ -156,5 +157,39 @@ it('it listerning for task-created', function () {
         ->dispatch(EventEnum::TASK_CREATED->value)
         ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 4;
+        });
+});
+
+it('does not reload when status is all', function () {
+    try {
+        Livewire::actingAs($this->user)
+            ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
+            ->set('status', 'all')
+            ->assertViewHas('tasks', function ($tasks) {
+                return count($tasks) === 3;
+            })
+            ->dispatch(EventEnum::TASK_CLOSED->value)
+            ->assertViewHas('tasks', function ($tasks) {
+                return count($tasks) === 3;
+            });
+        $this->fail('exception not thrown');
+    } catch (\Throwable $th) {
+        expect($th->getMessage())->toBe('The response is not a view.');
+    }
+});
+
+it('reloads when status is not all', function () {
+    Livewire::actingAs($this->user)
+        ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
+        ->set('status', 'open')
+        ->assertViewHas('tasks', function ($tasks) {
+            return count($tasks) === 3;
+        })
+        ->tap(function () {
+            $this->tasks[0]->update(['completed_at' => Carbon::now()]);
+        })
+        ->dispatch(EventEnum::TASK_CLOSED->value)
+        ->assertViewHas('tasks', function ($tasks) {
+            return count($tasks) === 2;
         });
 });

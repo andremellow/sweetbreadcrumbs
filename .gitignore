@@ -5,11 +5,11 @@
 /public/storage
 /storage/*.key
 /storage/pail
-/storage/framework
+/storage/framework/views/**/*
 /vendor
 /coverage
-/tests/Browser/console/*
-/tests/Browser/screenshots/*
+/tests/Browser/console/**/*
+/tests/Browser/screenshots/**/*
 .env
 .env.dusk.local
 .env.backup
