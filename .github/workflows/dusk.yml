@@ -23,6 +23,7 @@ jobs:
       WORKOS_CLIENT_ID=: anythinghere
       WORKOS_API_KEY: anythinghere
       WORKOS_REDIRECT_URL: "authenticate"
+      APP_ENV: testing
     steps:
       - uses: actions/checkout@v4
       - name: Prepare The Environment
