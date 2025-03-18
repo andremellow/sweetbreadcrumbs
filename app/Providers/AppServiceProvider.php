@@ -44,15 +44,13 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(OrganizationService::class, function () {
             $organization = request()->route('organization');
-
             // If there is no biding on the component mount
             // Organization is just a string, need to
             // Get Organization from DB
             if (($organization instanceof Organization) === false) {
                 $organization = Organization::whereSlug($organization)->first();
             }
-
-            if (Session::isStarted() && request()->hasSession()) {
+            if (request()->hasSession()) {
                 if ($organization) {
                     // When organiation is present, need to check if session need to be updated
                     if ($organization->id !== intval(request()->session()->get('current_organization_id'))) {

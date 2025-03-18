@@ -86,6 +86,11 @@
             "@php artisan migrate",
             "@php artisan db:seed",
             "@php artisan db:seed --class=QuickStartDatabaseSeeder"
+        ],
+        "pre-commit": [
+            "vendor/bin/pint",
+            "@php artisan test --parallel",
+            "@php artisan dusk"
         ]
     },
     "extra": {

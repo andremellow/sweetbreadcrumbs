@@ -43,6 +43,7 @@ it('gets organization value if set', function () {
 });
 
 it('call getTaskDefaultPriorityId for TASK_DEFAULT_PRIORITY_ID when company config is not set', function () {
+    /** @var ConfigService */
     $this->mockConfigService = Mockery::mock(ConfigService::class)->makePartial();
     $config = $this->configService->getConfigWithDefaultByKey(ConfigEnum::TASK_DEFAULT_PRIORITY_ID);
 
@@ -53,6 +54,22 @@ it('call getTaskDefaultPriorityId for TASK_DEFAULT_PRIORITY_ID when company conf
 
     $this->mockConfigService->valueOrDefault(
         ConfigEnum::TASK_DEFAULT_PRIORITY_ID,
+        $config
+    );
+});
+
+it('call getTaskDefaultPriorityId for WORKSTREAM_DEFAULT_PRIORITY_ID when company config is not set', function () {
+    /** @var ConfigService */
+    $this->mockConfigService = Mockery::mock(ConfigService::class)->makePartial();
+    $config = $this->configService->getConfigWithDefaultByKey(ConfigEnum::WORKSTREAM_DEFAULT_PRIORITY_ID);
+
+    $this->mockConfigService
+        ->shouldReceive('getTaskDefaultPriorityId')
+        ->once()
+        ->with($config->default);
+
+    $this->mockConfigService->valueOrDefault(
+        ConfigEnum::WORKSTREAM_DEFAULT_PRIORITY_ID,
         $config
     );
 });

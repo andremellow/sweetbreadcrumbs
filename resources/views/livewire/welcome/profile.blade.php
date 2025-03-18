@@ -13,7 +13,7 @@
         </div>
     </div>
     
-    <form wire:submit="create" class="mt-6">
+    <form wire:submit="update" class="mt-6">
         <div class="space-y-6">
             <flux:input label="First Name *" placeholder="First name" wire:model="first_name" />
             <flux:input label="Last Name" placeholder="Last name" wire:model="last_name" />
