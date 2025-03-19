@@ -68,6 +68,16 @@ class OrganizationService
     }
 
     /**
+     * Get Organization's Roles.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getRolesDropDownData(): \Illuminate\Support\Collection
+    {
+        return $this->organization->roles()->select('id', 'name')->get()->pluck('name', 'id');
+    }
+
+    /**
      * Get Organization's Releases.
      *
      * @return \Illuminate\Support\Collection

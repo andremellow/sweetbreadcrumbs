@@ -14,7 +14,6 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[On([EventEnum::TASK_CREATED->value])]
 class ListTasks extends Component
 {
     use WithPagination, WithSorting;

@@ -3,6 +3,8 @@
 use App\Http\Middleware\SetOrganizationRouteParameter;
 use App\Livewire\Meeting\ListMeetings;
 use App\Livewire\Organization\Dashboard as OrganizationDashboard;
+use App\Livewire\Organization\Invite as OrganizationInvite;
+use App\Livewire\Organization\Settings as OrganizationSettings;
 use App\Livewire\Task\ListTasks;
 use App\Livewire\Welcome\Organization as WelcomeOrganization;
 use App\Livewire\Welcome\Profile as WelcomeProfile;
@@ -41,6 +43,8 @@ Route::middleware([
         Route::get('/workstreams/{workstream}/tasks', ListTasks::class)->name('workstreams.tasks.index');
 
         Route::get('dashboard', OrganizationDashboard::class)->name('dashboard');
+        Route::get('settings', OrganizationSettings::class)->name('organization.settings');
+        Route::get('invite', OrganizationInvite::class)->name('organization.invite');
     });
 
 });

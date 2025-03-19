@@ -20,6 +20,9 @@ enum EventEnum: string
     case WORKSTREAM_DELETED = 'workstream-deleted';
     case LOAD_WORKSTREAM_FORM_MODAL = 'load-workstream-form-modal';
 
+    case INVITE_CREATED = 'invite-created';
+    case INVITE_DELETED = 'invite-deleted';
+
     case LOAD_MEETING_VIEW_MODAL = 'load-meeting-view-modal';
 
     case PROFILE_UPDATED = 'profile-updated';

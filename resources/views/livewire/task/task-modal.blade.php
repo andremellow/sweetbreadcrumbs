@@ -12,7 +12,7 @@
                 <flux:subheading>Small Steps, Big Wins—Let’s Tackle It!</flux:subheading>
             </div>
 
-            <flux:input label="Name" placeholder="Task Name" wire:model="form.name" />
+            <flux:input label="Name" placeholder="Task Name" wire:model="form.name" dusk="form.name" />
 
             <flux:editor wire:model="form.description" label="Description"  />
 
@@ -24,7 +24,7 @@
             <flux:date-picker wire:model="form.due_date" label="Due date" />
             <div class="flex">
                 <flux:spacer />
-                <flux:button type="submit" variant="primary">Save</flux:button>
+                <flux:button type="submit" variant="primary" >Save</flux:button>
             </div>
         </div>
     </form>

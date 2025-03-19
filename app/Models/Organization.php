@@ -59,6 +59,16 @@ class Organization extends Model
     }
 
     /**
+     * Organization's Invites.
+     *
+     * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
+     */
+    public function invites()
+    {
+        return $this->hasMany(Invite::class);
+    }
+
+    /**
      * Organization's Risk Levels.
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
@@ -86,6 +96,16 @@ class Organization extends Model
     public function probabilities()
     {
         return $this->hasMany(Probability::class);
+    }
+
+    /**
+     * Organization's Roles.
+     *
+     * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
+     */
+    public function roles()
+    {
+        return $this->hasMany(Role::class);
     }
 
     /**
