@@ -6,6 +6,7 @@ use App\DTO\Invite\CreateInviteDTO as InviteCreateInviteDTO;
 use App\DTO\Workstream\CreateInviteDTO;
 use App\Models\Invite;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class CreateInvite
 {
@@ -21,9 +22,11 @@ class CreateInvite
     ): Invite {
 
         return $createInviteDTO->organization->invites()->create([
-            'email' => $createInviteDTO->email,
+            'token' => Str::uuid()->toString(),
+            'email' => strtolower($createInviteDTO->email),
             'sent_at' => Carbon::now(),
             'role_id' => $createInviteDTO->role_id,
+            'inviter_user_id' => $createInviteDTO->user->id,
         ]);
 
     }

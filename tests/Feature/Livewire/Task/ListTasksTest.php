@@ -129,7 +129,7 @@ it('applyFilter reload with right data', function () {
         });
 });
 
-it('it listerning for task-deleted', function () {
+it('listerning for task-deleted', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
         ->assertViewHas('tasks', function ($tasks) {

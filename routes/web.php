@@ -29,6 +29,9 @@ Route::middleware([
     Livewire::setUpdateRoute(fn ($handle) => Route::post('livewire/update', $handle));
 
     Route::group(['middleware' => ['verified']], function () {
+        Route::get('invite/{token}', function ($token) {
+            return $token;
+        })->name('invite.accept')->withoutMiddleware(SetOrganizationRouteParameter::class);
         Route::get('welcome/profile', WelcomeProfile::class)->name('welcome.profile')->withoutMiddleware(SetOrganizationRouteParameter::class);
         Route::get('welcome/organization', WelcomeOrganization::class)->name('welcome.organization')->withoutMiddleware(SetOrganizationRouteParameter::class);
         require __DIR__.'/settings.php';

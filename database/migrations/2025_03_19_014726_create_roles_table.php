@@ -15,13 +15,15 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->boolean('is_default')->default(false);
             $table->foreignId('organization_id')->constrained();
+
             $table->softDeletes();
             $table->timestamps();
         });
 
         Role::create(['name' => 'Admin', 'organization_id' => 1]);
-        Role::create(['name' => 'Contributor', 'organization_id' => 1]);
+        Role::create(['name' => 'Contributor', 'organization_id' => 1, 'is_default' => true]);
         Role::create(['name' => 'Viewer', 'organization_id' => 1]);
     }
 

@@ -40,7 +40,7 @@
 
                             <flux:table.cell class="whitespace-nowrap">
                                 @if($invite->sent_at)
-                                    {{ $invite->sent_at }}
+                                    {{ $invite->sent_at->toDayDateTimeString() }}
                                 @endif
                             </flux:table.cell>
 
@@ -49,8 +49,20 @@
                             </flux:table.cell>
 
                             
-                            <flux:table.cell class="text-right">
-                                <flux:button class="cursor-pointer" size="sm" icon="send" >Resend</flux:button>
+                            <flux:table.cell class="text-right space-x-1">
+                                <flux:tooltip content="{{ $invite->can_resend ? 'Resend invite' : 'Please wait to resend the invite' }}">
+                                    <span>
+                                        <flux:button 
+                                            class="cursor-pointer"
+                                            size="sm"
+                                            icon="{{ $invite->can_resend ? 'send' : 'clock' }}" 
+                                            variant="primary"
+                                            :disabled="!$invite->can_resend"
+                                            wire:click="resend({{ $invite->id  }})"
+                                            dusk="resend"
+                                        >Resend</flux:button>
+                                    </span>
+                                </flux:tooltip>
                                 <flux:button 
                                     class="cursor-pointer"
                                     size="sm"

@@ -7,6 +7,7 @@ use App\Models\Priority;
 use App\Models\Probability;
 use App\Models\RiskLevel;
 use App\Models\RiskStatus;
+use App\Models\Role;
 use App\Models\User;
 
 beforeEach(function () {
@@ -58,5 +59,12 @@ it('copies probabilities', function () {
     expect($this->organization->probabilities->count())->toBe(3);
     expect($this->organization->probabilities->first()->name)->tobe(
         Probability::where(['organization_id' => config('app.demo_organization_id')])->first()->name
+    );
+});
+
+it('copies roles', function () {
+    expect($this->organization->roles->count())->toBe(3);
+    expect($this->organization->roles->first()->name)->tobe(
+        Role::where(['organization_id' => config('app.demo_organization_id')])->first()->name
     );
 });

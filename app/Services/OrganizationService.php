@@ -86,4 +86,19 @@ class OrganizationService
     {
         return $this->organization->releases()->select('id', 'name')->get()->pluck('name', 'id');
     }
+
+    /**
+     * Get Default role Id.
+     *
+     * @return int
+     */
+    public function getDefaultRoleId(): int
+    {
+        $role = $this->organization->roles()->where('is_default', true)->first();
+        if (! $role) {
+            $role = $this->organization->roles()->first();
+        }
+
+        return $role->id;
+    }
 }

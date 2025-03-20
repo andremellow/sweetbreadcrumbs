@@ -90,6 +90,7 @@ class CreateOrganization
         foreach ($rolesToCopy as $role) {
             $organization->roles()->create([
                 'name' => $role->name,
+                'is_default' => $role->is_default,
             ]);
         }
     }

@@ -16,7 +16,22 @@ class ConfigService
     {
         $config = $this->getConfigWithDefaultByKey($key);
 
-        return $this->valueOrDefault($key, $config);
+        return $this->cast(
+            $key,
+            $this->valueOrDefault($key, $config)
+        );
+    }
+
+    protected function cast(ConfigEnum $key, $value)
+    {
+        switch ($key->type()) {
+            case 'int':
+                return intval($value);
+                // @codeCoverageIgnoreStart
+            default:
+                return $value;
+                // @codeCoverageIgnoreEnd
+        }
     }
 
     public function getConfigWithDefaultByKey(ConfigEnum $key)
