@@ -68,6 +68,16 @@ class OrganizationService
     }
 
     /**
+     * Get Organization's Roles.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getRolesDropDownData(): \Illuminate\Support\Collection
+    {
+        return $this->organization->roles()->select('id', 'name')->get()->pluck('name', 'id');
+    }
+
+    /**
      * Get Organization's Releases.
      *
      * @return \Illuminate\Support\Collection
@@ -75,5 +85,20 @@ class OrganizationService
     public function getReleasesDropDownData(): \Illuminate\Support\Collection
     {
         return $this->organization->releases()->select('id', 'name')->get()->pluck('name', 'id');
+    }
+
+    /**
+     * Get Default role Id.
+     *
+     * @return int
+     */
+    public function getDefaultRoleId(): int
+    {
+        $role = $this->organization->roles()->where('is_default', true)->first();
+        if (! $role) {
+            $role = $this->organization->roles()->first();
+        }
+
+        return $role->id;
     }
 }

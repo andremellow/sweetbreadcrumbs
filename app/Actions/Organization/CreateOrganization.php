@@ -8,6 +8,7 @@ use App\Models\Priority;
 use App\Models\Probability;
 use App\Models\RiskLevel;
 use App\Models\RiskStatus;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Str;
 
@@ -37,6 +38,7 @@ class CreateOrganization
         $this->copyRiskLevels($organization);
         $this->copyRiskStatuses($organization);
         $this->copyProbabilities($organization);
+        $this->copyRoles($organization);
 
         return $organization;
     }
@@ -78,6 +80,17 @@ class CreateOrganization
         foreach ($probabilitiesToCopy as $priority) {
             $organization->probabilities()->create([
                 'name' => $priority->name,
+            ]);
+        }
+    }
+
+    protected function copyRoles(Organization $organization)
+    {
+        $rolesToCopy = Role::where(['organization_id' => $this->demoOrganizationId])->get();
+        foreach ($rolesToCopy as $role) {
+            $organization->roles()->create([
+                'name' => $role->name,
+                'is_default' => $role->is_default,
             ]);
         }
     }

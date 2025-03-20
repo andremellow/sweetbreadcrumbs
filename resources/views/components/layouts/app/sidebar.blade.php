@@ -1,6 +1,8 @@
 @use(App\Services\OrganizationService)
+@use(App\Services\UserService)
 @php
     $organization = app(OrganizationService::class)->getOrganization();
+    $usesOrganizations = app(UserService::class)->getOrganizations();
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
@@ -75,6 +77,27 @@
 
                     <flux:menu.radio.group>
                         <flux:menu.item href="/settings/profile" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                        <flux:menu.submenu heading="Organizations">
+                            @foreach($usesOrganizations as $org) 
+                                <flux:navmenu.item  href="{{ route('dashboard', ['organization' => $org->slug]) }}" :checked="$org->id === $organization->id">
+                                    <div class="w-full flex justify-between items-center">
+                                        <div class="flex space-x-1 items-center">
+                                            @if($org->id === $organization->id) 
+                                                <flux:icon.check variant="micro"/> 
+                                            @endif
+                                            <div>
+                                            {{ $org->name }}
+                                            </div>
+                                        </div>
+                                        @if($org->id === $organization->id) 
+                                            <a class="ml-2" href="{{ route('organization.settings', [ 'organization' => $org->slug ]) }}">
+                                                <flux:icon.settings variant="mini"/> 
+                                            </a>
+                                        @endif
+                                    </div>
+                                </flux:navmenu.item>
+                            @endforeach
+                        </flux:menu.submenu>
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />
@@ -147,5 +170,6 @@
         {{ $slot }}
 
         @fluxScripts
+        <flux:toast  position="top right" />
     </body>
 </html>

@@ -41,6 +41,7 @@ class TaskModal extends Component
     {
         if ($this->form->id === null) {
             $task = $this->form->add($taskService);
+
             $this->dispatch(EventEnum::TASK_CREATED->value, taskId: $task->id);
         } else {
             $task = $this->form->edit($taskService);
