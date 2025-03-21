@@ -17,11 +17,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class WorkstreamService
 {
     /**
-     * OrganizationService Construct.
+     * WorkstreamService Construct.
      *
      * @param CreateWorkstream $createWorkstream
      *
-     * @return OrganizationService
+     * @return WorkstreamService
      */
     public function __construct(protected CreateWorkstream $createWorkstream, protected UpdateWorkstream $updateWorkstream, protected DeleteWorkstream $deleteWorkstream) {}
 

@@ -6,19 +6,18 @@ use App\Enums\ConfigEnum;
 use App\Models\Config;
 use App\Models\User;
 use App\Services\ConfigService;
-use App\Services\OrganizationService;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Context;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
+    Context::add('current_organization', $this->organization);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
+    $this->app->bind(UserService::class, function () {
+        return new UserService($this->user);
     });
+
     // Instantiate UserService with a user
     $this->configService = app(ConfigService::class);
 

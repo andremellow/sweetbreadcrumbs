@@ -4,6 +4,7 @@ use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Welcome\Profile;
 use App\Models\User;
+use Illuminate\Support\Facades\Context;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -23,6 +24,7 @@ it('renders the profile component successfully', function () {
 
 it('directs to dashboard if the user has an organization', function () {
     $organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    Context::add('current_organization', $organization);
     Livewire::actingAs($this->user)
         ->test(Profile::class)
         ->assertStatus(200)

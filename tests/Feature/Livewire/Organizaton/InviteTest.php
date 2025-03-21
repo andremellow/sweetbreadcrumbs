@@ -6,8 +6,9 @@ use App\Enums\EventEnum;
 use App\Livewire\Organization\Invite;
 use App\Models\User;
 use App\Services\InviteService;
-use App\Services\OrganizationService;
+use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
@@ -20,12 +21,7 @@ beforeEach(function () {
 
     URL::defaults(['organization' => $this->organization->slug]);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
+    Context::add('current_organization', $this->organization);
 });
 
 afterEach(function () {
@@ -92,7 +88,7 @@ it('cancels a event successfully and dispatches event', function () {
 
     Livewire::actingAs($this->user)
         ->test(Invite::class)
-        ->call('delete', app(OrganizationService::class), app(InviteService::class), $inviteToDelete->id)
+        ->call('delete', app(UserService::class), app(InviteService::class), $inviteToDelete->id)
         ->assertDispatched(EventEnum::INVITE_DELETED->value, inviteId: $inviteToDelete->id);
 
     $inviteToDelete = App\Models\Invite::find($inviteToDelete->id);
@@ -105,7 +101,7 @@ it('resends a event successfully and dispatches event', function () {
     $inviteToUpdate->update(['sent_at' => null]);
     Livewire::actingAs($this->user)
         ->test(Invite::class)
-        ->call('resend', app(OrganizationService::class), app(InviteService::class), $inviteToUpdate->id);
+        ->call('resend', app(UserService::class), app(InviteService::class), $inviteToUpdate->id);
 
     $inviteToUpdate->refresh();
 
@@ -118,7 +114,7 @@ it('it does not resend if can_reset does not allow it ', function () {
     $inviteToUpdate->update(['sent_at' => $date]);
     Livewire::actingAs($this->user)
         ->test(Invite::class)
-        ->call('resend', app(OrganizationService::class), app(InviteService::class), $inviteToUpdate->id);
+        ->call('resend', app(UserService::class), app(InviteService::class), $inviteToUpdate->id);
 
     $inviteToUpdate->refresh();
 

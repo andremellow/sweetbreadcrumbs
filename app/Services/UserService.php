@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Support\Facades\Context;
 
 class UserService
 {
@@ -73,7 +74,7 @@ class UserService
      */
     public function getCurrentOrganization(): ?Organization
     {
-        return $this->organization ?? $this->user->organizations()->first();
+        return $this->organization ?? Context::get('current_organization');
     }
 
     /**

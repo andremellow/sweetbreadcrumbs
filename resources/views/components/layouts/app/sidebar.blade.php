@@ -1,8 +1,8 @@
-@use(App\Services\OrganizationService)
 @use(App\Services\UserService)
 @php
-    $organization = app(OrganizationService::class)->getOrganization();
-    $usesOrganizations = app(UserService::class)->getOrganizations();
+    $userService = app(UserService::class);
+    $organization = $userService->getCurrentOrganization();
+    $usesOrganizations = $userService->getOrganizations();
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">

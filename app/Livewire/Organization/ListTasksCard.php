@@ -4,8 +4,8 @@ namespace App\Livewire\Organization;
 
 use App\Enums\EventEnum;
 use App\Livewire\Traits\CloseTask;
-use App\Services\OrganizationService;
 use App\Services\TaskService;
+use App\Services\UserService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -14,11 +14,11 @@ class ListTasksCard extends Component
 {
     use CloseTask;
 
-    public function render(OrganizationService $organizationService, TaskService $taskService)
+    public function render(UserService $userService, TaskService $taskService)
     {
         return view('livewire.organization.list-tasks-card', [
             'tasks' => $taskService->listForCard(
-                taskable: $organizationService->getOrganization(),
+                taskable: $userService->getCurrentOrganization(),
                 pageSize: 5
             ),
         ]);

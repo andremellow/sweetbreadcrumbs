@@ -16,7 +16,6 @@ use App\Enums\SortDirection;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Workstream;
-use App\Services\OrganizationService;
 use App\Services\TaskService;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -46,7 +45,6 @@ beforeEach(function () {
     /** @var OpenTask */
     $this->mockOpenTask = Mockery::mock(OpenTask::class);
     $this->service = new TaskService(
-        organizationService: app(OrganizationService::class),
         closeTask: $this->mockCloseTask,
         openTask: $this->mockOpenTask,
         createTask: $this->mockCreateTask,

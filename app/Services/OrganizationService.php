@@ -18,7 +18,10 @@ class OrganizationService
      *
      * @return OrganizationService
      */
-    public function __construct(protected CreateOrganization $createOrganization, protected ?Organization $organization = null) {}
+    public function __construct(protected UserService $userService, protected CreateOrganization $createOrganization, protected ?Organization $organization = null)
+    {
+        $this->organization = $userService->getCurrentOrganization();
+    }
 
     /**
      * Set organization.
@@ -34,15 +37,15 @@ class OrganizationService
         return $this;
     }
 
-    /**
-     * Get organization.
-     *
-     * @return Organization|null
-     */
-    public function getOrganization(): ?Organization
-    {
-        return $this->organization ?? null;
-    }
+    // /**
+    //  * Get organization.
+    //  *
+    //  * @return Organization|null
+    //  */
+    // public function getOrganization(): ?Organization
+    // {
+    //     return $this->organization ?? null;
+    // }
 
     /**
      * Creates a new organization.

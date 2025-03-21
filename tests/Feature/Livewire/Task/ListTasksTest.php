@@ -8,8 +8,8 @@ use App\Livewire\Task\ListTasks;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Workstream;
-use App\Services\OrganizationService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -26,12 +26,7 @@ beforeEach(function () {
     URL::defaults(['organization' => $this->organization->slug]);
     View::share('currentOrganizationSlug', $this->organization->slug);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
+    Context::add('current_organization', $this->organization);
 });
 
 afterEach(function () {

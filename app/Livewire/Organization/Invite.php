@@ -9,6 +9,7 @@ use App\Livewire\Traits\WithSorting;
 use App\Models\Organization;
 use App\Services\InviteService;
 use App\Services\OrganizationService;
+use App\Services\UserService;
 use Flux\Flux;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -24,9 +25,9 @@ class Invite extends Component
 
     public Organization $organization;
 
-    public function mount(OrganizationService $organizationService)
+    public function mount(UserService $userService, OrganizationService $organizationService)
     {
-        $this->organization = $organizationService->getOrganization();
+        $this->organization = $userService->getCurrentOrganization();
         $this->role_id = $organizationService->getDefaultRoleId();
     }
 
@@ -42,13 +43,13 @@ class Invite extends Component
         ];
     }
 
-    public function send(OrganizationService $organizationService, InviteService $inviteService)
+    public function send(UserService $userService, InviteService $inviteService)
     {
         $this->validate();
 
         $invite = $inviteService->create(new CreateInviteDTO(
             user: Auth::user(),
-            organization: $organizationService->getOrganization(),
+            organization: $userService->getCurrentOrganization(),
             email: $this->email,
             role_id: $this->role_id,
         ));
@@ -59,11 +60,11 @@ class Invite extends Component
 
     }
 
-    public function delete(OrganizationService $organizationService, InviteService $inviteService, int $inviteId)
+    public function delete(UserService $userService, InviteService $inviteService, int $inviteId)
     {
         $invite = $inviteService->delete(new DeleteInviteDTO(
             user: Auth::user(),
-            organization: $organizationService->getOrganization(),
+            organization: $userService->getCurrentOrganization(),
             invite_id: $inviteId,
         ));
 
@@ -71,12 +72,12 @@ class Invite extends Component
         $this->dispatch(EventEnum::INVITE_DELETED->value, inviteId: $inviteId);
     }
 
-    public function resend(OrganizationService $organizationService, InviteService $inviteService, int $inviteId)
+    public function resend(UserService $userService, InviteService $inviteService, int $inviteId)
     {
         try {
             $inviteService->sendNotificationUsingId(
                 user: Auth::user(),
-                organization: $organizationService->getOrganization(),
+                organization: $userService->getCurrentOrganization(),
                 id: $inviteId,
             );
 
@@ -86,20 +87,20 @@ class Invite extends Component
         }
     }
 
-    protected function list(OrganizationService $organizationService, InviteService $inviteService)
+    protected function list(UserService $userService, InviteService $inviteService)
     {
         return $inviteService->list(
-            organization: $organizationService->getOrganization(),
+            organization: $userService->getCurrentOrganization(),
             sortBy: $this->sortBy,
             sortDirection: $this->sortDirection
         );
     }
 
-    public function render(OrganizationService $organizationService, InviteService $inviteService)
+    public function render(UserService $userService, InviteService $inviteService)
     {
         return view('livewire.organization.invite', [
-            'organization' => $organizationService->getOrganization(),
-            'invites' => $this->list($organizationService, $inviteService),
+            'organization' => $userService->getCurrentOrganization(),
+            'invites' => $this->list($userService, $inviteService),
         ]);
     }
 }

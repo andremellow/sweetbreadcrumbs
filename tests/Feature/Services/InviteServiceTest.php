@@ -11,11 +11,11 @@ use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\SortDirection;
 use App\Models\Invite;
 use App\Models\User;
-use App\Models\Workstream;
 use App\Notifications\InviteCreatedNotification;
 use App\Services\InviteService;
-use App\Services\OrganizationService;
+use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Notification;
 
 covers(InviteService::class);
@@ -37,12 +37,12 @@ beforeEach(function () {
         deleteInvite: $this->mockDeleteInvite,
         updateInviteSent: $this->mockUpdateInviteSent);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
+    $this->app->bind(UserService::class, function () {
+        return new UserService($this->user);
     });
+
+    Context::add('current_organization', $this->organization);
+
 });
 
 afterEach(function () {
@@ -85,34 +85,6 @@ it('creates a meeting using CreateInvite action', function () {
 
     expect($invite)->toBe($mockInvite);
 });
-
-// it('updates a meeting using UpdateInvite action', function () {
-//     /** @var Workstream */
-//     $workstream = Mockery::mock(Workstream::class);
-
-//     $dto = new UpdateInviteDTO(
-//         $workstream,
-//         1,
-//         'Updated Invite',
-//         'Updated description',
-//         Carbon::now()
-//     );
-
-//     $mockInvite = Mockery::mock(Invite::class);
-
-//     // Expect the UpdateInvite action to be called with these parameters
-//     $this->mockUpdateInvite
-//         ->shouldReceive('__invoke')
-//         ->once()
-//         ->with($dto)
-
-//         ->andReturn($mockInvite);
-
-//     // Call the method
-//     $invite = $this->service->update($this->user, $dto);
-
-//     expect($invite)->toBe($mockInvite);
-// });
 
 it('deletes a meeting using DeleteInvite action', function () {
     /** @var Invite */

@@ -65,8 +65,7 @@ test('it sends an invate', function () {
             ->press('Send')
             ->waitForText('johndoe@gmail.com')
             ->waitForText('Invite sent')
-            ->assertButtonDisabled('Resend')
-            ->screenshot('invite_sent');
+            ->assertButtonDisabled('Resend');
 
     });
 });

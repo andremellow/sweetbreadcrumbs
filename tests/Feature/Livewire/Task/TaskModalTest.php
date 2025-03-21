@@ -8,8 +8,9 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Workstream;
 use App\Services\ConfigService;
-use App\Services\OrganizationService;
+use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
 
@@ -17,14 +18,12 @@ beforeEach(function () {
     // Create test user and organization
     $this->user = User::factory()->create();
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
 
-    $this->configService = app(ConfigService::class);
+    Context::add('current_organization', $this->organization);
+
+    $this->configService = new ConfigService(
+        new UserService($this->user)
+    );
 
     // Create test workstreams
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();

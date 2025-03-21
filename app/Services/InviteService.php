@@ -19,11 +19,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class InviteService
 {
     /**
-     * OrganizationService Construct.
+     * InviteService Construct.
      *
      * @param CreateInvite $createInvite
      *
-     * @return OrganizationService
+     * @return InviteService
      */
     public function __construct(
         protected CreateInvite $createInvite,

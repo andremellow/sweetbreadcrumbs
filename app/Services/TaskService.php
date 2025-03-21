@@ -25,14 +25,12 @@ class TaskService
     /**
      * Task Service.
      *
-     * @param OrganizationService $organizationService
-     * @param CloseTask           $closeTask
-     * @param OpenTask            $openTask
-     * @param CreateTask          $createTask
-     * @param DeleteTask          $deleteTask
+     * @param CloseTask  $closeTask
+     * @param OpenTask   $openTask
+     * @param CreateTask $createTask
+     * @param DeleteTask $deleteTask
      */
     public function __construct(
-        protected OrganizationService $organizationService,
         protected CloseTask $closeTask,
         protected OpenTask $openTask,
         protected CreateTask $createTask,
