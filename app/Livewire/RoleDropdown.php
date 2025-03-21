@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Models\Organization;
 use App\Services\OrganizationService;
+use App\Services\UserService;
 use Livewire\Attributes\Modelable;
 use Livewire\Component;
 
@@ -12,16 +12,9 @@ class RoleDropdown extends Component
     #[Modelable]
     public ?int $roleId;
 
-    public Organization $organization;
-
-    public function mount(OrganizationService $organizationService)
+    public function render(UserService $userService, OrganizationService $organizationService)
     {
-        $this->organization = $organizationService->getOrganization();
-    }
-
-    public function render(OrganizationService $organizationService)
-    {
-        $organizationService->setOrganization($this->organization);
+        $organizationService->setOrganization($userService->getCurrentOrganization());
 
         return view('livewire.role-dropdown', [
             'roles' => $organizationService->getRolesDropDownData(),

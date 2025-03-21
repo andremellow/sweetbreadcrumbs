@@ -5,8 +5,9 @@ use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Invite;
 use App\Models\Role;
 use App\Models\User;
-use App\Services\OrganizationService;
+use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Context;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -14,11 +15,10 @@ beforeEach(function () {
     $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')
         ->create(['email' => 'mariodoe@test.com', 'role_id' => 4, 'sent_at' => Carbon::now()->addDays(-2)]);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
+    Context::add('current_organization', $this->organization);
+
+    $this->app->bind(UserService::class, function () {
+        return new UserService($this->user);
     });
 
 });

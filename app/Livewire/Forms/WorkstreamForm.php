@@ -5,6 +5,8 @@ namespace App\Livewire\Forms;
 use App\DTO\Workstream\CreateWorkstreamDTO;
 use App\DTO\Workstream\UpdateWorkstreamDTO;
 use App\Models\Workstream;
+use App\Services\UserService;
+use App\Services\WorkstreamService;
 use Livewire\Form;
 
 class WorkstreamForm extends Form
@@ -20,27 +22,27 @@ class WorkstreamForm extends Form
         return CreateWorkstreamDTO::rules();
     }
 
-    public function add($organizationService, $workstreamService)
+    public function add(UserService $userService, WorkstreamService $workstreamService)
     {
         $validated = $this->validate();
 
         return $workstreamService->create(
             auth()->user(),
             CreateWorkstreamDTO::from([
-                'organization' => $organizationService->getOrganization(),
+                'organization' => $userService->getCurrentOrganization(),
                 ...$validated,
             ])
         );
     }
 
-    public function edit($organizationService, $workstreamService)
+    public function edit(UserService $userService, WorkstreamService $workstreamService)
     {
         $validated = $this->validate();
 
         $workstreamService->update(
             auth()->user(),
             UpdateWorkstreamDTO::from([
-                'organization' => $organizationService->getOrganization(),
+                'organization' => $userService->getCurrentOrganization(),
                 'workstream_id' => $this->id,
                 ...$validated,
             ])

@@ -3,9 +3,11 @@
 namespace App\Http\Middleware;
 
 use App\Models\Organization;
-use App\Services\UserService;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Context;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 
@@ -19,22 +21,59 @@ class SetOrganizationRouteParameter
      */
     public function handle($request, Closure $next)
     {
+
         // Get the organization from the current route
-        $organization = $request->route('organization');
+        $organizationSlug = $request->route('organization');
 
-        if ($organization == null) {
-            $organization = app(UserService::class)->getCurrentOrganization() ? app(UserService::class)->getCurrentOrganization()->slug : '';
-        } elseif ($organization instanceof Organization) {
-            $organization = $organization->slug;
+        if (Route::currentRouteName() === 'livewire.update' && $organizationSlug === null && $request->session()->has('current_organization') === false) {
+            return $next($request);
         }
 
-        if ($organization) {
-            // Ensure the 'organization' is always added to route() calls
-            URL::defaults(['organization' => $organization]);
-            View::share('currentOrganizationSlug', $organization);
-
+        if ($organizationSlug instanceof Organization) {
+            $organizationSlug = $organizationSlug->slug;
         }
+
+        $organization = $this->resolveOrganization($request, $organizationSlug);
+
+        // Ensure the 'organization' is always added to route() calls
+        URL::defaults(['organization' => $organization->slug]);
+        View::share('currentOrganizationSlug', $organization->slug);
+        Context::add('current_organization', $organization);
 
         return $next($request);
+    }
+
+    public function resolveOrganization($request, ?string $slug)
+    {
+        if ($slug === null && $request->session()->has('current_organization') === false) {
+            abort(403);
+        }
+
+        if ($slug === null && $request->session()->has('current_organization')) {
+            return $request->session()->get('current_organization');
+        }
+
+        if ($slug !== null) {
+            if (
+                $request->session()->has('current_organization') &&
+                $slug === $request->session()->get('current_organization')->slug
+            ) {
+                return $request->session()->get('current_organization');
+            }
+
+            $organization = Auth::user()->organizations()->whereSlug($slug)->first();
+
+            if (! $organization) {
+                abort(403);
+            }
+
+            $request->session()->put('current_organization', $organization);
+
+            return $organization;
+
+        }
+
+        abort(403);
+
     }
 }

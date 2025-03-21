@@ -6,8 +6,8 @@ use App\Enums\EventEnum;
 use App\Enums\SortDirection;
 use App\Livewire\Traits\WithSorting;
 use App\Models\Workstream;
-use App\Services\OrganizationService;
 use App\Services\TaskService;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -107,13 +107,13 @@ class ListTasks extends Component
             || $this->onlyLates === true;
     }
 
-    public function render(OrganizationService $organizationService, TaskService $taskService)
+    public function render(UserService $userService, TaskService $taskService)
     {
         $this->isFiltred = $this->isFiltered();
 
         return view('livewire.task.list-tasks', [
             'workstream' => $this->workstream,
-            'organization' => $organizationService->getOrganization(),
+            'organization' => $userService->getCurrentOrganization(),
             'tasks' => $this->list($taskService),
         ]);
     }

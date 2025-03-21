@@ -7,8 +7,8 @@ use App\Enums\SortDirection;
 use App\Livewire\Workstream\ListWorkstreams;
 use App\Models\User;
 use App\Models\Workstream;
-use App\Services\OrganizationService;
 use App\Services\WorkstreamService;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
 
@@ -22,12 +22,8 @@ beforeEach(function () {
 
     URL::defaults(['organization' => $this->organization->slug]);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
+    Context::add('current_organization', $this->organization);
+
 });
 
 afterEach(function () {

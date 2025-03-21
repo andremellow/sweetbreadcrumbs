@@ -13,24 +13,17 @@ beforeEach(function () {
     $this->user = User::factory()->create();
     $this->mockCreateOrganization = Mockery::mock(CreateOrganization::class);
 
-    $this->organizationService = new OrganizationService($this->mockCreateOrganization);
-
     // Instantiate UserService with a user
     $this->userService = new UserService($this->user);
+
+    $this->organizationService = new OrganizationService($this->userService, $this->mockCreateOrganization);
+    $this->app->bind(UserService::class, function () {
+        return new UserService($this->user);
+    });
 });
 
 afterEach(function () {
     Mockery::close();
-});
-
-it('sets and get an organization', function () {
-    expect($this->organizationService->getOrganization())->toBeNull();
-
-    $organization = Organization::factory()->create();
-    $this->organizationService->setOrganization($organization);
-
-    expect($this->organizationService->getOrganization())->toBe($organization);
-
 });
 
 it('calls CreateOrganization when creating an new organization', function () {

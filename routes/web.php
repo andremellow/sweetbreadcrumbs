@@ -22,32 +22,31 @@ Route::get('/', function () {
 Route::middleware([
     'auth',
     ValidateSessionWithWorkOS::class,
-    SetOrganizationRouteParameter::class,
 ])->group(function () {
-
-    // Set Livewire update route (handles multi-tenant URLs)
-    Livewire::setUpdateRoute(fn ($handle) => Route::post('livewire/update', $handle));
-
-    Route::group(['middleware' => ['verified']], function () {
-        Route::get('invite/{token}', function ($token) {
-            return $token;
-        })->name('invite.accept')->withoutMiddleware(SetOrganizationRouteParameter::class);
-        Route::get('welcome/profile', WelcomeProfile::class)->name('welcome.profile')->withoutMiddleware(SetOrganizationRouteParameter::class);
-        Route::get('welcome/organization', WelcomeOrganization::class)->name('welcome.organization')->withoutMiddleware(SetOrganizationRouteParameter::class);
-        require __DIR__.'/settings.php';
+    Route::middleware([SetOrganizationRouteParameter::class])->group(function () {
+        // Set Livewire update route (handles multi-tenant URLs)
+        Livewire::setUpdateRoute(fn ($handle) => Route::post('livewire/update', $handle));
     });
 
-    Route::group(['prefix' => '/{organization:slug}', 'middleware' => ['verified']], function () {
-        Route::get('welcome/workstream', WelcomeWorkstream::class)->name('welcome.workstream');
+    Route::group(['middleware' => ['verified']], function () {
+        Route::get('invite/{token}', fn ($token) => $token)->name('invite.accept');
+        Route::get('welcome/profile', WelcomeProfile::class)->name('welcome.profile');
+        Route::get('welcome/organization', WelcomeOrganization::class)->name('welcome.organization');
+        require __DIR__.'/settings.php';
+    });
+    Route::middleware([SetOrganizationRouteParameter::class])->group(function () {
+        Route::group(['prefix' => '/{organization:slug}', 'middleware' => ['verified']], function () {
+            Route::get('welcome/workstream', WelcomeWorkstream::class)->name('welcome.workstream');
 
-        Route::get('/workstreams', ListWorkstreams::class)->name('workstreams.index');
-        Route::get('/workstreams/{workstream}/dashboard', WorkstreamDashboard::class)->name('workstreams.dashboard');
-        Route::get('/workstreams/{workstream}/meetings', ListMeetings::class)->name('workstreams.meetings.index');
-        Route::get('/workstreams/{workstream}/tasks', ListTasks::class)->name('workstreams.tasks.index');
+            Route::get('/workstreams', ListWorkstreams::class)->name('workstreams.index');
+            Route::get('/workstreams/{workstream}/dashboard', WorkstreamDashboard::class)->name('workstreams.dashboard');
+            Route::get('/workstreams/{workstream}/meetings', ListMeetings::class)->name('workstreams.meetings.index');
+            Route::get('/workstreams/{workstream}/tasks', ListTasks::class)->name('workstreams.tasks.index');
 
-        Route::get('dashboard', OrganizationDashboard::class)->name('dashboard');
-        Route::get('settings', OrganizationSettings::class)->name('organization.settings');
-        Route::get('invite', OrganizationInvite::class)->name('organization.invite');
+            Route::get('dashboard', OrganizationDashboard::class)->name('dashboard');
+            Route::get('settings', OrganizationSettings::class)->name('organization.settings');
+            Route::get('invite', OrganizationInvite::class)->name('organization.invite');
+        });
     });
 
 });

@@ -6,7 +6,7 @@ use App\DTO\Workstream\DeleteWorkstreamDTO;
 use App\Enums\EventEnum;
 use App\Livewire\Traits\WithSorting;
 use App\Models\Workstream;
-use App\Services\OrganizationService;
+use App\Services\UserService;
 use App\Services\WorkstreamService;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -34,11 +34,11 @@ class ListWorkstreams extends Component
         $this->reset('name', 'priorityId');
     }
 
-    protected function list(OrganizationService $organizationService, WorkstreamService $workstreamService)
+    protected function list(UserService $userService, WorkstreamService $workstreamService)
     {
 
         return $workstreamService->list(
-            $organizationService->getOrganization(),
+            $userService->getCurrentOrganization(),
             $this->name,
             $this->priorityId,
             $this->sortBy,
@@ -59,13 +59,13 @@ class ListWorkstreams extends Component
         $this->dispatch(EventEnum::WORKSTREAM_DELETED->value, workstreamId: $workstreamId);
     }
 
-    public function render(OrganizationService $organizationService, WorkstreamService $workstreamService)
+    public function render(UserService $userService, WorkstreamService $workstreamService)
     {
         $this->isFiltred = ! empty($this->name) || ! empty($this->priorityId);
 
         return view('livewire.workstream.list-workstreams', [
-            'organization' => $organizationService->getOrganization(),
-            'workstreams' => $this->list($organizationService, $workstreamService),
+            'organization' => $userService->getCurrentOrganization(),
+            'workstreams' => $this->list($userService, $workstreamService),
         ]);
     }
 }

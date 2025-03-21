@@ -5,7 +5,7 @@ use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Welcome\Organization;
 use App\Livewire\Welcome\Workstream;
 use App\Models\User;
-use App\Services\OrganizationService;
+use Illuminate\Support\Facades\Context;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -13,12 +13,8 @@ beforeEach(function () {
     $this->user = User::factory()->create(['first_name' => '', 'last_name' => '']);
     $this->organization = (new CreateOrganization)(User::factory()->create(), new CreateOrganizationDTO('new organization'));
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
+    Context::add('current_organization', $this->organization);
+
 });
 
 it('validates name is required', function () {

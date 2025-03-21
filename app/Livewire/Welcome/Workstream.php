@@ -5,7 +5,7 @@ namespace App\Livewire\Welcome;
 use App\DTO\Workstream\CreateWorkstreamDTO;
 use App\Enums\ConfigEnum;
 use App\Services\ConfigService;
-use App\Services\OrganizationService;
+use App\Services\UserService;
 use App\Services\WorkstreamService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -16,12 +16,9 @@ class Workstream extends Component
 
     public string $priority_id;
 
-    public $organization;
-
-    public function mount(ConfigService $configService, OrganizationService $organizationService)
+    public function mount(ConfigService $configService, UserService $userService)
     {
         $this->priority_id = $configService->get(ConfigEnum::WORKSTREAM_DEFAULT_PRIORITY_ID);
-        $this->organization = $organizationService->getOrganization();
     }
 
     public function rules()
@@ -29,19 +26,19 @@ class Workstream extends Component
         return CreateWorkstreamDTO::rules();
     }
 
-    public function create(WorkstreamService $workstreamService)
+    public function create(UserService $userService, WorkstreamService $workstreamService)
     {
         $this->validate();
 
         $workstream = $workstreamService->create(
             auth()->user(),
             new CreateWorkstreamDTO(
-                organization: $this->organization,
+                organization: $userService->getCurrentOrganization(),
                 name: $this->name,
                 priority_id: $this->priority_id
             )
         );
-        $this->redirect(route('workstreams.dashboard', ['organization' => $this->organization->slug, 'workstream' => $workstream]));
+        $this->redirect(route('workstreams.dashboard', ['organization' => $userService->getCurrentOrganization()->slug, 'workstream' => $workstream]));
     }
 
     #[Layout('components.layouts.welcome')]

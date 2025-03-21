@@ -5,7 +5,7 @@ use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Invite;
 use App\Models\User;
 use App\Notifications\InviteCreatedNotification;
-use App\Services\OrganizationService;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Notification;
 
 beforeEach(function () {
@@ -13,12 +13,7 @@ beforeEach(function () {
     $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
     $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
+    Context::add('current_organization', $this->organization);
 
 });
 

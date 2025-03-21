@@ -2,15 +2,15 @@
 
 namespace App\Livewire\Organization;
 
-use App\Services\OrganizationService;
+use App\Services\UserService;
 use Livewire\Component;
 
 class Settings extends Component
 {
-    public function render(OrganizationService $organizationService)
+    public function render(UserService $userService)
     {
         return view('livewire.organization.settings', [
-            'organization' => $organizationService->getOrganization(),
+            'organization' => $userService->getCurrentOrganization(),
         ]);
     }
 }

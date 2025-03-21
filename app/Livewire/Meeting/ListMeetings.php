@@ -8,7 +8,6 @@ use App\Livewire\Traits\WithSorting;
 use App\Models\Meeting;
 use App\Models\Workstream;
 use App\Services\MeetingService;
-use App\Services\OrganizationService;
 use Flux\DateRange;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -44,7 +43,7 @@ class ListMeetings extends Component
         $this->reset('search', 'dateRange');
     }
 
-    protected function list(OrganizationService $organizationService, MeetingService $meetingService)
+    protected function list(MeetingService $meetingService)
     {
         return $meetingService->list(
             $this->workstream,
@@ -68,13 +67,13 @@ class ListMeetings extends Component
         $this->dispatch(EventEnum::MEETING_DELETED->value, meetingId: $meetingId);
     }
 
-    public function render(OrganizationService $organizationService, MeetingService $meetingService)
+    public function render(MeetingService $meetingService)
     {
         $this->isFiltred = ! empty($this->search) || isset($this->dateRange);
 
         return view('livewire.meeting.list-meetings', [
             'workstream' => $this->workstream,
-            'meetings' => $this->list($organizationService, $meetingService),
+            'meetings' => $this->list($meetingService),
         ]);
     }
 }
