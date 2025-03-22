@@ -7,6 +7,7 @@ use App\DTO\Workstream\UpdateWorkstreamDTO;
 use App\Models\Workstream;
 use App\Services\UserService;
 use App\Services\WorkstreamService;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Form;
 
 class WorkstreamForm extends Form
@@ -17,17 +18,17 @@ class WorkstreamForm extends Form
 
     public ?int $priority_id = null;
 
-    protected function rules()
+    protected function rules(): array
     {
         return CreateWorkstreamDTO::rules();
     }
 
-    public function add(UserService $userService, WorkstreamService $workstreamService)
+    public function add(UserService $userService, WorkstreamService $workstreamService): Workstream
     {
         $validated = $this->validate();
 
         return $workstreamService->create(
-            auth()->user(),
+            Auth::user(),
             CreateWorkstreamDTO::from([
                 'organization' => $userService->getCurrentOrganization(),
                 ...$validated,
@@ -35,12 +36,12 @@ class WorkstreamForm extends Form
         );
     }
 
-    public function edit(UserService $userService, WorkstreamService $workstreamService)
+    public function edit(UserService $userService, WorkstreamService $workstreamService): void
     {
         $validated = $this->validate();
 
         $workstreamService->update(
-            auth()->user(),
+            Auth::user(),
             UpdateWorkstreamDTO::from([
                 'organization' => $userService->getCurrentOrganization(),
                 'workstream_id' => $this->id,
@@ -51,7 +52,7 @@ class WorkstreamForm extends Form
         $this->reset();
     }
 
-    public function maybeLoadWorkstream(?int $workstreamId)
+    public function maybeLoadWorkstream(?int $workstreamId): void
     {
         if ($workstreamId !== null) {
             // TODO: VALIDETE THIS

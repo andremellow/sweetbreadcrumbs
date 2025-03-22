@@ -11,6 +11,8 @@ use App\Services\InviteService;
 use App\Services\OrganizationService;
 use App\Services\UserService;
 use Flux\Flux;
+use Illuminate\Contracts\View\View;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -25,25 +27,25 @@ class Invite extends Component
 
     public Organization $organization;
 
-    public function mount(UserService $userService, OrganizationService $organizationService)
+    public function mount(UserService $userService, OrganizationService $organizationService): void
     {
         $this->organization = $userService->getCurrentOrganization();
         $this->role_id = $organizationService->getDefaultRoleId();
     }
 
-    public function rules()
+    public function rules(): array
     {
         return CreateInviteDTO::rawRules($this->organization->id);
     }
 
-    protected function messages()
+    protected function messages(): array
     {
         return [
             'email.unique' => "$this->email was already invited",
         ];
     }
 
-    public function send(UserService $userService, InviteService $inviteService)
+    public function send(UserService $userService, InviteService $inviteService): void
     {
         $this->validate();
 
@@ -60,7 +62,7 @@ class Invite extends Component
 
     }
 
-    public function delete(UserService $userService, InviteService $inviteService, int $inviteId)
+    public function delete(UserService $userService, InviteService $inviteService, int $inviteId): void
     {
         $invite = $inviteService->delete(new DeleteInviteDTO(
             user: Auth::user(),
@@ -72,7 +74,7 @@ class Invite extends Component
         $this->dispatch(EventEnum::INVITE_DELETED->value, inviteId: $inviteId);
     }
 
-    public function resend(UserService $userService, InviteService $inviteService, int $inviteId)
+    public function resend(UserService $userService, InviteService $inviteService, int $inviteId): void
     {
         try {
             $inviteService->sendNotificationUsingId(
@@ -87,7 +89,7 @@ class Invite extends Component
         }
     }
 
-    protected function list(UserService $userService, InviteService $inviteService)
+    protected function list(UserService $userService, InviteService $inviteService): LengthAwarePaginator
     {
         return $inviteService->list(
             organization: $userService->getCurrentOrganization(),
@@ -96,7 +98,7 @@ class Invite extends Component
         );
     }
 
-    public function render(UserService $userService, InviteService $inviteService)
+    public function render(UserService $userService, InviteService $inviteService): View
     {
         return view('livewire.organization.invite', [
             'organization' => $userService->getCurrentOrganization(),

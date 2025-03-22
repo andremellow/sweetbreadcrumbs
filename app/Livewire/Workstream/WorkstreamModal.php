@@ -6,6 +6,7 @@ use App\Enums\EventEnum;
 use App\Livewire\Forms\WorkstreamForm;
 use App\Services\UserService;
 use App\Services\WorkstreamService;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -13,22 +14,22 @@ class WorkstreamModal extends Component
 {
     public WorkstreamForm $form;
 
-    public $showWorkstreamFormModal = false;
+    public bool $showWorkstreamFormModal = false;
 
     #[On([EventEnum::LOAD_WORKSTREAM_FORM_MODAL->value])]
-    public function load(?int $workstreamId = null)
+    public function load(?int $workstreamId = null): void
     {
         $this->form->maybeLoadWorkstream($workstreamId);
 
         $this->showWorkstreamFormModal = true;
     }
 
-    public function onModalClose()
+    public function onModalClose(): void
     {
         $this->form->reset();
     }
 
-    public function save(UserService $userService, WorkstreamService $workstreamService)
+    public function save(UserService $userService, WorkstreamService $workstreamService): void
     {
         if ($this->form->id === null) {
             $workstream = $this->form->add($userService, $workstreamService);
@@ -42,7 +43,7 @@ class WorkstreamModal extends Component
         $this->showWorkstreamFormModal = false;
     }
 
-    public function render(UserService $userService)
+    public function render(UserService $userService): View
     {
         return view('livewire.workstream.workstream-modal', [
             'organization' => $userService->getCurrentOrganization(),

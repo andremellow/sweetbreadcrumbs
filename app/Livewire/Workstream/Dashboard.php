@@ -4,6 +4,7 @@ namespace App\Livewire\Workstream;
 
 use App\Enums\EventEnum;
 use App\Models\Workstream;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -12,7 +13,7 @@ class Dashboard extends Component
 {
     public Workstream $workstream;
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.workstream.dashboard');
     }

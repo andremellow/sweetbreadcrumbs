@@ -14,7 +14,7 @@ class Config extends Model
      */
     protected $fillable = ['config_default_id', 'organization_id', 'value'];
 
-    public function casts()
+    public function casts(): array
     {
         return [
             'key' => ConfigEnum::class,

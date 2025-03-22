@@ -12,7 +12,7 @@ class ConfigService
         protected UserService $userService,
     ) {}
 
-    public function get(ConfigEnum $key)
+    public function get(ConfigEnum $key): int | string
     {
         $config = $this->getConfigWithDefaultByKey($key);
 
@@ -22,7 +22,7 @@ class ConfigService
         );
     }
 
-    protected function cast(ConfigEnum $key, $value)
+    protected function cast(ConfigEnum $key, string $value): int | string
     {
         switch ($key->type()) {
             case 'int':
@@ -34,7 +34,7 @@ class ConfigService
         }
     }
 
-    public function getConfigWithDefaultByKey(ConfigEnum $key)
+    public function getConfigWithDefaultByKey(ConfigEnum $key): Config
     {
         return Config::rightJoin('config_defaults', function (JoinClause $join) {
             $join->on('configs.config_default_id', '=', 'config_defaults.id')
@@ -64,7 +64,7 @@ class ConfigService
         }
     }
 
-    public function getTaskDefaultPriorityId(string $priorityName)
+    public function getTaskDefaultPriorityId(string $priorityName): int
     {
         $priority = $this->userService->getCurrentOrganization()->priorities()->where('name', $priorityName)->first();
 

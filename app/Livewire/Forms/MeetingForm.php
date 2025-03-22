@@ -8,6 +8,7 @@ use App\Models\Meeting;
 use App\Models\Workstream;
 use App\Services\MeetingService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Form;
 
 class MeetingForm extends Form
@@ -22,17 +23,17 @@ class MeetingForm extends Form
 
     public Workstream $workstream;
 
-    protected function rules()
+    protected function rules(): array
     {
         return CreateMeetingDTO::rules();
     }
 
-    public function add(MeetingService $meetingService)
+    public function add(MeetingService $meetingService): Meeting
     {
         $validated = $this->validate();
 
         return $meetingService->create(
-            auth()->user(),
+            Auth::user(),
             CreateMeetingDTO::from([
                 'workstream' => $this->workstream,
                 ...$validated,
@@ -40,7 +41,7 @@ class MeetingForm extends Form
         );
     }
 
-    public function edit(MeetingService $meetingService)
+    public function edit(MeetingService $meetingService): void
     {
         $validated = $this->validate();
 
@@ -54,7 +55,7 @@ class MeetingForm extends Form
         );
     }
 
-    public function maybeLoadMeeting(?int $meetingId)
+    public function maybeLoadMeeting(?int $meetingId): void
     {
         if ($meetingId !== null) {
             $meeting = Meeting::findOrFail($meetingId);

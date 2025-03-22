@@ -6,6 +6,7 @@ use App\Enums\EventEnum;
 use App\Livewire\Traits\CloseTask;
 use App\Models\Workstream;
 use App\Services\TaskService;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -16,7 +17,7 @@ class ListTasksCard extends Component
 
     public Workstream $workstream;
 
-    public function render(TaskService $taskService)
+    public function render(TaskService $taskService): View
     {
         return view('livewire.workstream.list-tasks-card', [
             'tasks' => $taskService->listForCard(

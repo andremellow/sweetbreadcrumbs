@@ -8,6 +8,9 @@ use App\Livewire\Traits\WithSorting;
 use App\Models\Workstream;
 use App\Services\UserService;
 use App\Services\WorkstreamService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -26,15 +29,15 @@ class ListWorkstreams extends Component
 
     public bool $isFiltred = false;
 
-    public function applyFilter() {}
+    public function applyFilter(): void {}
 
     #[On(EventEnum::RESET->value)]
-    public function resetForm()
+    public function resetForm(): void
     {
         $this->reset('name', 'priorityId');
     }
 
-    protected function list(UserService $userService, WorkstreamService $workstreamService)
+    protected function list(UserService $userService, WorkstreamService $workstreamService): LengthAwarePaginator
     {
 
         return $workstreamService->list(
@@ -46,10 +49,10 @@ class ListWorkstreams extends Component
         );
     }
 
-    public function delete(WorkstreamService $workstreamService, int $workstreamId)
+    public function delete(WorkstreamService $workstreamService, int $workstreamId): void
     {
         $workstreamService->delete(
-            auth()->user(),
+            Auth::user(),
             new DeleteWorkstreamDTO(
                 // THIS IS TERRIBLE
                 workstream: Workstream::findOrFail($workstreamId)
@@ -59,7 +62,7 @@ class ListWorkstreams extends Component
         $this->dispatch(EventEnum::WORKSTREAM_DELETED->value, workstreamId: $workstreamId);
     }
 
-    public function render(UserService $userService, WorkstreamService $workstreamService)
+    public function render(UserService $userService, WorkstreamService $workstreamService): View
     {
         $this->isFiltred = ! empty($this->name) || ! empty($this->priorityId);
 

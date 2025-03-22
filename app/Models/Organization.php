@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,7 +26,7 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function priorities()
+    public function priorities(): HasMany
     {
         return $this->hasMany(Priority::class);
     }
@@ -33,7 +36,7 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function releases()
+    public function releases(): HasMany
     {
         return $this->hasMany(Release::class);
     }
@@ -53,7 +56,7 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function workstreams()
+    public function workstreams(): HasMany
     {
         return $this->hasMany(Workstream::class);
     }
@@ -63,7 +66,7 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function invites()
+    public function invites(): HasMany
     {
         return $this->hasMany(Invite::class);
     }
@@ -73,7 +76,7 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function riskLevels()
+    public function riskLevels(): HasMany
     {
         return $this->hasMany(RiskLevel::class);
     }
@@ -83,7 +86,7 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function riskStatuses()
+    public function riskStatuses(): HasMany
     {
         return $this->hasMany(RiskStatus::class);
     }
@@ -93,7 +96,7 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function probabilities()
+    public function probabilities(): HasMany
     {
         return $this->hasMany(Probability::class);
     }
@@ -103,7 +106,7 @@ class Organization extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function roles()
+    public function roles(): HasMany
     {
         return $this->hasMany(Role::class);
     }
@@ -113,17 +116,17 @@ class Organization extends Model
      *
      * @return lluminate\Database\Eloquent\Concerns\HasRelationships::belongsToMany
      */
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }
 
-    public function tasks()
+    public function tasks(): Builder
     {
         return Task::whereHasMorph(
             'taskable',
             [Workstream::class], // Add more models here
-            function ($query) {
+            function (Builder $query) {
                 $query->where('organization_id', $this->id);
             }
         );
