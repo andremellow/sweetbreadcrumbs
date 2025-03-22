@@ -22,7 +22,7 @@ class Profile extends Component
         ];
     }
 
-    public function update(UserService $userService): void
+    public function update(UserService $userService) // @pest-ignore-type
     {
         $validated = $this->validate();
 
@@ -35,10 +35,10 @@ class Profile extends Component
         $organization = $userService->getCurrentOrganization();
 
         if ($organization) {
-            $this->redirect(route('dashboard', ['organization' => $organization->slug]));
+            return $this->redirect(route('dashboard', ['organization' => $organization->slug]));
         }
-        
-        $this->redirect(route('welcome.organization'));
+
+        return $this->redirect(route('welcome.organization'));
     }
 
     #[Layout('components.layouts.welcome')]

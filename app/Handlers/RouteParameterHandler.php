@@ -67,7 +67,7 @@ class RouteParameterHandler
 
         // IT SHOULD NOT GET HERE. I CAN'T EVENT TEST THIS. IGNORING THE COVERAGE
         // @codeCoverageIgnoreStart
-        abort(403, 'Invalid organization slug'); //@pest-mutate-ignore
+        abort(403, 'Invalid organization slug'); // @pest-mutate-ignore
         // @codeCoverageIgnoreEnd
     }
 

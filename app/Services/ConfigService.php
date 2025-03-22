@@ -12,7 +12,7 @@ class ConfigService
         protected UserService $userService,
     ) {}
 
-    public function get(ConfigEnum $key): int | string
+    public function get(ConfigEnum $key): int|string
     {
         $config = $this->getConfigWithDefaultByKey($key);
 
@@ -22,7 +22,7 @@ class ConfigService
         );
     }
 
-    protected function cast(ConfigEnum $key, string $value): int | string
+    protected function cast(ConfigEnum $key, string $value): int|string
     {
         switch ($key->type()) {
             case 'int':

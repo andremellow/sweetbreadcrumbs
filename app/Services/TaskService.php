@@ -70,7 +70,7 @@ class TaskService
             ->when($priorityId, function (Builder $query, int $priorityId): Builder {
                 return $query->where('tasks.priority_id', '=', $priorityId);
             })
-            ->when($status, function (Builder $query, string $status): Builder  {
+            ->when($status, function (Builder $query, string $status): Builder {
                 if ($status === 'open') {
                     return $query->whereNull('tasks.completed_at');
                 } elseif ($status === 'closed') {
