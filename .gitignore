@@ -5,7 +5,6 @@
 /public/storage
 /storage/*.key
 /storage/pail
-/storage/framework/views/**/*
 /vendor
 /coverage
 /tests/Browser/console/**/*
