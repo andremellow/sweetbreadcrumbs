@@ -6,6 +6,7 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Models\Workstream;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Context;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -45,6 +46,7 @@ it('checks if user has organizations', function () {
 });
 
 it('gets the current organization', function () {
+    Context::add('current_organization', $this->organization);
     // Should return the first attached organization by default
     expect($this->userService->getCurrentOrganization()->id)->toBe($this->organization->id);
 
@@ -69,6 +71,7 @@ it('gets all user organizations', function () {
 });
 
 it('gets all workstreams from the current organization', function () {
+    Context::add('current_organization', $this->organization);
     $factoryWorkstreams = Workstream::factory(4)->for($this->organization)->withPriority($this->organization)->create()->sortBy('name')->values();
 
     $workstreams = $this->userService->getWorkstreams();
