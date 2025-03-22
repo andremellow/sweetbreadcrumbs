@@ -29,10 +29,6 @@ beforeEach(function () {
     View::share('currentOrganizationSlug', $this->organization->slug);
 });
 
-afterEach(function () {
-    Mockery::close();
-});
-
 it('renders the ListMeetings component successfully', function () {
     Livewire::actingAs($this->user)
         ->test(ListMeetings::class, ['workstream' => $this->workstream])

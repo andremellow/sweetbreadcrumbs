@@ -74,7 +74,18 @@ class UserService
      */
     public function getCurrentOrganization(): ?Organization
     {
-        return $this->organization ?? Context::get('current_organization');
+        /**
+         * Using session and contex. Session fail for most of test.
+         */
+        if (isset($this->organization) && $this->organization instanceof Organization) {
+            return $this->organization;
+        }
+
+        if (request()->hasSession() && request()->session()->has('current_organization')) {
+            return request()->session()->get('current_organization');
+        }
+
+        return Context::get('current_organization');
     }
 
     /**

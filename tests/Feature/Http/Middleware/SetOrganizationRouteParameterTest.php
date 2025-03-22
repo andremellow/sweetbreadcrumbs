@@ -2,6 +2,7 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Handlers\RouteParameterHandler;
 use App\Http\Middleware\SetOrganizationRouteParameter;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,89 +24,52 @@ afterEach(function () {
     Mockery::close();
 });
 
-// it('sets URL and VIEW default when organization is present as string', function () {
-//     actingAs($this->user);
-//     $request = Request::create(route('workstreams.index', ['organization' => $this->anotherOrganization->slug]));
+it('calls RouteParameterHandler', function () {
+    actingAs($this->user);
+    $request = Request::create(route('workstreams.index', ['organization' => $this->anotherOrganization->slug]));
 
-//     // ✅ Create a Fake Route Object
-//     $fakeRoute = new class($this->anotherOrganization)
-//     {
-//         protected $parameters;
+    // ✅ Create a Fake Route Object
+    $fakeRoute = new FakeRoute($this->anotherOrganization->slug);
+    $request->setRouteResolver(fn () => $fakeRoute);
 
-//         public function __construct($organization)
-//         {
-//             $this->parameters = ['organization' => $organization->slug];
-//         }
+    $next = function () {
+        return response('This is a secret place');
+    };
 
-//         public function parameter($key, $default = null)
-//         {
-//             return $this->parameters[$key] ?? $default;
-//         }
-//     };
+    $routeParameterHandler = $this->mock(RouteParameterHandler::class);
 
-//     $request->setRouteResolver(fn () => $fakeRoute);
+    $routeParameterHandler->shouldReceive('shouldSkip')->once()->andReturn(false);
+    $routeParameterHandler->shouldReceive('handle')->once();
 
-//     $next = function () {
-//         return response('This is a secret place');
-//     };
+    $middleware = new SetOrganizationRouteParameter($routeParameterHandler);
+    $middleware->handle($request, $next);
 
-//     // When
-//     $middleware = new SetOrganizationRouteParameter;
-//     $middleware->handle($request, $next);
+    // expect(View::shared('currentOrganizationSlug'))->toBe($this->anotherOrganization->slug);
+    // expect(URL::getDefaultParameters())->toHaveKey('organization', $this->anotherOrganization->slug);
 
-//     expect(View::shared('currentOrganizationSlug'))->toBe($this->anotherOrganization->slug);
-//     expect(URL::getDefaultParameters())->toHaveKey('organization', $this->anotherOrganization->slug);
+});
 
-// });
+it('ingnores handle when skip', function () {
+    actingAs($this->user);
+    $request = Request::create(route('workstreams.index', ['organization' => $this->anotherOrganization->slug]));
 
-// it('sets URL and VIEW default when organization is present as Model', function () {
-//     actingAs($this->user);
-//     $request = Request::create(route('workstreams.index', ['organization' => $this->anotherOrganization->slug]));
+    // ✅ Create a Fake Route Object
+    $fakeRoute = new FakeRoute($this->anotherOrganization->slug);
+    $request->setRouteResolver(fn () => $fakeRoute);
 
-//     // ✅ Create a Fake Route Object
-//     $fakeRoute = new class($this->anotherOrganization)
-//     {
-//         protected $parameters;
+    $next = function () {
+        return response('This is a secret place');
+    };
 
-//         public function __construct($organization)
-//         {
-//             $this->parameters = ['organization' => $organization];
-//         }
+    $routeParameterHandler = $this->mock(RouteParameterHandler::class);
 
-//         public function parameter($key, $default = null)
-//         {
-//             return $this->parameters[$key] ?? $default;
-//         }
-//     };
+    $routeParameterHandler->shouldReceive('shouldSkip')->once()->andReturn(true);
+    $routeParameterHandler->shouldNotReceive('handle');
 
-//     $request->setRouteResolver(fn () => $fakeRoute);
+    $middleware = new SetOrganizationRouteParameter($routeParameterHandler);
+    $middleware->handle($request, $next);
 
-//     $next = function () {
-//         return response('This is a secret place');
-//     };
+    // expect(View::shared('currentOrganizationSlug'))->toBe($this->anotherOrganization->slug);
+    // expect(URL::getDefaultParameters())->toHaveKey('organization', $this->anotherOrganization->slug);
 
-//     // When
-//     $middleware = new SetOrganizationRouteParameter;
-//     $middleware->handle($request, $next);
-
-//     expect(View::shared('currentOrganizationSlug'))->toBe($this->anotherOrganization->slug);
-//     expect(URL::getDefaultParameters())->toHaveKey('organization', $this->anotherOrganization->slug);
-
-// });
-
-// it('sets URL and VIEW default when organization is NOT present', function () {
-//     actingAs($this->user);
-//     $request = Request::create(route('settings.profile'));
-
-//     $next = function () {
-//         return response('This is a secret place');
-//     };
-
-//     // When
-//     $middleware = new SetOrganizationRouteParameter;
-//     $response = $middleware->handle($request, $next);
-
-//     expect(View::shared('currentOrganizationSlug'))->toBe($this->organization->slug);
-//     expect(URL::getDefaultParameters())->toHaveKey('organization', $this->organization->slug);
-
-// });
+});

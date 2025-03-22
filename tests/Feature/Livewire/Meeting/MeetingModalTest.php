@@ -23,10 +23,6 @@ beforeEach(function () {
     URL::defaults(['organization' => $this->organization->slug]);
 });
 
-afterEach(function () {
-    Mockery::close();
-});
-
 it('renders the MeetingModal component successfully', function () {
     Livewire::actingAs($this->user)
         ->test(MeetingModal::class, ['workstream' => $this->workstream])

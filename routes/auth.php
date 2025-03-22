@@ -14,7 +14,7 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
     $request->authenticate();
     $user = $request->user();
     $userService = new UserService($user);
-    $organization = $userService->getCurrentOrganization();
+    $organization = $userService->getOrganizations()->first();
 
     if ($user->first_name === null || $user->first_name === '') {
         return redirect(route('welcome.profile'));

@@ -105,10 +105,10 @@ it('resends a event successfully and dispatches event', function () {
 
     $inviteToUpdate->refresh();
 
-    expect($inviteToUpdate->sent_at->toDateTimeString())->toBe(Carbon::now()->toDateTimeString());
+    expect($inviteToUpdate->sent_at->format('Y-m-d H:i'))->toBe(Carbon::now()->format('Y-m-d H:i'));
 });
 
-it('it does not resend if can_reset does not allow it ', function () {
+it('does not resend if can_reset does not allow it ', function () {
     $inviteToUpdate = $this->invites->first();
     $date = Carbon::now()->addMinute(-3);
     $inviteToUpdate->update(['sent_at' => $date]);
