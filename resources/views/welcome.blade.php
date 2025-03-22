@@ -25,6 +25,12 @@
                         $organization = $userService->getCurrentOrganization();
                         $link = route('welcome.organization');
 
+                        if(!$organization) {
+                            $organization = $userService->getOrganizations()->first();
+                        }
+
+
+
                         if($organization) {
                             $link = route('dashboard', [ 'organization' => $organization->slug ]);
                         }
@@ -67,7 +73,109 @@
                 <div class="relative left-[calc(50%+3rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
                 </div>
             </div>
-            </div>
-
+        </div>
+        <div class="flex justify-center pb-12">
+        <nav aria-label="Progress">
+            <ol role="list" class="overflow-hidden">
+                <li class="relative pb-10">
+                <div class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-red-300" aria-hidden="true"></div>
+                <!-- Complete Step -->
+                <a href="#" class="group relative flex items-start">
+                    <span class="flex h-9 items-center">
+                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full bg-red-300 group-hover:bg-red-300">
+                        <svg class="size-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                    </span>
+                    <span class="ml-4 flex min-w-0 flex-col">
+                    <span class="text-sm font-medium">Launch V0.0.1</span>
+                    <span class="text-sm text-gray-500">Beta Release.</span>
+                    </span>
+                </a>
+                </li>
+                <li class="relative pb-10">
+                <div class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-gray-300" aria-hidden="true"></div>
+                <!-- Current Step -->
+                <a href="#" class="group relative flex items-start" aria-current="step">
+                    <span class="flex h-9 items-center" aria-hidden="true">
+                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full border-2 border-red-300 bg-white">
+                        <span class="size-2.5 rounded-full bg-red-300"></span>
+                    </span>
+                    </span>
+                    <span class="ml-4 flex min-w-0 flex-col">
+                    <span class="text-sm font-medium text-red-300">Permissions & Security @ {{ Carbon\Carbon::create(2025,04,01)->toFormattedDayDateString() }}</span>
+                    <span class="text-sm text-gray-500">Invite user to organization.</span>
+                    <span class="text-sm text-gray-500">User's permissions.</span>
+                    <span class="text-sm text-gray-500">Workstream & Task access control between team members</span>
+                    <span class="text-sm text-gray-500">New logo</span>
+                    </span>
+                </a>
+                </li>
+                <li class="relative pb-10">
+                <div class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-gray-300" aria-hidden="true"></div>
+                <!-- Upcoming Step -->
+                <a href="#" class="group relative flex items-start">
+                    <span class="flex h-9 items-center" aria-hidden="true">
+                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full border-2 border-gray-300 bg-white group-hover:border-gray-400">
+                        <span class="size-2.5 rounded-full bg-transparent group-hover:bg-gray-300"></span>
+                    </span>
+                    </span>
+                    <span class="ml-4 flex min-w-0 flex-col">
+                    <span class="text-sm font-medium text-red-300">Risks & Notes  @ {{ Carbon\Carbon::create(2025,04,15)->toFormattedDayDateString() }}</span>
+                    <span class="text-sm text-gray-500">Ability to create and magene risks.</span>
+                    <span class="text-sm text-gray-500">Ability to create and magene notes.</span>
+                    <span class="text-sm text-gray-500">Dashboard improvments.</span>
+                    <span class="text-sm text-gray-500">Daily digest emails.</span>
+                    </span>
+                </a>
+                </li>
+                <li class="relative pb-10">
+                <div class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-gray-300" aria-hidden="true"></div>
+                <!-- Upcoming Step -->
+                <a href="#" class="group relative flex items-start">
+                    <span class="flex h-9 items-center" aria-hidden="true">
+                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full border-2 border-gray-300 bg-white group-hover:border-gray-400">
+                        <span class="size-2.5 rounded-full bg-transparent group-hover:bg-gray-300"></span>
+                    </span>
+                    </span>
+                    <span class="ml-4 flex min-w-0 flex-col">
+                    <span class="text-sm font-medium text-red-300">Dashboard enhancement @ {{ Carbon\Carbon::create(2025,05,1)->toFormattedDayDateString() }}</span>
+                    <span class="text-sm text-gray-500">User's dashboard across all organizations.</span>
+                    <span class="text-sm text-gray-500">Notes specific dashboard.</span>
+                    <span class="text-sm text-gray-500">Task specific dashboard.</span>
+                    </span>
+                </a>
+                </li>
+                <li class="relative">
+                <!-- Upcoming Step -->
+                <a href="#" class="group relative flex items-start">
+                    <span class="flex h-9 items-center" aria-hidden="true">
+                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full border-2 border-gray-300 bg-white group-hover:border-gray-400">
+                        <span class="size-2.5 rounded-full bg-transparent group-hover:bg-gray-300"></span>
+                    </span>
+                    </span>
+                    <span class="ml-4 flex min-w-0 flex-col">
+                    <span class="text-sm font-medium text-green-500 blink">Go Live @ {{ Carbon\Carbon::create(2025, 06, 1)->toFormattedDayDateString() }}</span>
+                    <span class="text-sm text-gray-500">Official support start.</span>
+                    <span class="text-sm text-gray-500">It will still be free for a while (Not for long).</span>
+                    <span class="text-sm text-gray-500">We gonna start working on integrations (Jira, Microsoft, etc).</span>
+                    </span>
+                </a>
+                </li>
+            </ol>
+            </nav>
+        </div>
     </body>
+    <style>
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .blink {
+    animation: blink 1s infinite; /* 1 second duration, infinitely blinking */
+  }
+</style>
 </html>

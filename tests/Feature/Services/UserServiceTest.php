@@ -6,6 +6,9 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Models\Workstream;
 use App\Services\UserService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Context;
 
 beforeEach(function () {
@@ -56,6 +59,20 @@ it('gets the current organization', function () {
 
     // Now it should return the newly set organization
     expect($this->userService->getCurrentOrganization())->toBe($newOrganization);
+});
+
+it('gets the current organization from session', function () {
+    // Should return the first attached organization by default
+    $request = Request::create(route('workstreams.index', ['organization' => $this->organization->slug]))
+        ->setRouteResolver(fn () => new FakeRoute($this->organization));
+
+    $startSession = app(StartSession::class);
+    $startSession->handle($request, fn ($return) => new Response);
+    app()->instance('request', $request);
+
+    $request->session()->put('current_organization', $this->organization);
+
+    expect($this->userService->getCurrentOrganization()->id)->toBe($this->organization->id);
 });
 
 it('gets all user organizations', function () {

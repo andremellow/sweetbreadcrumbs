@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Organization;
+
 pest()->extend(Tests\DuskTestCase::class)
     ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
     ->in('Browser');
@@ -50,4 +52,21 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+class FakeRoute
+{
+    protected $parameters;
+
+    public function __construct(Organization|string|null $organization = null)
+    {
+        if ($organization) {
+            $this->parameters = ['organization' => $organization];
+        }
+    }
+
+    public function parameter($key, $default = null)
+    {
+        return $this->parameters[$key] ?? $default;
+    }
 }

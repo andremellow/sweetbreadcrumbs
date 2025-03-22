@@ -76,7 +76,7 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item href="/settings/profile" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                        <flux:menu.item href="{{ route('settings.profile') }}" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                         <flux:menu.submenu heading="Organizations">
                             @foreach($usesOrganizations as $org) 
                                 <flux:navmenu.item  href="{{ route('dashboard', ['organization' => $org->slug]) }}" :checked="$org->id === $organization->id">

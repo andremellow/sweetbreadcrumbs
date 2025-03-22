@@ -17,7 +17,7 @@ beforeEach(function () {
     $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create(['role_id' => 5]);
 });
 
-it('it cannot validate if organizaiton is not preset', function () {
+it('cannot validate if organizaiton is not preset', function () {
     CreateInviteDTO::from([
         'user' => '',
         'organization' => '',
