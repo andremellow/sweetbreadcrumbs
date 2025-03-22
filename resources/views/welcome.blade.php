@@ -123,9 +123,9 @@
                     </span>
                     <span class="ml-4 flex min-w-0 flex-col">
                     <span class="text-sm font-medium text-red-300">Risks & Notes  @ {{ Carbon\Carbon::create(2025,04,15)->toFormattedDayDateString() }}</span>
-                    <span class="text-sm text-gray-500">Ability to create and magene risks.</span>
-                    <span class="text-sm text-gray-500">Ability to create and magene notes.</span>
-                    <span class="text-sm text-gray-500">Dashboard improvments.</span>
+                    <span class="text-sm text-gray-500">Ability to create and magane risks.</span>
+                    <span class="text-sm text-gray-500">Ability to create and magane notes.</span>
+                    <span class="text-sm text-gray-500">Dashboard improvements.</span>
                     <span class="text-sm text-gray-500">Daily digest emails.</span>
                     </span>
                 </a>
@@ -158,8 +158,8 @@
                     <span class="ml-4 flex min-w-0 flex-col">
                     <span class="text-sm font-medium text-green-500 blink">Go Live @ {{ Carbon\Carbon::create(2025, 06, 1)->toFormattedDayDateString() }}</span>
                     <span class="text-sm text-gray-500">Official support start.</span>
-                    <span class="text-sm text-gray-500">It will still be free for a while (Not for long).</span>
-                    <span class="text-sm text-gray-500">We gonna start working on integrations (Jira, Microsoft, etc).</span>
+                    <span class="text-sm text-gray-500">It will still be free for a while, but not for long.</span>
+                    <span class="text-sm text-gray-500">We're going to start working on integrations (Jira, Microsoft, etc.).</span>
                     </span>
                 </a>
                 </li>
