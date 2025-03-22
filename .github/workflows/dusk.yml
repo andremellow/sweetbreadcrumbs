@@ -39,9 +39,7 @@ jobs:
         run: |
           composer config http-basic.composer.fluxui.dev "${FLUX_USERNAME}" "${FLUX_LICENSE_KEY}"
       - name: List all directories inside /storage
-        run: 
-          echo "Listing all directories inside /storage:"
-          find ./storage -type d
+        run: ls -ls storage/framework
       - name: Install Composer Dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
       - name: Setup Node
