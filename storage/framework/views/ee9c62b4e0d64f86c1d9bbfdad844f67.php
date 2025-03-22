@@ -1,6 +1,9 @@
 <?php use \App\Services\OrganizationService; ?>
+<?php use \App\Services\UserService; ?>
 <?php
     $organization = app(OrganizationService::class)->getOrganization();
+    $userService = app(UserService::class);
+    $usesOrganizations = $userService->getOrganizations();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" class="dark">
@@ -127,11 +130,11 @@ if (isset($__slots)) unset($__slots);
 <?php $component = $__componentOriginal8b1fe5c87f0876e7c101dbc6fe82a9a4; ?>
 <?php unset($__componentOriginal8b1fe5c87f0876e7c101dbc6fe82a9a4); ?>
 <?php endif; ?>
-                    <?php
+                <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
-[$__name, $__params] = $__split(Sidebar\FeaturedWorkstreams::class);
+[$__name, $__params] = $__split('sidebar.featured-workstreams', []);
 
 $__html = app('livewire')->mount($__name, $__params, 'lw-3790659975-1', $__slots ?? [], get_defined_vars());
 
@@ -379,14 +382,14 @@ if (isset($__slots)) unset($__slots);
 <?php $component->withAttributes([]); ?>
                         <?php if (isset($component)) { $__componentOriginal5027d420cfeeb03dd925cfc08ae44851 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal5027d420cfeeb03dd925cfc08ae44851 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::menu.item','data' => ['href' => '/settings/profile','icon' => 'cog','wire:navigate' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::menu.item','data' => ['href' => ''.e(route('settings.profile')).'','icon' => 'cog','wire:navigate' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('flux::menu.item'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['href' => '/settings/profile','icon' => 'cog','wire:navigate' => true]); ?><?php echo e(__('Settings')); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['href' => ''.e(route('settings.profile')).'','icon' => 'cog','wire:navigate' => true]); ?><?php echo e(__('Settings')); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal5027d420cfeeb03dd925cfc08ae44851)): ?>
 <?php $attributes = $__attributesOriginal5027d420cfeeb03dd925cfc08ae44851; ?>
@@ -395,6 +398,78 @@ if (isset($__slots)) unset($__slots);
 <?php if (isset($__componentOriginal5027d420cfeeb03dd925cfc08ae44851)): ?>
 <?php $component = $__componentOriginal5027d420cfeeb03dd925cfc08ae44851; ?>
 <?php unset($__componentOriginal5027d420cfeeb03dd925cfc08ae44851); ?>
+<?php endif; ?>
+                        <?php if (isset($component)) { $__componentOriginal537ed435212ff58ad54506e5742b0b39 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal537ed435212ff58ad54506e5742b0b39 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::menu.submenu','data' => ['heading' => 'Organizations']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::menu.submenu'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['heading' => 'Organizations']); ?>
+                            <?php $__currentLoopData = $usesOrganizations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $org): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> 
+                                <?php if (isset($component)) { $__componentOriginal6498d2c45a9cd193b85bf4c51011baaf = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal6498d2c45a9cd193b85bf4c51011baaf = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::navmenu.item','data' => ['href' => ''.e(route('dashboard', ['organization' => $org->slug])).'','checked' => $org->id === $organization->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::navmenu.item'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['href' => ''.e(route('dashboard', ['organization' => $org->slug])).'','checked' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($org->id === $organization->id)]); ?>
+                                    <div class="w-full flex justify-between items-center">
+                                        <div class="flex space-x-1 items-center">
+                                            <?php if($org->id === $organization->id): ?> 
+                                                <?php if (isset($component)) { $__componentOriginal9c2dfd6cb98f4df18e26d1694500af11 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9c2dfd6cb98f4df18e26d1694500af11 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'e60dd9d2c3a62d619c9acb38f20d5aa5::icon.check','data' => ['variant' => 'micro']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flux::icon.check'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['variant' => 'micro']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9c2dfd6cb98f4df18e26d1694500af11)): ?>
+<?php $attributes = $__attributesOriginal9c2dfd6cb98f4df18e26d1694500af11; ?>
+<?php unset($__attributesOriginal9c2dfd6cb98f4df18e26d1694500af11); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9c2dfd6cb98f4df18e26d1694500af11)): ?>
+<?php $component = $__componentOriginal9c2dfd6cb98f4df18e26d1694500af11; ?>
+<?php unset($__componentOriginal9c2dfd6cb98f4df18e26d1694500af11); ?>
+<?php endif; ?> 
+                                            <?php endif; ?>
+                                            <div>
+                                            <?php echo e($org->name); ?>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal6498d2c45a9cd193b85bf4c51011baaf)): ?>
+<?php $attributes = $__attributesOriginal6498d2c45a9cd193b85bf4c51011baaf; ?>
+<?php unset($__attributesOriginal6498d2c45a9cd193b85bf4c51011baaf); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal6498d2c45a9cd193b85bf4c51011baaf)): ?>
+<?php $component = $__componentOriginal6498d2c45a9cd193b85bf4c51011baaf; ?>
+<?php unset($__componentOriginal6498d2c45a9cd193b85bf4c51011baaf); ?>
+<?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal537ed435212ff58ad54506e5742b0b39)): ?>
+<?php $attributes = $__attributesOriginal537ed435212ff58ad54506e5742b0b39; ?>
+<?php unset($__attributesOriginal537ed435212ff58ad54506e5742b0b39); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal537ed435212ff58ad54506e5742b0b39)): ?>
+<?php $component = $__componentOriginal537ed435212ff58ad54506e5742b0b39; ?>
+<?php unset($__componentOriginal537ed435212ff58ad54506e5742b0b39); ?>
 <?php endif; ?>
                      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>

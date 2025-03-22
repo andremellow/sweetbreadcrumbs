@@ -1,6 +1,9 @@
 @use(App\Services\OrganizationService)
+@use(App\Services\UserService)
 @php
     $organization = app(OrganizationService::class)->getOrganization();
+    $userService = app(UserService::class);
+    $usesOrganizations = $userService->getOrganizations();
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
@@ -74,7 +77,23 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item href="/settings/profile" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                        <flux:menu.item href="{{ route('settings.profile') }}" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                        <flux:menu.submenu heading="Organizations">
+                            @foreach($usesOrganizations as $org) 
+                                <flux:navmenu.item  href="{{ route('dashboard', ['organization' => $org->slug]) }}" :checked="$org->id === $organization->id">
+                                    <div class="w-full flex justify-between items-center">
+                                        <div class="flex space-x-1 items-center">
+                                            @if($org->id === $organization->id) 
+                                                <flux:icon.check variant="micro"/> 
+                                            @endif
+                                            <div>
+                                            {{ $org->name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </flux:navmenu.item>
+                            @endforeach
+                        </flux:menu.submenu>
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />
