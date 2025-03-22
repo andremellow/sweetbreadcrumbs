@@ -75,7 +75,7 @@
             "herd coverage ./vendor/bin/pest --coverage --coverage-html coverage  --testsuite=Feature"
         ],
         "mutate": [
-            "herd coverage ./vendor/bin/pest --coverage --mudate"
+            "herd coverage ./vendor/bin/pest --mutate"
         ],
         "db-reset": [
             "@php artisan db:wipe",
@@ -91,6 +91,7 @@
         "pre-commit": [
             "vendor/bin/pint",
             "@php artisan test --parallel",
+            "./vendor/bin/pest --type-coverage --min=100",
             "@php artisan dusk"
         ]
     },

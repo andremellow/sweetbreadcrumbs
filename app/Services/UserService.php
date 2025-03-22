@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Context;
 
 class UserService
@@ -93,7 +94,7 @@ class UserService
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
      */
-    public function getOrganizations()
+    public function getOrganizations(): Collection
     {
         return $this->user->organizations()->get();
     }
@@ -103,12 +104,12 @@ class UserService
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
      */
-    public function getWorkstreams()
+    public function getWorkstreams(): Collection
     {
         return $this->getCurrentOrganization()?->workstreams()->orderBy('name')->get();
     }
 
-    public static function getOrganizationBySlug(User $user, $slug): ?Organization
+    public static function getOrganizationBySlug(User $user, string $slug): ?Organization
     {
         return $user->organizations()->where('slug', $slug)->first();
     }

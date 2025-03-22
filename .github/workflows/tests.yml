@@ -62,3 +62,6 @@ jobs:
 
       - name: Tests
         run: ./vendor/bin/pest
+
+      - name: Type Coverage
+        run: ./vendor/bin/pest --type-coverage --min=100

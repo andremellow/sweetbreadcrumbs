@@ -13,6 +13,7 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Models\Workstream;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class WorkstreamService
 {
@@ -47,10 +48,10 @@ class WorkstreamService
         return $organization->workstreams()
             ->leftJoin('priorities', 'workstreams.priority_id', '=', 'priorities.id')
             ->with(['priority:id,name'])
-            ->when($name, function ($query, $name) {
+            ->when($name, function (Builder $query, string $name): builder {
                 return $query->where('workstreams.name', 'like', "%$name%");
             })
-            ->when($priorityId, function ($query, $priorityId) {
+            ->when($priorityId, function (builder $query, int $priorityId): builder {
                 return $query->where('workstreams.priority_id', '=', $priorityId);
             })
             ->orderBy($sortBy, $sortDirection->value)

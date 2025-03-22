@@ -36,7 +36,7 @@ it('validates required fields', function () {
 })->throws(ValidationException::class, 'The user field is required. (and 2 more errors)');
 
 it('validates the rules', function () {
-    $rules = CreateInviteDTO::rawRules($this->organization);
+    $rules = CreateInviteDTO::rawRules($this->organization->id);
     expect($rules['email'][0])->toBe('required');
     expect($rules['email'][1])->toBe('email');
     expect($rules['email'][2])->toBeInstanceOf(Unique::class);

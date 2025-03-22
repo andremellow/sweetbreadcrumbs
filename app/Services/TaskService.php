@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\Workstream;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class TaskService
 {
@@ -62,24 +63,26 @@ class TaskService
 
         return $taskable->tasks()->with('priority', 'taskable')
             ->leftJoin('priorities', 'tasks.priority_id', '=', 'priorities.id')
-            ->when($search, function ($query, $search) {
-                $query->whereLike('tasks.name', "%$search%")
+            ->when($search, function (Builder $query, string $search): Builder {
+                return $query->whereLike('tasks.name', "%$search%")
                     ->orWhereLike('tasks.description', "%$search%");
             })
-            ->when($priorityId, function ($query, $priorityId) {
+            ->when($priorityId, function (Builder $query, int $priorityId): Builder {
                 return $query->where('tasks.priority_id', '=', $priorityId);
             })
-            ->when($status, function ($query, $status) {
+            ->when($status, function (Builder $query, string $status): Builder {
                 if ($status === 'open') {
                     return $query->whereNull('tasks.completed_at');
                 } elseif ($status === 'closed') {
                     return $query->whereNotNull('tasks.completed_at');
                 }
+
+                return $query;
             })
-            ->when($dateStart, function ($query, $dateStart) {
+            ->when($dateStart, function (Builder $query, Carbon $dateStart): Builder {
                 return $query->whereDate('tasks.due_date', '>=', $dateStart);
             })
-            ->when($dateEnd, function ($query, $dateEnd) {
+            ->when($dateEnd, function (Builder $query, Carbon $dateEnd): Builder {
                 return $query->whereDate('tasks.due_date', '<=', $dateEnd);
             })
             ->orderBy($sortBy, $sortDirection->value)

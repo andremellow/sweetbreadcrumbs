@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 
 class CreateOrganization
 {
-    protected $demoOrganizationId;
+    protected int $demoOrganizationId;
 
     /**
      * Creates new organization.
@@ -24,7 +24,7 @@ class CreateOrganization
      *
      * @return Organization
      */
-    public function __invoke(User $user, CreateOrganizationDTO $createOrganizationDTO)
+    public function __invoke(User $user, CreateOrganizationDTO $createOrganizationDTO): Organization
     {
         $this->demoOrganizationId = config('app.demo_organization_id');
         $organization = Organization::create([
@@ -43,7 +43,7 @@ class CreateOrganization
         return $organization;
     }
 
-    protected function copyPriorities(Organization $organization)
+    protected function copyPriorities(Organization $organization): void
     {
         $prioritiesToCopy = Priority::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($prioritiesToCopy as $priority) {
@@ -54,7 +54,7 @@ class CreateOrganization
         }
     }
 
-    protected function copyRiskLevels(Organization $organization)
+    protected function copyRiskLevels(Organization $organization): void
     {
         $riskLevelsToCopy = RiskLevel::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($riskLevelsToCopy as $priority) {
@@ -64,7 +64,7 @@ class CreateOrganization
         }
     }
 
-    protected function copyRiskStatuses(Organization $organization)
+    protected function copyRiskStatuses(Organization $organization): void
     {
         $riskStatusesToCopy = RiskStatus::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($riskStatusesToCopy as $priority) {
@@ -74,7 +74,7 @@ class CreateOrganization
         }
     }
 
-    protected function copyProbabilities(Organization $organization)
+    protected function copyProbabilities(Organization $organization): void
     {
         $probabilitiesToCopy = Probability::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($probabilitiesToCopy as $priority) {
@@ -84,7 +84,7 @@ class CreateOrganization
         }
     }
 
-    protected function copyRoles(Organization $organization)
+    protected function copyRoles(Organization $organization): void
     {
         $rolesToCopy = Role::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($rolesToCopy as $role) {

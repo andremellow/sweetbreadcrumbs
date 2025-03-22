@@ -17,7 +17,7 @@ class Role extends Model
      */
     protected $fillable = ['name', 'is_default', 'organization_id'];
 
-    public function casts()
+    public function casts(): array
     {
         return [
             'is_default' => 'bool',

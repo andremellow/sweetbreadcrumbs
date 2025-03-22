@@ -9,6 +9,8 @@ use App\Models\Workstream;
 use App\Services\TaskService;
 use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -37,7 +39,7 @@ class ListTasks extends Component
 
     public Workstream $workstream;
 
-    public function mount(Workstream $workstream)
+    public function mount(Workstream $workstream): void
     {
         $this->workstream = $workstream;
         $this->sortBy = 'due_date';
@@ -45,23 +47,23 @@ class ListTasks extends Component
 
     }
 
-    public function updated($name)
+    public function updated(string $name): void
     {
         if (in_array($name, ['status', 'dateRange'])) {
             $this->reset('onlyLates');
         }
     }
 
-    public function toggleLate()
+    public function toggleLate(): void
     {
         $this->onlyLates = ! $this->onlyLates;
     }
 
     #[On([EventEnum::TASK_CREATED->value, EventEnum::TASK_DELETED->value])]
-    public function applyFilter() {}
+    public function applyFilter(): void {}
 
     #[On([EventEnum::TASK_OPENED->value, EventEnum::TASK_CLOSED->value])]
-    public function maybeReload()
+    public function maybeReload(): void
     {
         if ($this->status === 'all') {
             $this->skipRender();
@@ -69,12 +71,12 @@ class ListTasks extends Component
     }
 
     #[On(EventEnum::RESET->value)]
-    public function resetForm()
+    public function resetForm(): void
     {
         $this->reset(['search', 'status', 'dateRange', 'priorityId', 'onlyLates']);
     }
 
-    protected function list(TaskService $taskService)
+    protected function list(TaskService $taskService): LengthAwarePaginator
     {
         if ($this->onlyLates) {
             $this->reset(['status', 'dateRange']);
@@ -97,7 +99,7 @@ class ListTasks extends Component
         );
     }
 
-    protected function isFiltered()
+    protected function isFiltered(): bool
     {
         return
             ! empty($this->search)
@@ -107,7 +109,7 @@ class ListTasks extends Component
             || $this->onlyLates === true;
     }
 
-    public function render(UserService $userService, TaskService $taskService)
+    public function render(UserService $userService, TaskService $taskService): View
     {
         $this->isFiltred = $this->isFiltered();
 

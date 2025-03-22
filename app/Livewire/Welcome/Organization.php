@@ -4,6 +4,8 @@ namespace App\Livewire\Welcome;
 
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Services\OrganizationService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -11,17 +13,17 @@ class Organization extends Component
 {
     public string $name;
 
-    public function rules()
+    public function rules(): array
     {
         return CreateOrganizationDTO::rules();
     }
 
-    public function create(OrganizationService $organizationService)
+    public function create(OrganizationService $organizationService): void
     {
         $this->validate();
 
         $organization = $organizationService->create(
-            auth()->user(),
+            Auth::user(),
             new CreateOrganizationDTO(name: $this->name)
         );
 
@@ -29,7 +31,7 @@ class Organization extends Component
     }
 
     #[Layout('components.layouts.welcome')]
-    public function render()
+    public function render(): View
     {
         return view('livewire.welcome.organization');
     }

@@ -20,7 +20,7 @@ class Invite extends Model
      */
     protected $fillable = ['email', 'token', 'role_id', 'sent_at', 'inviter_user_id'];
 
-    public function casts()
+    public function casts(): array
     {
         $format = config('app.save_date_format');
 

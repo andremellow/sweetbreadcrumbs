@@ -15,6 +15,8 @@ use App\Models\User;
 use App\Models\Workstream;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class MeetingService
 {
@@ -33,14 +35,14 @@ class MeetingService
 
         return $source->meetings()
             ->with('workstream')
-            ->when($search, function ($query, $search) {
-                $query->whereLike('meetings.name', "%$search%")
+            ->when($search, function (Builder $query, string $search): Builder {
+                return $query->whereLike('meetings.name', "%$search%")
                     ->orWhereLike('meetings.description', "%$search%");
             })
-            ->when($dateStart, function ($query, $dateStart) {
+            ->when($dateStart, function (Builder $query, Carbon $dateStart): Builder {
                 return $query->whereDate('meetings.date', '>=', $dateStart);
             })
-            ->when($dateEnd, function ($query, $dateEnd) {
+            ->when($dateEnd, function (Builder $query, Carbon $dateEnd): Builder {
                 return $query->whereDate('meetings.date', '<=', $dateEnd);
             })
             ->orderBy($sortBy, $sortDirection->value)
@@ -50,7 +52,7 @@ class MeetingService
     public function lastMeeings(
         Organization|Workstream $source,
         int $take = 5
-    ) {
+    ): Collection {
 
         return $source->meetings()->with('workstream')
             ->orderBy('date', SortDirection::DESC->value)

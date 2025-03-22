@@ -3,6 +3,8 @@
 namespace App\Livewire\Welcome;
 
 use App\Services\UserService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -12,7 +14,7 @@ class Profile extends Component
 
     public string $last_name;
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'first_name' => ['required', 'string', 'max:255'],
@@ -20,11 +22,11 @@ class Profile extends Component
         ];
     }
 
-    public function update(UserService $userService)
+    public function update(UserService $userService) // @pest-ignore-type
     {
         $validated = $this->validate();
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         $user->fill($validated);
 
@@ -32,15 +34,15 @@ class Profile extends Component
 
         $organization = $userService->getCurrentOrganization();
 
-        if ($organization === null) {
-            return $this->redirect(route('welcome.organization'));
+        if ($organization) {
+            return $this->redirect(route('dashboard', ['organization' => $organization->slug]));
         }
 
-        return $this->redirect(route('dashboard', ['organization' => $organization->slug]));
+        return $this->redirect(route('welcome.organization'));
     }
 
     #[Layout('components.layouts.welcome')]
-    public function render()
+    public function render(): View
     {
         return view('livewire.welcome.profile');
     }

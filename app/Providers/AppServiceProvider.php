@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\UserService;
 use Illuminate\Console\Application;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -17,9 +18,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // @codeCoverageIgnoreStart
-        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) { // @pest-mutate-ignore
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class); // @pest-mutate-ignore
+            $this->app->register(TelescopeServiceProvider::class); // @pest-mutate-ignore
         }
         // @codeCoverageIgnoreEnd
     }
@@ -31,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if (env('APP_ENV') !== 'production') {
 
-            DB::listen(function ($query) {
+            DB::listen(function (QueryExecuted $query) {
                 Log::info(
                     $query->sql,
                     $query->bindings,

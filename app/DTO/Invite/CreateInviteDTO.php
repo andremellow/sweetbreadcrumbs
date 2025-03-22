@@ -23,7 +23,7 @@ class CreateInviteDTO extends Data
         return static::rawRules($context->payload['organization']->id);
     }
 
-    public static function rawRules($organizationId): array
+    public static function rawRules(int $organizationId): array
     {
         return [
             'email' => [
