@@ -1,9 +1,10 @@
 <flux:modal 
     name="meeting-view-modal"
     wire:model.self="showMeetingViewModal"
-    
+    variant="flyout" 
+    position="bottom"
 >
-    <form wire:submit="save">
+    
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Meeting for {{ $name }}</flux:heading>
@@ -15,5 +16,5 @@
             </div>
             
         </div>
-    </form>
+    
 </flux:modal>
