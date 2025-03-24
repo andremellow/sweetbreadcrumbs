@@ -6,6 +6,7 @@ use App\Enums\EventEnum;
 use App\Livewire\Forms\WorkstreamForm;
 use App\Models\Organization;
 use App\Services\OrganizationService;
+use App\Services\UserService;
 use App\Services\WorkstreamService;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -36,13 +37,13 @@ class WorkstreamModal extends Component
         $this->form->reset();
     }
 
-    public function save(OrganizationService $organizationService, WorkstreamService $workstreamService)
+    public function save(UserService $userService, WorkstreamService $workstreamService)
     {
         if ($this->form->id === null) {
-            $workstream = $this->form->add($organizationService, $workstreamService);
+            $workstream = $this->form->add($userService, $workstreamService);
             $this->dispatch(EventEnum::WORKSTREAM_CREATED->value, workstreamId: $workstream->id);
         } else {
-            $this->form->edit($organizationService, $workstreamService);
+            $this->form->edit($userService, $workstreamService);
             $this->dispatch(EventEnum::WORKSTREAM_UPDATED->value, workstreamId: $this->form->id);
         }
 
@@ -50,10 +51,10 @@ class WorkstreamModal extends Component
         $this->showWorkstreamFormModal = false;
     }
 
-    public function render(OrganizationService $organizationService)
+    public function render(UserService $userService)
     {
         return view('livewire.workstream.workstream-modal', [
-            'organization' => $organizationService->getOrganization(),
+            'organization' => $userService->getCurrentOrganization(),
         ]);
     }
 }
