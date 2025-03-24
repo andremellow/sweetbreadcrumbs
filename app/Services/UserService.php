@@ -69,6 +69,16 @@ class UserService
     }
 
     /**
+     * Check if the given user has organizations.
+     *
+     * @return bool
+     */
+    public function hasOrganization(int $organizationId): bool
+    {
+        return $this->user->organizations()->where('organization_id', $organizationId)->exists();
+    }
+
+    /**
      * Get user's current Organizations.
      *
      * @return Organization | null

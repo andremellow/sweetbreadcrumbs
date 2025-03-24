@@ -1,6 +1,12 @@
 <?php
 
+use App\Actions\Organization\CreateOrganization;
+use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
+use App\Models\User;
+use App\Services\OrganizationService;
+
+use function Pest\Laravel\actingAs;
 
 pest()->extend(Tests\DuskTestCase::class)
     ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
@@ -49,9 +55,18 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function createOrganization(?string $name = null)
 {
-    // ..
+    $user = User::factory()->create();
+    actingAs($user);
+
+    $organization = (new CreateOrganization)(
+        $user, 
+        new CreateOrganizationDTO($name ?? 'New Organization Name'), 
+        app(OrganizationService::class)
+    );
+
+    return compact('user', 'organization');
 }
 
 class FakeRoute

@@ -4,6 +4,7 @@ namespace App\DTO\Invite;
 
 use App\Models\Organization;
 use App\Models\User;
+use App\Rules\NotOnTeam;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
@@ -29,7 +30,9 @@ class CreateInviteDTO extends Data
             'email' => [
                 'required',
                 'email',
-                Rule::unique('invites')->where(fn (Builder $query) => $query->where('organization_id', $organizationId))],
+                Rule::unique('invites')->where(fn (Builder $query) => $query->where('organization_id', $organizationId)),
+                new NotOnTeam(organizationId: $organizationId),
+            ],
             'role_id' => ['required',
                 Rule::exists('App\Models\Role', 'id')->where(fn (Builder $query) => $query->where('organization_id', $organizationId))],
         ];

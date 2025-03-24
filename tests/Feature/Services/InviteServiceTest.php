@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Invite\AcceptInvite;
 use App\Actions\Invite\CreateInvite;
 use App\Actions\Invite\DeleteInvite;
 use App\Actions\Invite\UpdateInviteSent;
@@ -13,6 +14,7 @@ use App\Models\Invite;
 use App\Models\User;
 use App\Notifications\InviteCreatedNotification;
 use App\Services\InviteService;
+use App\Services\OrganizationService;
 use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Context;
@@ -21,9 +23,8 @@ use Illuminate\Support\Facades\Notification;
 covers(InviteService::class);
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
-
+    [$this->user, $$this->organization] = createOrganization(); 
+dd($this->user);
     /** @var CreateInvite */
     $this->mockCreateInvite = Mockery::mock(CreateInvite::class);
 
@@ -32,10 +33,20 @@ beforeEach(function () {
 
     /** @var DeleteInvite */
     $this->mockDeleteInvite = Mockery::mock(DeleteInvite::class);
+
+    /** @var AcceptInvite */
+    $this->mockAcceptInvite = Mockery::mock(AcceptInvite::class);
+
+    /** @var OrganizationService */
+    $this->mockOrganizationService = Mockery::mock(OrganizationService::class);
+
     $this->service = new InviteService(
         createInvite: $this->mockCreateInvite,
         deleteInvite: $this->mockDeleteInvite,
-        updateInviteSent: $this->mockUpdateInviteSent);
+        updateInviteSent: $this->mockUpdateInviteSent,
+        acceptInvite: $this->mockAcceptInvite,
+        organizationService: $this->mockOrganizationService
+    );
 
     $this->app->bind(UserService::class, function () {
         return new UserService($this->user);

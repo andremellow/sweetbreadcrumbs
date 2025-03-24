@@ -7,6 +7,7 @@ use App\Livewire\Organization\Invite as OrganizationInvite;
 use App\Livewire\Organization\Settings as OrganizationSettings;
 use App\Livewire\Settings\Profile as SettingsProfile;
 use App\Livewire\Task\ListTasks;
+use App\Livewire\Welcome\AcceptInvite as WelcomeAcceptInvite;
 use App\Livewire\Welcome\Organization as WelcomeOrganization;
 use App\Livewire\Welcome\Profile as WelcomeProfile;
 use App\Livewire\Welcome\Workstream as WelcomeWorkstream;
@@ -30,7 +31,7 @@ Route::middleware([
     });
 
     Route::group(['middleware' => ['verified']], function () {
-        Route::get('invite/{token}', fn ($token) => $token)->name('invite.accept');
+        Route::get('invite/{invite:token}', WelcomeAcceptInvite::class)->name('invite.accept');
         Route::get('welcome/profile', WelcomeProfile::class)->name('welcome.profile');
         Route::get('welcome/organization', WelcomeOrganization::class)->name('welcome.organization');
 

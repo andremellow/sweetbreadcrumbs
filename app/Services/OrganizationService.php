@@ -60,6 +60,13 @@ class OrganizationService
         return ($this->createOrganization)($user, $createOrganizationDTO);
     }
 
+    public function attachUser(Organization $organization, User $user, int $roleId): void
+    {
+        $organization->users()->attach($user, [
+            'role_id' => $roleId,
+        ]);
+    }
+
     /**
      * Get Organization's Priorities.
      *
