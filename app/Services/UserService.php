@@ -85,7 +85,11 @@ class UserService
             return request()->session()->get('current_organization');
         }
 
-        return Context::get('current_organization');
+        if(Context::get('current_organization')) {
+            return Context::get('current_organization');
+        }
+
+        return $this->getOrganizations()->first();
     }
 
     /**
