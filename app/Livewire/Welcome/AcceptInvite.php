@@ -4,9 +4,11 @@ namespace App\Livewire\Welcome;
 
 use App\DTO\Invite\AcceptInviteDTO;
 use App\DTO\Invite\DeleteInviteDTO;
+use App\Exceptions\CreateInviteException;
 use App\Models\Invite as ModelsInvite;
 use App\Services\InviteService;
 use App\Services\UserService;
+use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -51,21 +53,26 @@ class AcceptInvite extends Component
 
     public function accept(InviteService $inviteService): void
     {
-        $user = Auth::user();
-        if ($this->showForm) {
-            $validated = $this->validate();
+        try {
+            $user = Auth::user();
+            if ($this->showForm) {
+                $validated = $this->validate();
 
-            $user->fill($validated);
+                $user->fill($validated);
 
-            $user->save();
+                $user->save();
+            }
+
+            $inviteService->acceptInvite(new AcceptInviteDTO(
+                $user,
+                $this->invite
+            ));
+
+            $this->redirectToDashboad();
+        } catch (CreateInviteException $th) {
+            Flux::toast(variant: 'danger', text: __(config('app.error_message')));
         }
 
-        $inviteService->acceptInvite(new AcceptInviteDTO(
-            $user,
-            $this->invite
-        ));
-
-        $this->redirectToDashboad();
     }
 
     public function redirectToDashboad()  // @pest-ignore-type

@@ -3,9 +3,9 @@
 namespace App\Actions\Invite;
 
 use App\DTO\Invite\AcceptInviteDTO;
+use App\Exceptions\CreateInviteException;
 use App\Models\User;
 use App\Services\OrganizationService;
-use Exception;
 
 class AcceptInvite
 {
@@ -23,11 +23,11 @@ class AcceptInvite
         }
 
         if ($this->roleNotExists($acceptInviteDTO)) {
-            throw new Exception(__('Invite role does not belongs to the organization'));
+            throw new CreateInviteException(__('Invite role does not belongs to the organization'));
         }
 
         if ($this->inviteDoesNotBelongsToSameEmail($acceptInviteDTO)) {
-            throw new Exception(__('Invite email does not belongs to authenticated user'));
+            throw new CreateInviteException(__('Invite email does not belongs to authenticated user'));
         }
 
         $organizationService->attachUser(
@@ -59,6 +59,6 @@ class AcceptInvite
 
     protected function inviteDoesNotBelongsToSameEmail(AcceptInviteDTO $acceptInviteDTO): bool
     {
-        return $acceptInviteDTO->user->email !== $acceptInviteDTO->invite->user;
+        return $acceptInviteDTO->user->email !== $acceptInviteDTO->invite->email;
     }
 }

@@ -60,6 +60,15 @@ class OrganizationService
         return ($this->createOrganization)($user, $createOrganizationDTO, $this);
     }
 
+    /**
+     * Attach user to the given organization.
+     *
+     * @param Organization $organization
+     * @param User         $user
+     * @param int          $roleId
+     *
+     * @return void
+     */
     public function attachUser(Organization $organization, User $user, int $roleId): void
     {
         $organization->users()->attach($user, [

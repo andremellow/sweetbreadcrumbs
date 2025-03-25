@@ -3,7 +3,9 @@
     <div class="mr-10 w-full pb-4 md:w-[220px]">
         <flux:navlist>
             <flux:navlist.item href="{{ route('organization.settings', [ 'organization' => $organization->slug ]) }}" wire:navigate>{{ __('Settings') }}</flux:navlist.item>
+            @if(Feature::active('dev'))
             <flux:navlist.item href="{{ route('organization.invite', [ 'organization' => $organization->slug ]) }}" wire:navigate>{{ __('Invites') }}</flux:navlist.item>
+            @endif
         </flux:navlist>
     </div>
 

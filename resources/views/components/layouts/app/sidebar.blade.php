@@ -90,10 +90,12 @@
                                                 {{ $org->name }}
                                                 </div>
                                             </div>
-                                            @if($org->id === $organization->id) 
-                                                <a class="ml-2" href="{{ route('organization.settings', [ 'organization' => $org->slug ]) }}">
-                                                    <flux:icon.settings variant="mini"/> 
-                                                </a>
+                                            @if(Feature::active('dev'))
+                                                @if($org->id === $organization->id) 
+                                                    <a class="ml-2" href="{{ route('organization.settings', [ 'organization' => $org->slug ]) }}">
+                                                        <flux:icon.settings variant="mini"/> 
+                                                    </a>
+                                                @endif
                                             @endif
                                         </div>
                                     </flux:navmenu.item>
