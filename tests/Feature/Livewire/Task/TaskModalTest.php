@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\ConfigEnum;
 use App\Livewire\Task\TaskModal;
 use App\Models\Task;
@@ -16,8 +14,9 @@ use Livewire\Livewire;
 
 beforeEach(function () {
     // Create test user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     Context::add('current_organization', $this->organization);
 

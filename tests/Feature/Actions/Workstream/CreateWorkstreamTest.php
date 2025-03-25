@@ -1,15 +1,13 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
 use App\Actions\Workstream\CreateWorkstream;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Workstream\CreateWorkstreamDTO;
 use App\Models\Release;
-use App\Models\User;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 });
 
 it('creates a new workstream with required with all fields', function () {

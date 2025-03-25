@@ -1,8 +1,6 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
 use App\Actions\Task\CloseTask;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\CloseTaskDTO;
 use App\Models\Meeting;
 use App\Models\Task;
@@ -12,8 +10,9 @@ use Carbon\Carbon;
 
 beforeEach(function () {
     // Create user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     // Create workstream and meeting
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();

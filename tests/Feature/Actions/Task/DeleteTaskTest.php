@@ -1,8 +1,6 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
 use App\Actions\Task\DeleteTask;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\DeleteTaskDTO;
 use App\Models\Task;
 use App\Models\User;
@@ -10,8 +8,9 @@ use App\Models\Workstream;
 
 beforeEach(function () {
     // Create user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     // Create workstream and task
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();

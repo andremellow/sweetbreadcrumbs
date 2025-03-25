@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Handlers\RouteParameterHandler;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,11 +16,12 @@ use function Pest\Laravel\actingAs;
 covers(RouteParameterHandler::class);
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
-    $this->organization1 = (new CreateOrganization)($this->user, new CreateOrganizationDTO('Another Organization'));
-    $this->organizationFromOtherUser = (new CreateOrganization)(User::factory()->create(), new CreateOrganizationDTO('Another Organization'));
-
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
+    [$user, $organization1] = createOrganization($user, 'Another Organization');
+    [$otherUser, $organizationFromOtherUser] = createOrganization(User::factory()->create(), 'Another Organization');
+    $this->organizationFromOtherUser = $organizationFromOtherUser;
 });
 
 afterEach(function () {

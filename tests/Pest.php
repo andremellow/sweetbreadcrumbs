@@ -55,18 +55,25 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function createOrganization(?string $name = null)
+function createOrganization(?User $user = null, string $name = 'New Organization Name')
 {
-    $user = User::factory()->create();
+    if (! $user) {
+        $user = User::factory()->create();
+    }
     actingAs($user);
 
     $organization = (new CreateOrganization)(
-        $user, 
-        new CreateOrganizationDTO($name ?? 'New Organization Name'), 
+        $user,
+        new CreateOrganizationDTO($name),
         app(OrganizationService::class)
     );
 
-    return compact('user', 'organization');
+    return [$user, $organization];
+}
+
+function createUser()
+{
+    return User::factory()->create();
 }
 
 class FakeRoute

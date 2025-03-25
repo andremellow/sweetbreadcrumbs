@@ -4,11 +4,9 @@ use App\Actions\Invite\AcceptInvite;
 use App\Actions\Invite\CreateInvite;
 use App\Actions\Invite\DeleteInvite;
 use App\Actions\Invite\UpdateInviteSent;
-use App\Actions\Organization\CreateOrganization;
 use App\DTO\Invite\CreateInviteDTO;
 use App\DTO\Invite\DeleteInviteDTO;
 use App\DTO\Invite\UpdateInviteSentDTO;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\SortDirection;
 use App\Models\Invite;
 use App\Models\User;
@@ -23,8 +21,10 @@ use Illuminate\Support\Facades\Notification;
 covers(InviteService::class);
 
 beforeEach(function () {
-    [$this->user, $$this->organization] = createOrganization(); 
-dd($this->user);
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
+
     /** @var CreateInvite */
     $this->mockCreateInvite = Mockery::mock(CreateInvite::class);
 
@@ -66,9 +66,13 @@ it('creates a meeting using CreateInvite action', function () {
         ->shouldAllowMockingProtectedMethods();  // Allow mocking of protected methods
 
     // Inject the mocked CreateInvite into the InviteService constructor
-    $inviteServiceMock->__construct($this->mockCreateInvite,
-        $this->mockDeleteInvite,
-        $this->mockUpdateInviteSent);
+    $inviteServiceMock->__construct(
+        createInvite: $this->mockCreateInvite,
+        deleteInvite: $this->mockDeleteInvite,
+        updateInviteSent: $this->mockUpdateInviteSent,
+        acceptInvite: $this->mockAcceptInvite,
+        organizationService: $this->mockOrganizationService
+    );
 
     $mockInvite = $this->mock(Invite::class);
 

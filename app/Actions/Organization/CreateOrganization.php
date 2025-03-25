@@ -33,6 +33,12 @@ class CreateOrganization
             'slug' => $this->generateUniqueSlug($createOrganizationDTO->name),
         ]);
 
+        $this->copyPriorities($organization);
+        $this->copyRiskLevels($organization);
+        $this->copyRiskStatuses($organization);
+        $this->copyProbabilities($organization);
+        $this->copyRoles($organization);
+
         $role = $organization->roles()->where('name', 'Admin')->first();
 
         $organizationService->attachUser(
@@ -40,12 +46,6 @@ class CreateOrganization
             user: $user,
             roleId: $role ? $role->id : $organizationService->getDefaultRoleId(),
         );
-
-        $this->copyPriorities($organization);
-        $this->copyRiskLevels($organization);
-        $this->copyRiskStatuses($organization);
-        $this->copyProbabilities($organization);
-        $this->copyRoles($organization);
 
         return $organization;
     }

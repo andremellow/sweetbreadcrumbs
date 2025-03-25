@@ -57,7 +57,7 @@ class OrganizationService
      */
     public function create(User $user, CreateOrganizationDTO $createOrganizationDTO): Organization
     {
-        return ($this->createOrganization)($user, $createOrganizationDTO);
+        return ($this->createOrganization)($user, $createOrganizationDTO, $this);
     }
 
     public function attachUser(Organization $organization, User $user, int $roleId): void
