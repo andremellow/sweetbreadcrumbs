@@ -3,7 +3,9 @@
         <flux:navlist>
             <flux:navlist.item :href="route('settings.profile')" wire:navigate>{{ __('Profile') }}</flux:navlist.item>
             <flux:navlist.item :href="route('settings.appearance')" wire:navigate>{{ __('Appearance') }}</flux:navlist.item>
+            @if(Feature::active('dev'))
             <flux:navlist.item :href="route('settings.invites')" wire:navigate>{{ __('Invites') }}</flux:navlist.item>
+            @endif
         </flux:navlist>
     </div>
 

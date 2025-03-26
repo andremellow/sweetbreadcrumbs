@@ -34,7 +34,7 @@ test('it handles expired invites', function () {
         $browser
             ->loginAs($this->user)
             ->visit(route('settings.invites'))
-            ->assertSee($this->user->email)
+            ->assertSee($this->invite->organization->name)
             ->assertSee('Expired')
             ->assertSee('Decline')
             ->assertDontSee('Accept');
@@ -51,11 +51,11 @@ test('it declies an invite', function () {
         $browser
             ->loginAs($this->user)
             ->visit(route('settings.invites'))
-            ->assertSee($this->user->email)
+            ->assertSee($this->invite->organization->name)
             ->assertSee('Expired')
             ->press('Decline')
             ->acceptDialog()
-            ->waitUntilMissingText($this->user->email)
+            ->waitUntilMissingText($this->invite->organization->name)
             ->assertSee('No pending invites')
             ->waitForText('Invite declined');
 
@@ -79,9 +79,9 @@ test('it accepts an invite', function () {
         $browser
             ->loginAs($this->user)
             ->visit(route('settings.invites'))
-            ->assertSee($this->user->email)
+            ->assertSee($this->invite->organization->name)
             ->press('Accept')
-            ->waitUntilMissingText($this->user->email)
+            ->waitUntilMissingText($this->invite->organization->name)
             ->assertSee('No pending invites')
             ->waitForText('Invite accept');
 
@@ -109,9 +109,9 @@ test('cannot accept invite if already part of the organization', function () {
         $browser
             ->loginAs($this->user)
             ->visit(route('settings.invites'))
-            ->assertSee($this->user->email)
+            ->assertSee($this->invite->organization->name)
             ->press('Accept')
-            ->assertSee($this->user->email);
+            ->assertSee($this->invite->organization->name);
         // ->assertSee(__(config('app.error_message')));
     });
 });

@@ -49,6 +49,24 @@ it('cannot accept the invite if is already member', function () {
     )->toBe(1);
 })->throws(CreateInviteException::class, 'E-mail is already a member of the organization');
 
+it('cannot accept expired invite', function () {
+
+    $this->invite->update(['sent_at' => now()->subDay(10)]);
+
+    (new AcceptInvite)(
+        new AcceptInviteDTO(
+            user: $this->invitee,
+            invite: $this->invite
+        ), app(OrganizationService::class)
+    );
+
+    expect(DB::table('organization_user')
+        ->where('user_id', $this->invitee->id)
+        ->where('user_id', $this->organization->id)
+        ->count()
+    )->toBe(1);
+})->throws(CreateInviteException::class, 'Invite is expired');
+
 it('validates invite role exists in the organization', function () {
 
     $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([

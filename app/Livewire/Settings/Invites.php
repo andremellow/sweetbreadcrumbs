@@ -31,18 +31,14 @@ class Invites extends Component
 
     public function decline(UserService $userService, InviteService $inviteService, int $id): void
     {
-        try {
-            $invite = $userService->getInviteById(id: $id);
-            $inviteService->delete(new DeleteInviteDTO(
-                user: Auth::user(),
-                organization: $invite->organization,
-                invite_id: $id
-            ));
+        $invite = $userService->getInviteById(id: $id);
+        $inviteService->delete(new DeleteInviteDTO(
+            user: Auth::user(),
+            organization: $invite->organization,
+            invite_id: $id
+        ));
 
-            Flux::toast(variant: 'success', text: __('Invite declined'));
-        } catch (CreateInviteException $e) {
-            Flux::toast(variant: 'danger', text: __(config('app.error_message')));
-        }
+        Flux::toast(variant: 'success', text: __('Invite declined'));
     }
 
     #[Layout('components.layouts.no-sidebar-app')]

@@ -7,7 +7,7 @@
             @if(count($invites) > 0)
             <flux:table :paginate="$invites">
                 <flux:table.columns>
-                    <flux:table.column>Email</flux:table.column>
+                    <flux:table.column>Organization</flux:table.column>
                     <flux:table.column >Sent</flux:table.column>
                     <flux:table.column >Role</flux:table.column>
                     <flux:table.column ></flux:table.column>
@@ -17,7 +17,7 @@
                     @foreach ($invites as $invite)
                         <flux:table.row :key="$invite->id">
                             <flux:table.cell class="flex items-center gap-3">
-                                {{ $invite->email }}
+                                {{ $invite->organization->name }}
                                 @if($invite->is_expired)
                                     <flux:badge size="sm" color="zinc" inset="top bottom">Expired</flux:badge>  
                                 @endif
