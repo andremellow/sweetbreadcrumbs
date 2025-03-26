@@ -33,11 +33,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Feature::define('dev', fn (User $user) => match (true) {
             $user->email === 'andremellow@gmail.com' => true,
-            env('APP_ENV') === 'testing' => true,
+            config('app.env') === 'testing' => true,
             default => false,
         });
 
-        if (env('APP_ENV') !== 'production') {
+        if (config('app.env') !== 'production') {
 
             DB::listen(function (QueryExecuted $query) {
                 Log::info(
