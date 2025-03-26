@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Invite;
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Context;
 
@@ -121,6 +123,26 @@ class UserService
     public function getWorkstreams(): Collection
     {
         return $this->getCurrentOrganization()?->workstreams()->orderBy('name')->get();
+    }
+
+    /**
+     * Get all user's invites.
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getInvites(): LengthAwarePaginator
+    {
+        return Invite::where('email', $this->user->email)->paginate(config('app.pagination_items'));
+    }
+
+    /**
+     * Get user's invite by id.
+     *
+     * @return Invite
+     */
+    public function getInviteById(int $id): Invite
+    {
+        return Invite::where('email', $this->user->email)->findOrFail($id);
     }
 
     public static function getOrganizationBySlug(User $user, string $slug): ?Organization

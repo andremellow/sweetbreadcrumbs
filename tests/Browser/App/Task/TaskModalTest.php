@@ -20,7 +20,6 @@ test('Reloads listing when new task is created', function () {
             ->type('@form.name', 'My new task')
             ->press('Save')
             ->waitUntilMissingText('Small Steps, Big Wins—Let’s Tackle It!')
-            ->waitForText('My new task')
-            ->responsiveScreenshots('list-tasks');
+            ->waitForText('My new task');
     });
 });

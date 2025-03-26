@@ -30,11 +30,8 @@
             <flux:navlist.item icon="home" href="{{ route('dashboard', [ 'organization' => app(App\Services\UserService::class)->getCurrentOrganization()->slug ])  }}" current>Dashboard</flux:navlist.item>
         </flux:navlist>
     </flux:sidebar>
-
-    
         {{ $slot }}
-    
-
     @fluxScripts
+    <flux:toast  position="top right" />
 </body>
 </html>

@@ -30,6 +30,7 @@ test('it validates the fields', function () {
 
 test('it updates user name and accepts the invite', function () {
     $this->inviteeUser = User::factory()->create(['first_name' => '', 'last_name' => '']);
+
     $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create(
         ['email' => $this->inviteeUser->email]
     );

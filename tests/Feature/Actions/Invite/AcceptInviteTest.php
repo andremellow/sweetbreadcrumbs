@@ -25,7 +25,7 @@ beforeEach(function () {
     $this->roleId = $this->organization->roles()->first()->id;
 });
 
-it('connot accept the invite if is already member', function () {
+it('cannot accept the invite if is already member', function () {
 
     $this->organizationService->attachUser($this->organization, $this->invitee, $this->roleId);
 
@@ -47,7 +47,7 @@ it('connot accept the invite if is already member', function () {
         ->where('user_id', $this->organization->id)
         ->count()
     )->toBe(1);
-});
+})->throws(CreateInviteException::class, 'E-mail is already a member of the organization');
 
 it('validates invite role exists in the organization', function () {
 

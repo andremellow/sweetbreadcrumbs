@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Settings\Appearance;
+use App\Livewire\Settings\Invites;
 use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
@@ -13,5 +14,6 @@ Route::middleware([
     Route::redirect('settings', 'settings/profile');
 
     Route::get('settings/profile', Profile::class)->name('settings.profile');
+    Route::get('settings/invites', Invites::class)->name('settings.invites');
     Volt::route('settings/appearance', Appearance::class)->name('settings.appearance');
 });
