@@ -19,7 +19,11 @@ class AcceptInvite
     public function __invoke(AcceptInviteDTO $acceptInviteDTO, OrganizationService $organizationService
     ): void {
         if ($this->userIsAlreadyMemberOfOrganization($acceptInviteDTO)) {
-            return;
+            throw new CreateInviteException(__('E-mail is already a member of the organization'));
+        }
+
+        if ($acceptInviteDTO->invite->is_expired) {
+            throw new CreateInviteException(__('Invite is expired'));
         }
 
         if ($this->roleNotExists($acceptInviteDTO)) {

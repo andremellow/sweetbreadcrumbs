@@ -4,6 +4,7 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Models\Workstream;
 use App\Services\UserService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Session\Middleware\StartSession;
@@ -109,6 +110,49 @@ it('gets all workstreams from the current organization', function () {
     expect($workstreams[2]->name)->toBe($factoryWorkstreams[2]->name);
     expect($workstreams[3]->name)->toBe($factoryWorkstreams[3]->name);
 });
+
+it('gets all invites from the current user', function () {
+    Context::add('current_organization', $this->organization);
+    $invitee = User::factory()->create();
+    [$otherUser, $otherOrganization] = createOrganization();
+    $currentUserInvite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create([
+        'email' => $invitee->email,
+    ]);
+    App\Models\Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->withRole($otherOrganization)->create();
+    $currentUserInvite1 = App\Models\Invite::factory()->for($otherOrganization)->for($this->user, 'inviter')->withRole($otherOrganization)->create([
+        'email' => $invitee->email,
+    ]);
+
+    $this->userService = new UserService($invitee);
+    $invites = $this->userService->getInvites();
+    expect($invites)->toHaveCount(2);
+    expect($invites[0]->organization->id)->toBe($this->organization->id);
+    expect($invites[0]->id)->toBe($currentUserInvite->id);
+    expect($invites[1]->organization->id)->toBe($otherOrganization->id);
+    expect($invites[1]->id)->toBe($currentUserInvite1->id);
+});
+
+it('gets and invite by Id', function () {
+    Context::add('current_organization', $this->organization);
+    $invitee = User::factory()->create();
+    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create([
+        'email' => $invitee->email,
+    ]);
+
+    $this->userService = new UserService($invitee);
+    $inviteById = $this->userService->getInviteById($invite->id);
+
+    expect($inviteById->organization->id)->toBe($this->organization->id);
+    expect($inviteById->id)->toBe($invite->id);
+
+});
+
+it('gets and invite by Id validates if id belongs to the current user', function () {
+    Context::add('current_organization', $this->organization);
+    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+
+    $this->userService->getInviteById($invite->id);
+})->throws(ModelNotFoundException::class);
 
 it('retrieves organization by slug', function () {
     $organizationBySlug = UserService::getOrganizationBySlug($this->user, $this->organization->slug);

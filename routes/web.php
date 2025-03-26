@@ -5,7 +5,6 @@ use App\Livewire\Meeting\ListMeetings;
 use App\Livewire\Organization\Dashboard as OrganizationDashboard;
 use App\Livewire\Organization\Invite as OrganizationInvite;
 use App\Livewire\Organization\Settings as OrganizationSettings;
-use App\Livewire\Settings\Profile as SettingsProfile;
 use App\Livewire\Task\ListTasks;
 use App\Livewire\Welcome\AcceptInvite as WelcomeAcceptInvite;
 use App\Livewire\Welcome\Organization as WelcomeOrganization;
@@ -37,8 +36,6 @@ Route::middleware([
 
         Route::get('welcome/profile', WelcomeProfile::class)->name('welcome.profile');
         Route::get('welcome/organization', WelcomeOrganization::class)->name('welcome.organization');
-
-        Route::get('settings/profile', SettingsProfile::class)->name('settings.profile');
 
         require __DIR__.'/settings.php';
     });
