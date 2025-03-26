@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ConfigEnum;
 use App\Services\ConfigService;
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,7 +65,7 @@ class Invite extends Model
         if (! $this->sent_at) {
             return false;
         }
-        $configService = app(ConfigService::class);
+        $configService = new ConfigService(app(UserService::class)->setOrganization($this->organization));
 
         return $this->sent_at->addDays($configService->get(ConfigEnum::INVITE_EXPIRATION_IN_DAYS))->isPast();
     }

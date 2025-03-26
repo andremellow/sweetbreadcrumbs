@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        foreach(Organization::all() as $organization) {
+        foreach (Organization::all() as $organization) {
             Role::create(['name' => 'Admin', 'organization_id' => $organization->id]);
             Role::create(['name' => 'Contributor', 'organization_id' => $organization->id, 'is_default' => true]);
             Role::create(['name' => 'Viewer', 'organization_id' => $organization->id]);
