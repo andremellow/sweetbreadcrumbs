@@ -8,6 +8,8 @@ use App\Livewire\Traits\CloseTask;
 use App\Livewire\Traits\OpenTask;
 use App\Models\Task;
 use App\Services\TaskService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -18,16 +20,16 @@ class TaskRow extends Component
     public Task $task;
 
     #[On(EventEnum::TASK_UPDATED->value.'.{task.id}')]
-    public function refreshTask()
+    public function refreshTask(): void
     {
         $this->task->refresh();
     }
 
-    public function delete(TaskService $taskService, int $taskId)
+    public function delete(TaskService $taskService, int $taskId): void
     {
         $taskService->delete(
             new DeleteTaskDTO(
-                user: auth()->user(),
+                user: Auth::user(),
                 task_id: $taskId
             )
         );
@@ -36,7 +38,7 @@ class TaskRow extends Component
         $this->dispatch(EventEnum::TASK_DELETED->value.".{$taskId}", taskId: $taskId);
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.task.task-row');
     }

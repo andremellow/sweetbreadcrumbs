@@ -2,15 +2,14 @@
 
 namespace App\Providers;
 
-use App\Actions\Organization\CreateOrganization;
-use App\Models\Organization;
-use App\Services\OrganizationService;
+use App\Models\User;
 use App\Services\UserService;
-use Illuminate\Console\Application;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Pennant\Feature;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +19,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // @codeCoverageIgnoreStart
-        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) { // @pest-mutate-ignore
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class); // @pest-mutate-ignore
+            $this->app->register(TelescopeServiceProvider::class); // @pest-mutate-ignore
         }
         // @codeCoverageIgnoreEnd
     }
@@ -32,8 +31,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Feature::define('dev', fn (User $user) => match (true) {
+            $user->email === 'andremellow@gmail.com' => true,
+            env('APP_ENV') === 'testing' => true,
+            default => false,
+        });
+
         if (env('APP_ENV') !== 'production') {
-            DB::listen(function ($query) {
+
+            DB::listen(function (QueryExecuted $query) {
                 Log::info(
                     $query->sql,
                     $query->bindings,
@@ -42,36 +48,8 @@ class AppServiceProvider extends ServiceProvider
             });
         }
 
-        $this->app->bind(OrganizationService::class, function () {
-            $organization = request()->route('organization');
-
-            // If there is no biding on the component mount
-            // Organization is just a string, need to
-            // Get Organization from DB
-            if (($organization instanceof Organization) === false) {
-                $organization = Organization::whereSlug($organization)->first();
-            }
-
-            if (Session::isStarted() && request()->hasSession()) {
-                if ($organization) {
-                    // When organiation is present, need to check if session need to be updated
-                    if ($organization->id !== intval(request()->session()->get('current_organization_id'))) {
-                        request()->session()->put('current_organization_id', $organization->id);
-                    }
-                } elseif (request()->session()->has('current_organization_id')) {
-                    // If organization is not present, need to get it from the session
-                    $organization = Organization::find(request()->session()->get('current_organization_id'));
-                }
-            }
-
-            return new OrganizationService(
-                app(CreateOrganization::class),
-                $organization
-            );
-        });
-
         $this->app->bind(UserService::class, function () {
-            return new UserService(auth()->user());
+            return new UserService(Auth::user());
         });
     }
 }

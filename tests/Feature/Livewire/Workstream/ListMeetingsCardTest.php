@@ -1,33 +1,28 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Workstream\ListMeetingsCard;
 use App\Models\Meeting;
 use App\Models\User;
 use App\Models\Workstream;
 use App\Services\MeetingService;
-use App\Services\OrganizationService;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 
 beforeEach(function () {
     // Create test user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
     $this->meetings = Meeting::factory(10)->for($this->workstream)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
     View::share('currentOrganizationSlug', $this->organization->slug);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
+    Context::add('current_organization', $this->organization);
+
 });
 
 afterEach(function () {

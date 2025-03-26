@@ -1,14 +1,10 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
-use App\Models\User;
 use Laravel\Dusk\Browser;
 
 test('it validates the fields', function () {
-    $user = User::factory()->create();
-    $organization = (new CreateOrganization)($user, new CreateOrganizationDTO('SBC'));
-    $workstream = null;
+    [$user, $organization] = createOrganization(name: 'SBC');
+
     $this->browse(function (Browser $browser) use ($user, $organization) {
         $browser
             ->loginAs($user)

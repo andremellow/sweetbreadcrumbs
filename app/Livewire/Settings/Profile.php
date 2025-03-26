@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use App\Enums\EventEnum;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -45,9 +46,8 @@ class Profile extends Component
     }
 
     #[Layout('components.layouts.no-sidebar-app')]
-    public function render()
+    public function render(): View
     {
-
         return view('livewire.settings.profile');
     }
 }

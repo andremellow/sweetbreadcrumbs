@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\EventEnum;
 use App\Livewire\Meeting\MeetingModal;
 use App\Models\Meeting;
@@ -13,18 +11,15 @@ use Livewire\Livewire;
 
 beforeEach(function () {
     // Create test user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     // Create test workstreams
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
     $this->meeting = Meeting::factory()->for($this->workstream)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
-});
-
-afterEach(function () {
-    Mockery::close();
 });
 
 it('renders the MeetingModal component successfully', function () {

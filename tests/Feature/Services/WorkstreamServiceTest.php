@@ -1,15 +1,12 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
 use App\Actions\Workstream\CreateWorkstream;
 use App\Actions\Workstream\DeleteWorkstream;
 use App\Actions\Workstream\UpdateWorkstream;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Workstream\CreateWorkstreamDTO;
 use App\DTO\Workstream\DeleteWorkstreamDTO;
 use App\DTO\Workstream\UpdateWorkstreamDTO;
 use App\Enums\SortDirection;
-use App\Models\User;
 use App\Models\Workstream;
 use App\Services\WorkstreamService;
 use Carbon\Carbon;
@@ -20,9 +17,9 @@ use Illuminate\Support\Facades\Request;
 covers(WorkstreamService::class);
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    // Create test organization
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new Organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     // Mock dependencies
     /** @var CreateWorkstream */

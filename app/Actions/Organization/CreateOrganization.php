@@ -8,12 +8,14 @@ use App\Models\Priority;
 use App\Models\Probability;
 use App\Models\RiskLevel;
 use App\Models\RiskStatus;
+use App\Models\Role;
 use App\Models\User;
+use App\Services\OrganizationService;
 use Illuminate\Support\Str;
 
 class CreateOrganization
 {
-    protected $demoOrganizationId;
+    protected int $demoOrganizationId;
 
     /**
      * Creates new organization.
@@ -23,7 +25,7 @@ class CreateOrganization
      *
      * @return Organization
      */
-    public function __invoke(User $user, CreateOrganizationDTO $createOrganizationDTO)
+    public function __invoke(User $user, CreateOrganizationDTO $createOrganizationDTO, OrganizationService $organizationService): Organization
     {
         $this->demoOrganizationId = config('app.demo_organization_id');
         $organization = Organization::create([
@@ -31,17 +33,24 @@ class CreateOrganization
             'slug' => $this->generateUniqueSlug($createOrganizationDTO->name),
         ]);
 
-        $this->attachUser($organization, $user);
-
         $this->copyPriorities($organization);
         $this->copyRiskLevels($organization);
         $this->copyRiskStatuses($organization);
         $this->copyProbabilities($organization);
+        $this->copyRoles($organization);
+
+        $role = $organization->roles()->where('name', 'Admin')->first();
+
+        $organizationService->attachUser(
+            organization: $organization,
+            user: $user,
+            roleId: $role ? $role->id : $organizationService->getDefaultRoleId(),
+        );
 
         return $organization;
     }
 
-    protected function copyPriorities(Organization $organization)
+    protected function copyPriorities(Organization $organization): void
     {
         $prioritiesToCopy = Priority::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($prioritiesToCopy as $priority) {
@@ -52,7 +61,7 @@ class CreateOrganization
         }
     }
 
-    protected function copyRiskLevels(Organization $organization)
+    protected function copyRiskLevels(Organization $organization): void
     {
         $riskLevelsToCopy = RiskLevel::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($riskLevelsToCopy as $priority) {
@@ -62,7 +71,7 @@ class CreateOrganization
         }
     }
 
-    protected function copyRiskStatuses(Organization $organization)
+    protected function copyRiskStatuses(Organization $organization): void
     {
         $riskStatusesToCopy = RiskStatus::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($riskStatusesToCopy as $priority) {
@@ -72,7 +81,7 @@ class CreateOrganization
         }
     }
 
-    protected function copyProbabilities(Organization $organization)
+    protected function copyProbabilities(Organization $organization): void
     {
         $probabilitiesToCopy = Probability::where(['organization_id' => $this->demoOrganizationId])->get();
         foreach ($probabilitiesToCopy as $priority) {
@@ -82,9 +91,15 @@ class CreateOrganization
         }
     }
 
-    protected function attachUser(Organization $organization, User $user): void
+    protected function copyRoles(Organization $organization): void
     {
-        $organization->users()->attach($user);
+        $rolesToCopy = Role::where(['organization_id' => $this->demoOrganizationId])->get();
+        foreach ($rolesToCopy as $role) {
+            $organization->roles()->create([
+                'name' => $role->name,
+                'is_default' => $role->is_default,
+            ]);
+        }
     }
 
     protected function generateUniqueSlug(string $name): string

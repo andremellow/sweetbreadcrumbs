@@ -3,14 +3,11 @@
 use App\Actions\Meeting\CreateMeeting;
 use App\Actions\Meeting\DeleteMeeting;
 use App\Actions\Meeting\UpdateMeeting;
-use App\Actions\Organization\CreateOrganization;
 use App\DTO\Meeting\CreateMeetingDTO;
 use App\DTO\Meeting\DeleteMeetingDTO;
 use App\DTO\Meeting\UpdateMeetingDTO;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\SortDirection;
 use App\Models\Meeting;
-use App\Models\User;
 use App\Models\Workstream;
 use App\Services\MeetingService;
 use Carbon\Carbon;
@@ -21,8 +18,9 @@ use Illuminate\Support\Facades\Request;
 covers(MeetingService::class);
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
     /** @var CreateMeeting */
     $this->mockCreateMeeting = Mockery::mock(CreateMeeting::class);

@@ -12,6 +12,7 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/octane": "^2.8",
+        "laravel/pennant": "^1.16",
         "laravel/tinker": "^2.10.1",
         "laravel/workos": "^0.1.6",
         "livewire/flux": "^2.0",
@@ -22,6 +23,7 @@
         "tightenco/ziggy": "^2.4"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.15",
         "fakerphp/faker": "^1.23",
         "laravel/dusk": "^8.3",
         "laravel/pail": "^1.2.2",
@@ -74,7 +76,7 @@
             "herd coverage ./vendor/bin/pest --coverage --coverage-html coverage  --testsuite=Feature"
         ],
         "mutate": [
-            "herd coverage ./vendor/bin/pest --coverage --mudate"
+            "herd coverage ./vendor/bin/pest --mutate"
         ],
         "db-reset": [
             "@php artisan db:wipe",
@@ -86,6 +88,12 @@
             "@php artisan migrate",
             "@php artisan db:seed",
             "@php artisan db:seed --class=QuickStartDatabaseSeeder"
+        ],
+        "pre-commit": [
+            "vendor/bin/pint",
+            "@php artisan test --parallel",
+            "./vendor/bin/pest --type-coverage --min=100",
+            "@php artisan dusk"
         ]
     },
     "extra": {

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Context;
 
 class UserService
@@ -68,13 +69,23 @@ class UserService
     }
 
     /**
+     * Check if the given user has organizations.
+     *
+     * @return bool
+     */
+    public function hasOrganization(int $organizationId): bool
+    {
+        return $this->user->organizations()->where('organization_id', $organizationId)->exists();
+    }
+
+    /**
      * Get user's current Organizations.
      *
      * @return Organization | null
      */
     public function getCurrentOrganization(): ?Organization
     {
-       /**
+        /**
          * Using session and contex. Session fail for most of test.
          */
         if (isset($this->organization) && $this->organization instanceof Organization) {
@@ -85,7 +96,7 @@ class UserService
             return request()->session()->get('current_organization');
         }
 
-        if(Context::get('current_organization')) {
+        if (Context::get('current_organization')) {
             return Context::get('current_organization');
         }
 
@@ -97,7 +108,7 @@ class UserService
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
      */
-    public function getOrganizations()
+    public function getOrganizations(): Collection
     {
         return $this->user->organizations()->get();
     }
@@ -107,12 +118,12 @@ class UserService
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
      */
-    public function getWorkstreams()
+    public function getWorkstreams(): Collection
     {
         return $this->getCurrentOrganization()?->workstreams()->orderBy('name')->get();
     }
 
-    public static function getOrganizationBySlug(User $user, $slug): ?Organization
+    public static function getOrganizationBySlug(User $user, string $slug): ?Organization
     {
         return $user->organizations()->where('slug', $slug)->first();
     }

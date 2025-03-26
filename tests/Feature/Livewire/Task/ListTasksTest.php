@@ -1,22 +1,22 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\EventEnum;
 use App\Enums\SortDirection;
 use App\Livewire\Task\ListTasks;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Workstream;
-use App\Services\OrganizationService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 
 beforeEach(function () {
     // Create test user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     // Create test workstreams
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
@@ -25,12 +25,7 @@ beforeEach(function () {
     URL::defaults(['organization' => $this->organization->slug]);
     View::share('currentOrganizationSlug', $this->organization->slug);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
+    Context::add('current_organization', $this->organization);
 });
 
 afterEach(function () {
@@ -128,7 +123,7 @@ it('applyFilter reload with right data', function () {
         });
 });
 
-it('it listerning for task-deleted', function () {
+it('listerning for task-deleted', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
         ->assertViewHas('tasks', function ($tasks) {
@@ -144,7 +139,7 @@ it('it listerning for task-deleted', function () {
 
 });
 
-it('it listerning for task-created', function () {
+it('listerning for task-created', function () {
     Livewire::actingAs($this->user)
         ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
         ->assertViewHas('tasks', function ($tasks) {
@@ -156,5 +151,39 @@ it('it listerning for task-created', function () {
         ->dispatch(EventEnum::TASK_CREATED->value)
         ->assertViewHas('tasks', function ($tasks) {
             return count($tasks) === 4;
+        });
+});
+
+it('does not reload when status is all', function () {
+    try {
+        Livewire::actingAs($this->user)
+            ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
+            ->set('status', 'all')
+            ->assertViewHas('tasks', function ($tasks) {
+                return count($tasks) === 3;
+            })
+            ->dispatch(EventEnum::TASK_CLOSED->value)
+            ->assertViewHas('tasks', function ($tasks) {
+                return count($tasks) === 3;
+            });
+        $this->fail('exception not thrown');
+    } catch (\Throwable $th) {
+        expect($th->getMessage())->toBe('The response is not a view.');
+    }
+});
+
+it('reloads when status is not all', function () {
+    Livewire::actingAs($this->user)
+        ->test(ListTasks::class, ['workstream' => $this->workstream, 'organization' => $this->organization])
+        ->set('status', 'open')
+        ->assertViewHas('tasks', function ($tasks) {
+            return count($tasks) === 3;
+        })
+        ->tap(function () {
+            $this->tasks[0]->update(['completed_at' => Carbon::now()]);
+        })
+        ->dispatch(EventEnum::TASK_CLOSED->value)
+        ->assertViewHas('tasks', function ($tasks) {
+            return count($tasks) === 2;
         });
 });

@@ -1,17 +1,16 @@
 <?php
 
 use App\Actions\Meeting\CreateMeeting;
-use App\Actions\Organization\CreateOrganization;
 use App\DTO\Meeting\CreateMeetingDTO;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Meeting;
-use App\Models\User;
 use App\Models\Workstream;
 use Carbon\Carbon;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
+
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
 });
 

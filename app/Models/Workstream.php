@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -36,7 +38,7 @@ class Workstream extends Model
         ];
     }
 
-    public function getIdentificationAttribute()
+    public function getIdentificationAttribute(): string
     {
         return "Workstream: {$this->name}";
     }
@@ -66,7 +68,7 @@ class Workstream extends Model
      *
      * @return void
      */
-    public function organization()
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
     }
@@ -76,7 +78,7 @@ class Workstream extends Model
      *
      * @return void
      */
-    public function priority()
+    public function priority(): BelongsTo
     {
         return $this->belongsTo(Priority::class);
     }
@@ -96,7 +98,7 @@ class Workstream extends Model
      *
      * @return Illuminate\Database\Eloquent\Concerns\HasRelationships::hasMany
      */
-    public function meetings()
+    public function meetings(): HasMany
     {
         return $this->hasMany(Meeting::class);
     }

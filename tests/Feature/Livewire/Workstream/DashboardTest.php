@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Workstream\Dashboard;
 use App\Livewire\Workstream\ListMeetingsCard;
 use App\Livewire\Workstream\ListTasksCard;
@@ -13,8 +11,9 @@ use Livewire\Livewire;
 
 beforeEach(function () {
     // Create test user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);

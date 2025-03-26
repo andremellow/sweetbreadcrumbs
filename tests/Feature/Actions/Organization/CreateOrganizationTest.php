@@ -1,17 +1,16 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Probability;
 use App\Models\RiskLevel;
 use App\Models\RiskStatus;
-use App\Models\User;
+use App\Models\Role;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 });
 
 it('creates a new organization', function () {
@@ -21,12 +20,12 @@ it('creates a new organization', function () {
 });
 
 it('slugs are unique', function () {
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
-    expect($this->organization->name)->toBe('New Organization Name');
-    expect($this->organization->slug)->toBe('new-organization-name-1');
+    [$user, $organization] = createOrganization($this->user);
+    expect($organization->name)->toBe('New Organization Name');
+    expect($organization->slug)->toBe('new-organization-name-1');
 
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
-    expect($this->organization->slug)->toBe('new-organization-name-2');
+    [$user, $organization] = createOrganization($this->user);
+    expect($organization->slug)->toBe('new-organization-name-2');
 });
 
 it('attaches the user', function () {
@@ -58,5 +57,12 @@ it('copies probabilities', function () {
     expect($this->organization->probabilities->count())->toBe(3);
     expect($this->organization->probabilities->first()->name)->tobe(
         Probability::where(['organization_id' => config('app.demo_organization_id')])->first()->name
+    );
+});
+
+it('copies roles', function () {
+    expect($this->organization->roles->count())->toBe(3);
+    expect($this->organization->roles->first()->name)->tobe(
+        Role::where(['organization_id' => config('app.demo_organization_id')])->first()->name
     );
 });

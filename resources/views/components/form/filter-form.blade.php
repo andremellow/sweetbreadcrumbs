@@ -6,10 +6,11 @@
     <flux:accordion.item heading="Filter"  expanded>
         <div class="mt-5">
             <form {{ $attributes }}>
-                <div class="flex-column sm:flex space-between gap-y-5 sm:gap-x-5 items-end">
-                    <div class="flex-1 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="flex-column space-between space-y-5 items-end">
+                    <div class="flex-1 grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-4 xl:grid-cols-6">
                         {{ $slot }}
                     </div>
+                    <flux:separator variant="subtle" />
                     <div class="flex h-full items-end justify-start gap-x-2 sm:col-span-1 sm:justify-end mt-5 sm:mt-0">
                         <flux:button type="submit" icon="filter">
                             Filter

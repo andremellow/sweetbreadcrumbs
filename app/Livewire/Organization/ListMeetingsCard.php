@@ -4,18 +4,19 @@ namespace App\Livewire\Organization;
 
 use App\Enums\EventEnum;
 use App\Services\MeetingService;
-use App\Services\OrganizationService;
+use App\Services\UserService;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 #[On([EventEnum::MEETING_CREATED->value, EventEnum::MEETING_UPDATED->value])]
 class ListMeetingsCard extends Component
 {
-    public function render(OrganizationService $organizaitonService, MeetingService $meetingService)
+    public function render(UserService $userService, MeetingService $meetingService): View
     {
         return view('livewire.organization.list-meetings-card', [
             'meetings' => $meetingService->lastMeeings(
-                source: $organizaitonService->getOrganization(),
+                source: $userService->getCurrentOrganization(),
                 take: 5
             ),
         ]);

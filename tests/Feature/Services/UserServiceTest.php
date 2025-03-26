@@ -1,16 +1,18 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\Workstream;
 use App\Services\UserService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Context;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     // Instantiate UserService with a user
     $this->userService = new UserService($this->user);
@@ -48,20 +50,34 @@ it('checks if user has organizations', function () {
 it('gets the current organization', function () {
     Context::add('current_organization', $this->organization);
     // Should return the first attached organization by default
+    Context::add('current_organization', $this->organization);
     expect($this->userService->getCurrentOrganization()->id)->toBe($this->organization->id);
 
     // Set a different organization
-    $newOrganization = Organization::factory()->hasAttached($this->user)->create();
+    $newOrganization = Organization::factory()->hasAttached($this->user, ['role_id' => 1])->create();
     $this->userService->setOrganization($newOrganization);
 
     // Now it should return the newly set organization
     expect($this->userService->getCurrentOrganization())->toBe($newOrganization);
 });
 
+it('gets the current organization from session', function () {
+    // Should return the first attached organization by default
+    $request = Request::create(route('workstreams.index', ['organization' => $this->organization->slug]))
+        ->setRouteResolver(fn () => new FakeRoute($this->organization));
+
+    $startSession = app(StartSession::class);
+    $startSession->handle($request, fn ($return) => new Response);
+    app()->instance('request', $request);
+
+    $request->session()->put('current_organization', $this->organization);
+
+    expect($this->userService->getCurrentOrganization()->id)->toBe($this->organization->id);
+});
+
 it('gets all user organizations', function () {
     // Create another organization and attach it
-    $newOrganization = Organization::factory()->create();
-    $this->user->organizations()->attach($newOrganization);
+    createOrganization($this->user);
 
     $organizations = $this->userService->getOrganizations();
 
@@ -70,8 +86,18 @@ it('gets all user organizations', function () {
     expect($organizations[1])->toBeInstanceOf(Organization::class);
 });
 
+it('checks if the user has an organization', function () {
+    // Create another organization and attach it
+    expect($this->userService->hasOrganization(organizationId: 3))->toBe(false);
+
+    createOrganization($this->user);
+
+    expect($this->userService->hasOrganization(organizationId: 3))->toBe(true);
+});
+
 it('gets all workstreams from the current organization', function () {
     Context::add('current_organization', $this->organization);
+
     $factoryWorkstreams = Workstream::factory(4)->for($this->organization)->withPriority($this->organization)->create()->sortBy('name')->values();
 
     $workstreams = $this->userService->getWorkstreams();

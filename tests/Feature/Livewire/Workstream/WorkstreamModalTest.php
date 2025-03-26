@@ -1,19 +1,26 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\EventEnum;
 use App\Livewire\Workstream\WorkstreamModal;
 use App\Models\User;
 use App\Models\Workstream;
 use App\Services\OrganizationService;
+use App\Services\UserService;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
 
 beforeEach(function () {
     // Create test user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
+    Context::add('current_organization', $this->organization);
+
+    $this->app->bind(UserService::class, function () {
+        return new UserService($this->user);
+    });
+
     $this->priorities = app(OrganizationService::class)
         ->setOrganization($this->organization)
         ->getPrioritiesDropDownData()
@@ -23,13 +30,6 @@ beforeEach(function () {
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
-
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
-    });
 });
 
 afterEach(function () {

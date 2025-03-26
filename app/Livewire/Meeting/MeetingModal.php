@@ -6,7 +6,7 @@ use App\Enums\EventEnum;
 use App\Livewire\Forms\MeetingForm;
 use App\Models\Workstream;
 use App\Services\MeetingService;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -14,27 +14,27 @@ class MeetingModal extends Component
 {
     public MeetingForm $form;
 
-    public $showMeetingFormModal = false;
+    public bool $showMeetingFormModal = false;
 
-    public function mount(Workstream $workstream)
+    public function mount(Workstream $workstream): void
     {
         $this->form->workstream = $workstream;
     }
 
     #[On([EventEnum::LOAD_MEETING_FORM_MODAL->value])]
-    public function load(?int $meetingId = null)
+    public function load(?int $meetingId = null): void
     {
         $this->form->maybeLoadMeeting($meetingId);
 
         $this->showMeetingFormModal = true;
     }
 
-    public function onModalClose(Request $request)
+    public function onModalClose(): void
     {
         $this->form->reset('id', 'name', 'description', 'date');
     }
 
-    public function save(MeetingService $meetingService)
+    public function save(MeetingService $meetingService): void
     {
         if ($this->form->id === null) {
             $meeting = $this->form->add($meetingService);
@@ -48,7 +48,7 @@ class MeetingModal extends Component
         $this->showMeetingFormModal = false;
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.meeting.meeting-modal');
     }

@@ -1,12 +1,10 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
 use App\Actions\Task\CloseTask;
 use App\Actions\Task\CreateTask;
 use App\Actions\Task\DeleteTask;
 use App\Actions\Task\OpenTask;
 use App\Actions\Task\UpdateTask;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Task\CloseTaskDTO;
 use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\DeleteTaskDTO;
@@ -14,9 +12,7 @@ use App\DTO\Task\OpenTaskDTO;
 use App\DTO\Task\UpdateTaskDTO;
 use App\Enums\SortDirection;
 use App\Models\Task;
-use App\Models\User;
 use App\Models\Workstream;
-use App\Services\OrganizationService;
 use App\Services\TaskService;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -26,8 +22,9 @@ use Illuminate\Support\Facades\Request;
 covers(TaskService::class);
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
     /** @var CreateTask */
     $this->mockCreateTask = Mockery::mock(CreateTask::class);
@@ -46,7 +43,6 @@ beforeEach(function () {
     /** @var OpenTask */
     $this->mockOpenTask = Mockery::mock(OpenTask::class);
     $this->service = new TaskService(
-        organizationService: app(OrganizationService::class),
         closeTask: $this->mockCloseTask,
         openTask: $this->mockOpenTask,
         createTask: $this->mockCreateTask,

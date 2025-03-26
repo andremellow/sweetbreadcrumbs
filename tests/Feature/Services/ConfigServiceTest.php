@@ -1,24 +1,22 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\ConfigEnum;
 use App\Models\Config;
 use App\Models\User;
 use App\Services\ConfigService;
-use App\Services\OrganizationService;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Context;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
+    Context::add('current_organization', $this->organization);
 
-    app()->bind(OrganizationService::class, function () {
-        return new OrganizationService(
-            app(CreateOrganization::class),
-            $this->organization
-        );
+    $this->app->bind(UserService::class, function () {
+        return new UserService($this->user);
     });
+
     // Instantiate UserService with a user
     $this->configService = app(ConfigService::class);
 
@@ -43,6 +41,7 @@ it('gets organization value if set', function () {
 });
 
 it('call getTaskDefaultPriorityId for TASK_DEFAULT_PRIORITY_ID when company config is not set', function () {
+    /** @var ConfigService */
     $this->mockConfigService = Mockery::mock(ConfigService::class)->makePartial();
     $config = $this->configService->getConfigWithDefaultByKey(ConfigEnum::TASK_DEFAULT_PRIORITY_ID);
 
@@ -53,6 +52,22 @@ it('call getTaskDefaultPriorityId for TASK_DEFAULT_PRIORITY_ID when company conf
 
     $this->mockConfigService->valueOrDefault(
         ConfigEnum::TASK_DEFAULT_PRIORITY_ID,
+        $config
+    );
+});
+
+it('call getTaskDefaultPriorityId for WORKSTREAM_DEFAULT_PRIORITY_ID when company config is not set', function () {
+    /** @var ConfigService */
+    $this->mockConfigService = Mockery::mock(ConfigService::class)->makePartial();
+    $config = $this->configService->getConfigWithDefaultByKey(ConfigEnum::WORKSTREAM_DEFAULT_PRIORITY_ID);
+
+    $this->mockConfigService
+        ->shouldReceive('getTaskDefaultPriorityId')
+        ->once()
+        ->with($config->default);
+
+    $this->mockConfigService->valueOrDefault(
+        ConfigEnum::WORKSTREAM_DEFAULT_PRIORITY_ID,
         $config
     );
 });

@@ -9,21 +9,36 @@ use Illuminate\Database\Query\JoinClause;
 class ConfigService
 {
     public function __construct(
-        protected OrganizationService $organizationService,
+        protected UserService $userService,
     ) {}
 
-    public function get(ConfigEnum $key)
+    public function get(ConfigEnum $key): int|string
     {
         $config = $this->getConfigWithDefaultByKey($key);
 
-        return $this->valueOrDefault($key, $config);
+        return $this->cast(
+            $key,
+            $this->valueOrDefault($key, $config)
+        );
     }
 
-    public function getConfigWithDefaultByKey(ConfigEnum $key)
+    protected function cast(ConfigEnum $key, string $value): int|string
+    {
+        switch ($key->type()) {
+            case 'int':
+                return intval($value);
+                // @codeCoverageIgnoreStart
+            default:
+                return $value;
+                // @codeCoverageIgnoreEnd
+        }
+    }
+
+    public function getConfigWithDefaultByKey(ConfigEnum $key): Config
     {
         return Config::rightJoin('config_defaults', function (JoinClause $join) {
             $join->on('configs.config_default_id', '=', 'config_defaults.id')
-                ->where('configs.organization_id', $this->organizationService->getOrganization()->id);
+                ->where('configs.organization_id', $this->userService->getCurrentOrganization()->id);
         })->where('config_defaults.id', $key->value)
             ->select('configs.value', 'config_defaults.value as default')
             ->first();
@@ -49,12 +64,12 @@ class ConfigService
         }
     }
 
-    public function getTaskDefaultPriorityId(string $priorityName)
+    public function getTaskDefaultPriorityId(string $priorityName): int
     {
-        $priority = $this->organizationService->getOrganization()->priorities()->where('name', $priorityName)->first();
+        $priority = $this->userService->getCurrentOrganization()->priorities()->where('name', $priorityName)->first();
 
         if (! $priority) {
-            $priority = $this->organizationService->getOrganization()->priorities()->first();
+            $priority = $this->userService->getCurrentOrganization()->priorities()->first();
         }
 
         return $priority->id;

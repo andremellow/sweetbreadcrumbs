@@ -18,9 +18,11 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
 
     if ($user->first_name === null || $user->first_name === '') {
         return redirect(route('welcome.profile'));
-    } if ($organization === null) {
-        return redirect(route('welcome.organization'));
+    } elseif ($organization === null) {
+        return redirect()->intended(route('welcome.organization'));
     }
+
+    // SE NÃO TEM NOME, VAI POR PROFILE......
 
     return redirect()->intended(route('dashboard', ['organization' => $organization->slug], absolute: false));
 

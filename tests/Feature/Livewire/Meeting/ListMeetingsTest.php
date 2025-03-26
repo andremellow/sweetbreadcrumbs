@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\EventEnum;
 use App\Enums\SortDirection;
 use App\Livewire\Meeting\ListMeetings;
@@ -16,8 +14,9 @@ use Livewire\Livewire;
 
 beforeEach(function () {
     // Create test user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     $this->app['session']->start();
     session(['current_organization_id' => $this->organization->id]);
 
@@ -27,10 +26,6 @@ beforeEach(function () {
 
     URL::defaults(['organization' => $this->organization->slug]);
     View::share('currentOrganizationSlug', $this->organization->slug);
-});
-
-afterEach(function () {
-    Mockery::close();
 });
 
 it('renders the ListMeetings component successfully', function () {

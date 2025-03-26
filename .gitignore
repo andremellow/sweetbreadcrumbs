@@ -8,8 +8,8 @@
 /storage/debugbar
 /vendor
 /coverage
-/tests/Browser/console/*
-/tests/Browser/screenshots/*
+/tests/Browser/console/**/*
+/tests/Browser/screenshots/**/*
 .env
 .env.dusk.local
 .env.backup

@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\Workstream;
 use App\Services\TaskService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Form;
 
 class TaskForm extends Form
@@ -26,7 +27,7 @@ class TaskForm extends Form
 
     public int $defaultPriorityId;
 
-    protected function rules()
+    protected function rules(): array
     {
         return CreateTaskDTO::rules();
     }
@@ -37,7 +38,7 @@ class TaskForm extends Form
 
         return $taskService->create(
             CreateTaskDTO::from([
-                'user' => auth()->user(),
+                'user' => Auth::user(),
                 'taskable' => $this->workstream,
                 ...$validated,
             ])
@@ -51,14 +52,14 @@ class TaskForm extends Form
 
         return $taskService->update(
             UpdateTaskDTO::from([
-                'user' => auth()->user(),
+                'user' => Auth::user(),
                 'task_id' => $this->id,
                 ...$validated,
             ])
         );
     }
 
-    public function maybeLoadTask(?int $taskId)
+    public function maybeLoadTask(?int $taskId): void
     {
         if ($taskId !== null) {
             $task = Task::findOrFail($taskId);
@@ -72,7 +73,7 @@ class TaskForm extends Form
         }
     }
 
-    public function resetForm()
+    public function resetForm(): void
     {
         $this->reset('id', 'name', 'description', 'due_date');
         $this->priority_id = $this->defaultPriorityId;

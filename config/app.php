@@ -12,6 +12,8 @@ return [
 
     'default_task_priority' => env('DEFAULT_TASK_PRIORITY', PriorityEnum::MIDIUM->value),
 
+    'error_message' => env('ERROR_MESSAGE', 'Ops! Oops! Looks like you\'ve wandered off the trail.'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

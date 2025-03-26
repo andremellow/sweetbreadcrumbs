@@ -8,8 +8,10 @@ use App\Livewire\Traits\WithSorting;
 use App\Models\Meeting;
 use App\Models\Workstream;
 use App\Services\MeetingService;
-use App\Services\OrganizationService;
 use Flux\DateRange;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -30,21 +32,21 @@ class ListMeetings extends Component
 
     public Workstream $workstream;
 
-    public function mount(Workstream $workstream)
+    public function mount(Workstream $workstream): void
     {
         $this->workstream = $workstream;
         $this->sortBy = 'name';
     }
 
-    public function applyFilter() {}
+    public function applyFilter(): void {}
 
     #[On(EventEnum::RESET->value)]
-    public function resetForm()
+    public function resetForm(): void
     {
         $this->reset('search', 'dateRange');
     }
 
-    protected function list(OrganizationService $organizationService, MeetingService $meetingService)
+    protected function list(MeetingService $meetingService): LengthAwarePaginator
     {
         return $meetingService->list(
             $this->workstream,
@@ -56,10 +58,10 @@ class ListMeetings extends Component
         );
     }
 
-    public function delete(MeetingService $meetingService, int $meetingId)
+    public function delete(MeetingService $meetingService, int $meetingId): void
     {
         $meetingService->delete(
-            auth()->user(),
+            Auth::user(),
             new DeleteMeetingDTO(
                 meeting: Meeting::findOrFail($meetingId)
             )
@@ -68,13 +70,13 @@ class ListMeetings extends Component
         $this->dispatch(EventEnum::MEETING_DELETED->value, meetingId: $meetingId);
     }
 
-    public function render(OrganizationService $organizationService, MeetingService $meetingService)
+    public function render(MeetingService $meetingService): View
     {
         $this->isFiltred = ! empty($this->search) || isset($this->dateRange);
 
         return view('livewire.meeting.list-meetings', [
             'workstream' => $this->workstream,
-            'meetings' => $this->list($organizationService, $meetingService),
+            'meetings' => $this->list($meetingService),
         ]);
     }
 }
