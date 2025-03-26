@@ -32,8 +32,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Feature::define('dev', fn (User $user) => match (true) {
-            env('APP_ENV') === 'testing' => true,
             $user->email === 'andremellow@gmail.com' => true,
+            env('APP_ENV') === 'testing' => true,
             default => false,
         });
 

@@ -65,12 +65,21 @@ it('validates', function () {
         ]);
 });
 
+it('validates emails is already parte of the organization', function () {
+    Livewire::actingAs($this->user)
+        ->test(Invite::class)
+        ->set('email', $this->user->email)
+        ->call('send')
+        ->assertHasErrors([
+            'email' => ["{$this->user->email} is already part of yor team"],
+        ]);
+});
+
 it('created a invite', function () {
     Notification::fake();
     $invite = $this->organization->invites()->where('email', 'johndoe@gmail.com')->first();
     expect($invite)->toBeNull();
 
-    $date = Carbon::now();
     Livewire::actingAs($this->user)
         ->test(Invite::class)
         ->set('email', 'johndoe@gmail.com')

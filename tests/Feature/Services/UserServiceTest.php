@@ -85,6 +85,15 @@ it('gets all user organizations', function () {
     expect($organizations[1])->toBeInstanceOf(Organization::class);
 });
 
+it('checks if the user has an organization', function () {
+    // Create another organization and attach it
+    expect($this->userService->hasOrganization(organizationId: 3))->toBe(false);
+
+    createOrganization($this->user);
+
+    expect($this->userService->hasOrganization(organizationId: 3))->toBe(true);
+});
+
 it('gets all workstreams from the current organization', function () {
     Context::add('current_organization', $this->organization);
 
