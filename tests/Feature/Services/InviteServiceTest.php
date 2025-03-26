@@ -1,18 +1,19 @@
 <?php
 
+use App\Actions\Invite\AcceptInvite;
 use App\Actions\Invite\CreateInvite;
 use App\Actions\Invite\DeleteInvite;
 use App\Actions\Invite\UpdateInviteSent;
-use App\Actions\Organization\CreateOrganization;
+use App\DTO\Invite\AcceptInviteDTO;
 use App\DTO\Invite\CreateInviteDTO;
 use App\DTO\Invite\DeleteInviteDTO;
 use App\DTO\Invite\UpdateInviteSentDTO;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\SortDirection;
 use App\Models\Invite;
 use App\Models\User;
 use App\Notifications\InviteCreatedNotification;
 use App\Services\InviteService;
+use App\Services\OrganizationService;
 use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Context;
@@ -21,8 +22,9 @@ use Illuminate\Support\Facades\Notification;
 covers(InviteService::class);
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     /** @var CreateInvite */
     $this->mockCreateInvite = Mockery::mock(CreateInvite::class);
@@ -32,10 +34,20 @@ beforeEach(function () {
 
     /** @var DeleteInvite */
     $this->mockDeleteInvite = Mockery::mock(DeleteInvite::class);
+
+    /** @var AcceptInvite */
+    $this->mockAcceptInvite = Mockery::mock(AcceptInvite::class);
+
+    /** @var OrganizationService */
+    $this->mockOrganizationService = Mockery::mock(OrganizationService::class);
+
     $this->service = new InviteService(
         createInvite: $this->mockCreateInvite,
         deleteInvite: $this->mockDeleteInvite,
-        updateInviteSent: $this->mockUpdateInviteSent);
+        updateInviteSent: $this->mockUpdateInviteSent,
+        acceptInvite: $this->mockAcceptInvite,
+        organizationService: $this->mockOrganizationService
+    );
 
     $this->app->bind(UserService::class, function () {
         return new UserService($this->user);
@@ -49,15 +61,19 @@ afterEach(function () {
     Mockery::close();
 });
 
-it('creates a meeting using CreateInvite action', function () {
+it('creates a invite using CreateInvite action', function () {
     $inviteServiceMock = Mockery::mock(InviteService::class)
         ->makePartial()  // Only mock specific methods, not the entire class
         ->shouldAllowMockingProtectedMethods();  // Allow mocking of protected methods
 
     // Inject the mocked CreateInvite into the InviteService constructor
-    $inviteServiceMock->__construct($this->mockCreateInvite,
-        $this->mockDeleteInvite,
-        $this->mockUpdateInviteSent);
+    $inviteServiceMock->__construct(
+        createInvite: $this->mockCreateInvite,
+        deleteInvite: $this->mockDeleteInvite,
+        updateInviteSent: $this->mockUpdateInviteSent,
+        acceptInvite: $this->mockAcceptInvite,
+        organizationService: $this->mockOrganizationService
+    );
 
     $mockInvite = $this->mock(Invite::class);
 
@@ -86,9 +102,8 @@ it('creates a meeting using CreateInvite action', function () {
     expect($invite)->toBe($mockInvite);
 });
 
-it('deletes a meeting using DeleteInvite action', function () {
+it('deletes a invite using DeleteInvite action', function () {
     /** @var Invite */
-    $mockInvite = Mockery::mock(Invite::class);
     $dto = new DeleteInviteDTO(
         user: $this->user,
         organization: $this->organization,
@@ -103,7 +118,31 @@ it('deletes a meeting using DeleteInvite action', function () {
 
     // Call the method
     $this->service->delete($dto);
+});
 
+it('accepts a invite using acceptInvite action', function () {
+    /** @var Invite */
+    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $dto = new AcceptInviteDTO(
+        user: $this->user,
+        invite: $invite
+    );
+
+    // Expect the UpdateInvite action to be called with these parameters
+    $this->mockAcceptInvite
+        ->shouldReceive('__invoke')
+        ->once()
+        ->with($dto, $this->mockOrganizationService);
+
+    // Expect the UpdateInvite action to be called with these parameters
+
+    $this->mockDeleteInvite
+        ->shouldReceive('__invoke')
+        ->once()
+        ->with(DeleteInviteDTO::class);
+
+    // Call the method
+    $this->service->acceptInvite($dto);
 });
 
 it('sends notification', function () {
@@ -190,7 +229,7 @@ it('get invite by id', function () {
     expect($invite->id)->toBe($inviteFound->id);
 });
 
-describe('list meetings', function () {
+describe('list invites', function () {
     beforeEach(function () {
 
         Invite::factory()->for($this->organization)->for($this->user, 'inviter')
@@ -201,7 +240,7 @@ describe('list meetings', function () {
             ->create(['email' => 'williamdoe@test.com', 'role_id' => 6, 'sent_at' => Carbon::now()->addDays(1)]);
     });
 
-    it('lists meetings default sort by sent_at if invalid argument is given', function () {
+    it('lists invites default sort by sent_at if invalid argument is given', function () {
         $invites = $this->service->list(
             organization: $this->organization,
             sortBy: 'any_invalid_sort_fields',
@@ -212,7 +251,7 @@ describe('list meetings', function () {
         expect($invites[0]->email)->toBe('williamdoe@test.com');
     });
 
-    it('lists meetings with default sorting', function () {
+    it('lists invites with default sorting', function () {
         $invites = $this->service->list(
             organization: $this->organization
         );
@@ -223,7 +262,7 @@ describe('list meetings', function () {
         expect($invites[2]->email)->toBe('andredoe@test.com');
     });
 
-    it('lists meetings with email sorting', function () {
+    it('lists invites with email sorting', function () {
         $invites = $this->service->list(
             organization: $this->organization,
             sortBy: 'email'
@@ -235,7 +274,7 @@ describe('list meetings', function () {
         expect($invites[2]->email)->toBe('williamdoe@test.com');
     });
 
-    it('lists meetings with role sorting', function () {
+    it('lists invites with role sorting', function () {
         $invites = $this->service->list(
             organization: $this->organization,
             sortBy: 'role'

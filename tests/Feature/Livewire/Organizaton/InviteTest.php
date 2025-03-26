@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\EventEnum;
 use App\Livewire\Organization\Invite;
 use App\Models\User;
@@ -15,8 +13,9 @@ use Livewire\Livewire;
 
 beforeEach(function () {
     // Create test user and organization
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     $this->invites = App\Models\Invite::factory(10)->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
@@ -66,12 +65,21 @@ it('validates', function () {
         ]);
 });
 
+it('validates emails is already parte of the organization', function () {
+    Livewire::actingAs($this->user)
+        ->test(Invite::class)
+        ->set('email', $this->user->email)
+        ->call('send')
+        ->assertHasErrors([
+            'email' => ["{$this->user->email} is already part of yor team"],
+        ]);
+});
+
 it('created a invite', function () {
     Notification::fake();
     $invite = $this->organization->invites()->where('email', 'johndoe@gmail.com')->first();
     expect($invite)->toBeNull();
 
-    $date = Carbon::now();
     Livewire::actingAs($this->user)
         ->test(Invite::class)
         ->set('email', 'johndoe@gmail.com')

@@ -10,6 +10,7 @@ use App\Models\RiskLevel;
 use App\Models\RiskStatus;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\OrganizationService;
 use Illuminate\Support\Str;
 
 class CreateOrganization
@@ -24,7 +25,7 @@ class CreateOrganization
      *
      * @return Organization
      */
-    public function __invoke(User $user, CreateOrganizationDTO $createOrganizationDTO): Organization
+    public function __invoke(User $user, CreateOrganizationDTO $createOrganizationDTO, OrganizationService $organizationService): Organization
     {
         $this->demoOrganizationId = config('app.demo_organization_id');
         $organization = Organization::create([
@@ -32,13 +33,19 @@ class CreateOrganization
             'slug' => $this->generateUniqueSlug($createOrganizationDTO->name),
         ]);
 
-        $this->attachUser($organization, $user);
-
         $this->copyPriorities($organization);
         $this->copyRiskLevels($organization);
         $this->copyRiskStatuses($organization);
         $this->copyProbabilities($organization);
         $this->copyRoles($organization);
+
+        $role = $organization->roles()->where('name', 'Admin')->first();
+
+        $organizationService->attachUser(
+            organization: $organization,
+            user: $user,
+            roleId: $role ? $role->id : $organizationService->getDefaultRoleId(),
+        );
 
         return $organization;
     }
@@ -93,11 +100,6 @@ class CreateOrganization
                 'is_default' => $role->is_default,
             ]);
         }
-    }
-
-    protected function attachUser(Organization $organization, User $user): void
-    {
-        $organization->users()->attach($user);
     }
 
     protected function generateUniqueSlug(string $name): string

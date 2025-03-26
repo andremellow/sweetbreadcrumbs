@@ -14,13 +14,15 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
     $request->authenticate();
     $user = $request->user();
     $userService = new UserService($user);
-    $organization = $userService->getOrganizations()->first();
+    $organization = $userService->getCurrentOrganization();
 
     if ($user->first_name === null || $user->first_name === '') {
         return redirect(route('welcome.profile'));
-    } if ($organization === null) {
-        return redirect(route('welcome.organization'));
+    } elseif ($organization === null) {
+        return redirect()->intended(route('welcome.organization'));
     }
+
+    // SE NÃO TEM NOME, VAI POR PROFILE......
 
     return redirect()->intended(route('dashboard', ['organization' => $organization->slug], absolute: false));
 

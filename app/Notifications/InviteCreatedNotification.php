@@ -34,7 +34,7 @@ class InviteCreatedNotification extends Notification implements ShouldQueue
             ->line('We are excited to invite you to join our organization.')
             ->line('As part of our team, you\'ll have access to exclusive features, resources, and more!')
             ->line('Simply click the button below to accept your invitation and get started.')
-            ->action('Accept Invitation', route('invite.accept', ['token' => $notifiable->token])) // Action button to accept the invite
+            ->action('Accept Invitation', route('invite.accept', ['invite' => $notifiable->token])) // Action button to accept the invite
             ->line('If you have any questions or need help, don\'t hesitate to reach out.')
             ->line('Be sure to use this email address to access the platform.')
             ->salutation('Best regards,')

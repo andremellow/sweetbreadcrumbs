@@ -1,9 +1,6 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Sidebar\FeaturedWorkstreams;
-use App\Models\User;
 use App\Models\Workstream;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\URL;
@@ -11,11 +8,13 @@ use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     $this->workstreams = Workstream::factory(3)->for($this->organization)->withPriority($this->organization)->create();
 
-    $this->organization2 = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
+    [$user, $organization2] = createOrganization($user);
+    $this->organization2 = $organization2;
     $this->workstreams2 = Workstream::factory(3)->for($this->organization2)->withPriority($this->organization2)->create();
 
     Context::add('current_organization', $this->organization);

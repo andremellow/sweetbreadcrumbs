@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Actions\Invite\AcceptInvite;
 use App\Actions\Invite\CreateInvite;
 use App\Actions\Invite\DeleteInvite;
 use App\Actions\Invite\UpdateInviteSent;
+use App\DTO\Invite\AcceptInviteDTO;
 use App\DTO\Invite\CreateInviteDTO;
 use App\DTO\Invite\DeleteInviteDTO;
 use App\DTO\Invite\UpdateInviteSentDTO;
@@ -28,7 +30,9 @@ class InviteService
     public function __construct(
         protected CreateInvite $createInvite,
         protected DeleteInvite $deleteInvite,
-        protected UpdateInviteSent $updateInviteSent
+        protected UpdateInviteSent $updateInviteSent,
+        protected AcceptInvite $acceptInvite,
+        protected OrganizationService $organizationService
     ) {}
 
     public function list(
@@ -148,5 +152,23 @@ class InviteService
         ($this->deleteInvite)(
             $deleteInviteDTO
         );
+    }
+
+    /**
+     * Accept an Invite.
+     *
+     * @param AcceptInviteDTO $acceptInviteDTO
+     *
+     * @return void
+     */
+    public function acceptInvite(AcceptInviteDTO $acceptInviteDTO): void
+    {
+        ($this->acceptInvite)($acceptInviteDTO, $this->organizationService);
+
+        ($this->deleteInvite)(new DeleteInviteDTO(
+            user: $acceptInviteDTO->user,
+            organization: $acceptInviteDTO->invite->organization,
+            invite_id: $acceptInviteDTO->invite->id
+        ));
     }
 }

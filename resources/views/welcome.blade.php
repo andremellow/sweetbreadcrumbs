@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex justify-center pb-12">
+        <div class="flex justify-center pb-12  mx-3">
         <nav aria-label="Progress">
             <ol role="list" class="overflow-hidden">
                 <li class="relative pb-10">

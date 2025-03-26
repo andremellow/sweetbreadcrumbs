@@ -1,17 +1,15 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\RoleDropdown;
-use App\Models\User;
 use App\Services\OrganizationService;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     URL::defaults(['organization' => $this->organization->slug]);
 
     Context::add('current_organization', $this->organization);

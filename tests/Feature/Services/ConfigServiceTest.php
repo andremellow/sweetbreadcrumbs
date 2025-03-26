@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Enums\ConfigEnum;
 use App\Models\Config;
 use App\Models\User;
@@ -10,8 +8,9 @@ use App\Services\UserService;
 use Illuminate\Support\Facades\Context;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     Context::add('current_organization', $this->organization);
 
     $this->app->bind(UserService::class, function () {

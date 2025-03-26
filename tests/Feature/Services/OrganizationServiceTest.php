@@ -33,7 +33,7 @@ it('calls CreateOrganization when creating an new organization', function () {
     $this->mockCreateOrganization
         ->shouldReceive('__invoke')
         ->once()
-        ->with($this->user, $createOrganizationDTO)
+        ->with($this->user, $createOrganizationDTO, $this->organizationService)
         ->andReturn($mockOrganization);
 
     $organization = $this->organizationService->create(

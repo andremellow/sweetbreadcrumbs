@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Welcome\Organization;
 use App\Models\User;
 use Livewire\Livewire;
@@ -9,7 +7,8 @@ use Livewire\Livewire;
 beforeEach(function () {
     // Create test user and organization
     $this->user = User::factory()->create(['first_name' => '', 'last_name' => '']);
-    (new CreateOrganization)(User::factory()->create(), new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization($this->user);
+    $this->organization = $organization;
 });
 
 it('validates name is required', function () {
@@ -19,7 +18,7 @@ it('validates name is required', function () {
         ->assertHasErrors([
             'name' => ['The name field is required.'],
         ])
-        ->set('name', 'new organization')
+        ->set('name', 'New Organization Name')
         ->call('create')
         ->assertHasErrors([
             'name' => ['The name has already been taken.'],

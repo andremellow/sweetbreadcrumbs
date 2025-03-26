@@ -2,13 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Services\UserService;
-use Illuminate\Console\Application;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Pennant\Feature;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Feature::define('dev', fn (User $user) => match (true) {
+            $user->email === 'andremellow@gmail.com' => true,
+            env('APP_ENV') === 'testing' => true,
+            default => false,
+        });
+
         if (env('APP_ENV') !== 'production') {
 
             DB::listen(function (QueryExecuted $query) {

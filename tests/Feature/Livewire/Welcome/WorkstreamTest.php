@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Livewire\Welcome\Organization;
 use App\Livewire\Welcome\Workstream;
 use App\Models\User;
@@ -11,7 +9,8 @@ use Livewire\Livewire;
 beforeEach(function () {
     // Create test user and organization
     $this->user = User::factory()->create(['first_name' => '', 'last_name' => '']);
-    $this->organization = (new CreateOrganization)(User::factory()->create(), new CreateOrganizationDTO('new organization'));
+    [$user, $organization] = createOrganization($this->user);
+    $this->organization = $organization;
 
     Context::add('current_organization', $this->organization);
 

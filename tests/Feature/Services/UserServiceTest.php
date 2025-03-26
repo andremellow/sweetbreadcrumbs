@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\Workstream;
@@ -12,8 +10,9 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Context;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
 
     // Instantiate UserService with a user
     $this->userService = new UserService($this->user);
@@ -54,7 +53,7 @@ it('gets the current organization', function () {
     expect($this->userService->getCurrentOrganization()->id)->toBe($this->organization->id);
 
     // Set a different organization
-    $newOrganization = Organization::factory()->hasAttached($this->user)->create();
+    $newOrganization = Organization::factory()->hasAttached($this->user, ['role_id' => 1])->create();
     $this->userService->setOrganization($newOrganization);
 
     // Now it should return the newly set organization
@@ -77,14 +76,22 @@ it('gets the current organization from session', function () {
 
 it('gets all user organizations', function () {
     // Create another organization and attach it
-    $newOrganization = Organization::factory()->create();
-    $this->user->organizations()->attach($newOrganization);
+    createOrganization($this->user);
 
     $organizations = $this->userService->getOrganizations();
 
     expect($organizations)->toHaveCount(2);
     expect($organizations[0])->toBeInstanceOf(Organization::class);
     expect($organizations[1])->toBeInstanceOf(Organization::class);
+});
+
+it('checks if the user has an organization', function () {
+    // Create another organization and attach it
+    expect($this->userService->hasOrganization(organizationId: 3))->toBe(false);
+
+    createOrganization($this->user);
+
+    expect($this->userService->hasOrganization(organizationId: 3))->toBe(true);
 });
 
 it('gets all workstreams from the current organization', function () {

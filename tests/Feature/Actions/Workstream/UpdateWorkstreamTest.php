@@ -1,17 +1,15 @@
 <?php
 
-use App\Actions\Organization\CreateOrganization;
 use App\Actions\Workstream\UpdateWorkstream;
-use App\DTO\Organization\CreateOrganizationDTO;
 use App\DTO\Workstream\UpdateWorkstreamDTO;
 use App\Models\Priority;
 use App\Models\Release;
-use App\Models\User;
 use App\Models\Workstream;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
-    $this->organization = (new CreateOrganization)($this->user, new CreateOrganizationDTO('New Organization Name'));
+    [$user, $organization] = createOrganization();
+    $this->user = $user;
+    $this->organization = $organization;
     $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
 });
 

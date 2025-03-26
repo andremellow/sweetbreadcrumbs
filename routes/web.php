@@ -7,12 +7,14 @@ use App\Livewire\Organization\Invite as OrganizationInvite;
 use App\Livewire\Organization\Settings as OrganizationSettings;
 use App\Livewire\Settings\Profile as SettingsProfile;
 use App\Livewire\Task\ListTasks;
+use App\Livewire\Welcome\AcceptInvite as WelcomeAcceptInvite;
 use App\Livewire\Welcome\Organization as WelcomeOrganization;
 use App\Livewire\Welcome\Profile as WelcomeProfile;
 use App\Livewire\Welcome\Workstream as WelcomeWorkstream;
 use App\Livewire\Workstream\Dashboard as WorkstreamDashboard;
 use App\Livewire\Workstream\ListWorkstreams;
 use Illuminate\Support\Facades\Route;
+use Laravel\Pennant\Middleware\EnsureFeaturesAreActive;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 use Livewire\Livewire;
 
@@ -30,7 +32,9 @@ Route::middleware([
     });
 
     Route::group(['middleware' => ['verified']], function () {
-        Route::get('invite/{token}', fn ($token) => $token)->name('invite.accept');
+        Route::get('invite/{invite:token}', WelcomeAcceptInvite::class)->name('invite.accept')
+            ->middleware(EnsureFeaturesAreActive::using('dev'));
+
         Route::get('welcome/profile', WelcomeProfile::class)->name('welcome.profile');
         Route::get('welcome/organization', WelcomeOrganization::class)->name('welcome.organization');
 
@@ -48,8 +52,8 @@ Route::middleware([
             Route::get('/workstreams/{workstream}/tasks', ListTasks::class)->name('workstreams.tasks.index');
 
             Route::get('dashboard', OrganizationDashboard::class)->name('dashboard');
-            Route::get('settings', OrganizationSettings::class)->name('organization.settings');
-            Route::get('invite', OrganizationInvite::class)->name('organization.invite');
+            Route::get('settings', OrganizationSettings::class)->name('organization.settings')->middleware(EnsureFeaturesAreActive::using('dev'));
+            Route::get('invite', OrganizationInvite::class)->name('organization.invite')->middleware(EnsureFeaturesAreActive::using('dev'));
 
         });
     });
