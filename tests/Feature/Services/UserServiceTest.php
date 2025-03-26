@@ -48,6 +48,7 @@ it('checks if user has organizations', function () {
 });
 
 it('gets the current organization', function () {
+    Context::add('current_organization', $this->organization);
     // Should return the first attached organization by default
     Context::add('current_organization', $this->organization);
     expect($this->userService->getCurrentOrganization()->id)->toBe($this->organization->id);
