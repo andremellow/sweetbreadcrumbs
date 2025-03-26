@@ -29,7 +29,7 @@ class InviteCreatedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('You\'ve Been Invited by'.$notifiable->inviter->full_name.'!')
+            ->subject('You\'ve Been Invited by '.$notifiable->inviter->full_name.'!')
             ->greeting('Hello,') // Greeting using the user's name
             ->line('We are excited to invite you to join our organization.')
             ->line('As part of our team, you\'ll have access to exclusive features, resources, and more!')

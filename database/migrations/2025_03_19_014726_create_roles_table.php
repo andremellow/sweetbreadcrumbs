@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Organization;
 use App\Models\Role;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,9 +23,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Role::create(['name' => 'Admin', 'organization_id' => 1]);
-        Role::create(['name' => 'Contributor', 'organization_id' => 1, 'is_default' => true]);
-        Role::create(['name' => 'Viewer', 'organization_id' => 1]);
+        foreach(Organization::all() as $organization) {
+            Role::create(['name' => 'Admin', 'organization_id' => $organization->id]);
+            Role::create(['name' => 'Contributor', 'organization_id' => $organization->id, 'is_default' => true]);
+            Role::create(['name' => 'Viewer', 'organization_id' => $organization->id]);
+        }
     }
 
     /**
