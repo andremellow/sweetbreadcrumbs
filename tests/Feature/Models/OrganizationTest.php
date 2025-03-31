@@ -15,6 +15,7 @@ beforeEach(function () {
     $workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
     Task::factory()->for($workstream, 'taskable')->withPriority($this->organization)->create();
     Meeting::factory()->for($workstream)->create();
+    $this->organization->roles()->create(['name' => 'New role', 'is_default' => false]);
 
 });
 

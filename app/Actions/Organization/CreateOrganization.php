@@ -37,9 +37,8 @@ class CreateOrganization
         $this->copyRiskLevels($organization);
         $this->copyRiskStatuses($organization);
         $this->copyProbabilities($organization);
-        $this->copyRoles($organization);
 
-        $role = $organization->roles()->where('name', 'Admin')->first();
+        $role = Role::where('name', 'Admin')->first();
 
         $organizationService->attachUser(
             organization: $organization,
@@ -91,16 +90,6 @@ class CreateOrganization
         }
     }
 
-    protected function copyRoles(Organization $organization): void
-    {
-        $rolesToCopy = Role::where(['organization_id' => $this->demoOrganizationId])->get();
-        foreach ($rolesToCopy as $role) {
-            $organization->roles()->create([
-                'name' => $role->name,
-                'is_default' => $role->is_default,
-            ]);
-        }
-    }
 
     protected function generateUniqueSlug(string $name): string
     {

@@ -34,7 +34,8 @@ class CreateInviteDTO extends Data
                 new NotOnTeam(organizationId: $organizationId),
             ],
             'role_id' => ['required',
-                Rule::exists('App\Models\Role', 'id')->where(fn (Builder $query) => $query->where('organization_id', $organizationId))],
+                Rule::exists('App\Models\Role', 'id')->where(fn (Builder $query) => $query->where('organization_id', $organizationId)->orWhere('organization_id', config('app.default_organization_id')))
+            ],
         ];
     }
 }

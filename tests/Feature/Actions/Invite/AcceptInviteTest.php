@@ -22,7 +22,7 @@ beforeEach(function () {
     ]);
     // actingAs($this->invitee);
     $this->organizationService = app(OrganizationService::class);
-    $this->roleId = $this->organization->roles()->first()->id;
+    $this->roleId =  $this->organizationService->getDefaultRoleId();
 });
 
 it('cannot accept the invite if is already member', function () {
@@ -68,11 +68,14 @@ it('cannot accept expired invite', function () {
 })->throws(CreateInviteException::class, 'Invite is expired');
 
 it('validates invite role exists in the organization', function () {
+    [$otherUser, $otherOrganization] = createOrganization();
+    $role = $otherOrganization->roles()->create(['name' => 'New role', 'is_default' => false]);
 
     $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([
         'email' => $this->invitee->email,
-        'role_id' => 1,
+        'role_id' => $role->id,
     ]);
+    actingAs($this->invitee);
 
     (new AcceptInvite)(
         new AcceptInviteDTO(

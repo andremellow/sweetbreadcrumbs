@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Organization;
+use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -32,7 +33,7 @@ class InviteFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($organization) {
             return [
-                'role_id' => $organization->roles()->inRandomOrder()->first()->id,
+                'role_id' => Role::inRandomOrder()->first()->id,
             ];
         });
     }

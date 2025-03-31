@@ -67,18 +67,18 @@ it('returns only organization roles dropdown data', function () {
     $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 1'));
     $organization = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 2'));
     $organization2 = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 3'));
-    $organization->roles()->create(['name' => 'New role', 'is_default' => false]);
     $organization2->roles()->create(['name' => 'New role for other organization', 'is_default' => false]);
+    $organization->roles()->create(['name' => 'New role', 'is_default' => false]);
 
     $this->organizationService->setOrganization($organization);
 
     $roles = $this->organizationService->getRolesDropDownData();
 
     expect($roles)->toHaveCount(4);
-    expect($roles[7])->toBe('Admin');
-    expect($roles[8])->toBe('Contributor');
-    expect($roles[9])->toBe('Viewer');
-    expect($roles[13])->toBe('New role');
+    expect($roles[1])->toBe('Admin');
+    expect($roles[2])->toBe('Contributor');
+    expect($roles[3])->toBe('Viewer');
+    expect($roles[5])->toBe('New role');
 });
 
 it('returns default role id', function () {
@@ -88,26 +88,26 @@ it('returns default role id', function () {
 
     $this->organizationService->setOrganization($organization);
 
-    // Set default role to 8
-    Role::where('organization_id', $organization->id)->update(['is_default' => false]);
-    Role::find(8)->update(['is_default' => true]);
+    // Set default role to 2
+    Role::where('organization_id', config('app.demo_organization_id') )->update(['is_default' => false]);
+    Role::find(2)->update(['is_default' => true]);
 
     $roleId = $this->organizationService->getDefaultRoleId();
-    expect($roleId)->toBe(8);
+    expect($roleId)->toBe(2);
 
-    // Set default role to 9
-    Role::where('organization_id', $organization->id)->update(['is_default' => false]);
-    Role::find(9)->update(['is_default' => true]);
+    // Set default role to 3
+    Role::where('organization_id', config('app.demo_organization_id'))->update(['is_default' => false]);
+    Role::find(3)->update(['is_default' => true]);
 
     $roleId = $this->organizationService->getDefaultRoleId();
-    expect($roleId)->toBe(9);
+    expect($roleId)->toBe(3);
 
     // Set default role to none
-    Role::where('organization_id', $organization->id)->update(['is_default' => false]);
+    Role::where('organization_id', config('app.demo_organization_id'))->update(['is_default' => false]);
 
     // Should return the first one: 7
     $roleId = $this->organizationService->getDefaultRoleId();
-    expect($roleId)->toBe(7);
+    expect($roleId)->toBe(1);
 
 });
 

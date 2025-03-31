@@ -95,7 +95,7 @@ it('creates a invite using CreateInvite action', function () {
             user: $this->user,
             organization: $this->organization,
             email: 'johndoe@gmail.com',
-            role_id: 7
+            role_id: 1
         )
     );
 
@@ -233,11 +233,11 @@ describe('list invites', function () {
     beforeEach(function () {
 
         Invite::factory()->for($this->organization)->for($this->user, 'inviter')
-            ->create(['email' => 'andredoe@test.com', 'role_id' => 5, 'sent_at' => Carbon::now()->addDays(3)]);
+            ->create(['email' => 'andredoe@test.com', 'role_id' => 2, 'sent_at' => Carbon::now()->addDays(3)]);
         Invite::factory()->for($this->organization)->for($this->user, 'inviter')
-            ->create(['email' => 'mariodoe@test.com', 'role_id' => 4, 'sent_at' => Carbon::now()->addDays(2)]);
+            ->create(['email' => 'mariodoe@test.com', 'role_id' => 1, 'sent_at' => Carbon::now()->addDays(2)]);
         Invite::factory()->for($this->organization)->for($this->user, 'inviter')
-            ->create(['email' => 'williamdoe@test.com', 'role_id' => 6, 'sent_at' => Carbon::now()->addDays(1)]);
+            ->create(['email' => 'williamdoe@test.com', 'role_id' => 3, 'sent_at' => Carbon::now()->addDays(1)]);
     });
 
     it('lists invites default sort by sent_at if invalid argument is given', function () {
