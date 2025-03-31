@@ -31,7 +31,7 @@ class InviteFactory extends Factory
      */
     public function withRole(Organization $organization): Factory
     {
-        return $this->state(function (array $attributes) use ($organization) {
+        return $this->state(function (array $attributes) {
             return [
                 'role_id' => Role::inRandomOrder()->first()->id,
             ];

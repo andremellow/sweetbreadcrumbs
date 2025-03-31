@@ -57,8 +57,8 @@ class Invite extends Component
         ));
 
         $this->reset('email');
-        Flux::toast(variant: 'success', text: 'Invite sent');
         $this->dispatch(EventEnum::INVITE_CREATED->value, inviteId: $invite->id);
+        Flux::toast(variant: 'success', text: 'Invite sent');
 
     }
 

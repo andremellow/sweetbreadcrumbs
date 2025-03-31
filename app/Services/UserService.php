@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
+use App\Enums\CapabilityEnum;
 use App\Models\Invite;
 use App\Models\Organization;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Context;
 
 class UserService
@@ -108,7 +111,7 @@ class UserService
     /**
      * Get all user's organizations.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
+     * @return Collection<int, Organization>
      */
     public function getOrganizations(): Collection
     {
@@ -118,7 +121,7 @@ class UserService
     /**
      * Get all user's workstreams.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Organization>
+     * @return Collection<int, Organization>
      */
     public function getWorkstreams(): Collection
     {
@@ -145,8 +148,28 @@ class UserService
         return Invite::where('email', $this->user->email)->findOrFail($id);
     }
 
+    /**
+     * Retrieve the organization associated with the given slug for the specified user.
+     *
+     * @param User   $user The user whose organization is being retrieved.
+     * @param string $slug The slug of the organization to retrieve.
+     *
+     * @return Organization|null The organization if found, otherwise null.
+     */
     public static function getOrganizationBySlug(User $user, string $slug): ?Organization
     {
         return $user->organizations()->where('slug', $slug)->first();
+    }
+
+    public function getCapabilities()
+    {
+        return Cache::remember("user.capabilities.{$this->user->id}.{$this->getCurrentOrganization()->id}", 60, function () {
+            return Role::find($this->getCurrentOrganization()->pivot->role_id)->capabilities;
+        });
+    }
+
+    public function can(CapabilityEnum $capability): bool
+    {
+        return $this->getCapabilities()->pluck('id')->contains($capability->value);
     }
 }

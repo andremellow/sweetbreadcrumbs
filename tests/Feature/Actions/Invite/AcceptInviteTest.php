@@ -22,7 +22,7 @@ beforeEach(function () {
     ]);
     // actingAs($this->invitee);
     $this->organizationService = app(OrganizationService::class);
-    $this->roleId =  $this->organizationService->getDefaultRoleId();
+    $this->roleId = $this->organizationService->getDefaultRoleId();
 });
 
 it('cannot accept the invite if is already member', function () {

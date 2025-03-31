@@ -89,7 +89,7 @@ it('returns default role id', function () {
     $this->organizationService->setOrganization($organization);
 
     // Set default role to 2
-    Role::where('organization_id', config('app.demo_organization_id') )->update(['is_default' => false]);
+    Role::where('organization_id', config('app.demo_organization_id'))->update(['is_default' => false]);
     Role::find(2)->update(['is_default' => true]);
 
     $roleId = $this->organizationService->getDefaultRoleId();

@@ -90,7 +90,6 @@ class CreateOrganization
         }
     }
 
-
     protected function generateUniqueSlug(string $name): string
     {
         $slug = Str::slug($name);

@@ -4,7 +4,6 @@ namespace App\Actions\Invite;
 
 use App\DTO\Invite\AcceptInviteDTO;
 use App\Exceptions\CreateInviteException;
-use App\Livewire\Welcome\Organization;
 use App\Models\User;
 use App\Services\OrganizationService;
 
@@ -54,7 +53,7 @@ class AcceptInvite
 
     protected function roleNotExists(AcceptInviteDTO $acceptInviteDTO, OrganizationService $organizationService): bool
     {
-        return 
+        return
             $organizationService
                 ->getRolesQuery()
                 ->where('id', $acceptInviteDTO->invite->role_id)

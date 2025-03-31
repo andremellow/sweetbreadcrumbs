@@ -20,7 +20,7 @@ use /**
  * Usage Context:
  * - Typically utilized in service or controller layers where deletion of a workstream is necessary.
  */
-    App\DTO\Workstream\DeleteWorkstreamDTO;
+App\DTO\Workstream\DeleteWorkstreamDTO;
 use /**
  * Enum class representing various events in the "Sweet Bread Crumbs" application.
  *
@@ -28,11 +28,10 @@ use /**
  * throughout the application, offering a centralized and standardized
  * way to reference these values.
  *
- * @package App\Enums
  */
-    App\Enums\EventEnum;
+App\Enums\EventEnum;
 use /**
- * Trait WithSorting
+ * Trait WithSorting.
  *
  * This trait provides functionality to handle sorting logic within components.
  * It is typically used with Laravel Livewire components to manage sorting state
@@ -41,9 +40,8 @@ use /**
  * Usage in the "Sweet Bread Crumbs" application should comply with
  * the application standards and architecture.
  *
- * @package App\Livewire\Traits
  */
-    App\Livewire\Traits\WithSorting;
+App\Livewire\Traits\WithSorting;
 use /**
  * The Workstream model represents a workstream within the "Sweet Bread Crumbs" Laravel application.
  *
@@ -68,7 +66,7 @@ use /**
  * - This feature utilizes the `sync` queueing connection for any event dispatching or job handling
  *   associated with the model.
  */
-    App\Models\Workstream;
+App\Models\Workstream;
 use /**
  * UserService is a service layer responsible for managing user-related operations
  * within the "Sweet Bread Crumbs" Laravel application.
@@ -82,7 +80,7 @@ use /**
  * This class adheres to Laravel's service layer principles, ensuring a clean separation
  * of concerns and promoting maintainability.
  */
-    App\Services\UserService;
+App\Services\UserService;
 use /**
  * Service class responsible for handling operations related to workstreams
  * in the "Sweet Bread Crumbs" Laravel application.
@@ -91,11 +89,10 @@ use /**
  * and provides methods to manage workstream functionalities.
  * It may also utilize synchronous queues for specific tasks.
  *
- * @package App\Services
  */
-    App\Services\WorkstreamService;
+App\Services\WorkstreamService;
 use /**
- * Interface LengthAwarePaginator
+ * Interface LengthAwarePaginator.
  *
  * This interface is a contract for creating length-aware pagination instances
  * in the Laravel framework. It provides methods for retrieving information about
@@ -107,7 +104,7 @@ use /**
  *
  * Applicable to Laravel version: 12.2.0
  */
-    Illuminate\Contracts\Pagination\LengthAwarePaginator;
+Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use /**
  * Interface Contract for a View in Laravel.
  *
@@ -124,7 +121,7 @@ use /**
  *
  * It is extensively used in the Laravel application workflow for templating mechanisms.
  */
-    Illuminate\Contracts\View\View;
+Illuminate\Contracts\View\View;
 use /**
  * The Auth facade provides access to the authentication services
  * in the Laravel application "Sweet Bread Crumbs".
@@ -146,7 +143,7 @@ use /**
  * Ensure proper middleware is applied in routes or controllers to enforce
  * authentication where required.
  */
-    Illuminate\Support\Facades\Auth;
+Illuminate\Support\Facades\Auth;
 use /**
  * This attribute is used to register a listener for a specific event in a Livewire component.
  * The associated method in the component will be triggered when the specified event occurs.
@@ -155,20 +152,17 @@ use /**
  * It provides a declarative way to specify that a method should execute
  * in response to a particular event.
  *
- * @package Sweet Bread Crumbs
- * @subpackage Livewire
  */
-    Livewire\Attributes\On;
+Livewire\Attributes\On;
 use /**
- * Class Url
+ * Class Url.
  *
  * This class is part of the Livewire framework attributes.
  * It is used to define and handle URL-related attributes and functionality
  * within the Livewire context of a Laravel application.
  *
- * @package Livewire\Attributes
  */
-    Livewire\Attributes\Url;
+Livewire\Attributes\Url;
 use /**
  * This is a Livewire component for the "Sweet Bread Crumbs" Laravel application.
  *
@@ -178,9 +172,9 @@ use /**
  *
  * This component is part of the application's dynamic frontend functionality.
  */
-    Livewire\Component;
+Livewire\Component;
 use /**
- * Trait Livewire\WithPagination
+ * Trait Livewire\WithPagination.
  *
  * This trait provides pagination functionality for Livewire components.
  * It simplifies the implementation of paginated data in Livewire-based applications.
@@ -198,7 +192,7 @@ use /**
  * - Ensure the underlying model or collection supports Laravel's `paginate()` method.
  * - Define per-page limits and adjustments within your Livewire components, as necessary.
  */
-    Livewire\WithPagination;
+Livewire\WithPagination;
 
 /**
  * Component for listing and managing workstreams.

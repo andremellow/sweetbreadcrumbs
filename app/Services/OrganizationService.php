@@ -8,7 +8,6 @@ use App\Models\Organization;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 
 class OrganizationService
 {
@@ -95,8 +94,8 @@ class OrganizationService
      * @return \Illuminate\Support\Collection
      */
     public function getRolesDropDownData(): \Illuminate\Support\Collection
-    {   
-        return  $this->getRolesQuery()->get()->pluck('name', 'id');
+    {
+        return $this->getRolesQuery()->get()->pluck('name', 'id');
     }
 
     /**
@@ -129,14 +128,14 @@ class OrganizationService
     }
 
     /**
-     * Get List Of Roles
+     * Get List Of Roles.
      *
      * @return Builder
      */
     public function getRolesQuery(): Builder
     {
-        return Role::where(function(Builder $query) {
-            $query->when($this->organization, function(Builder $query, Organization $organization) {
+        return Role::where(function (Builder $query) {
+            $query->when($this->organization, function (Builder $query, Organization $organization) {
                 $query->where('organization_id', $organization->id);
             })->orWhere('organization_id', config('app.demo_organization_id'));
         })->select('id', 'name');
