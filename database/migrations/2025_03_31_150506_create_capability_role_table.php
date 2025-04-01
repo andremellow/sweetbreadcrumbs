@@ -14,6 +14,12 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained();
             $table->timestamps();
         });
+
+        // Run the seeder
+        Artisan::call('db:seed', [
+            '--class' => 'CapabilityRoleSeeder', // Replace with your seeder class name
+            '--force' => true, // Force seeding in production
+        ]);
     }
 
     public function down(): void

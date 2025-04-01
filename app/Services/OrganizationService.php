@@ -40,16 +40,6 @@ class OrganizationService
     }
 
     /**
-     * Get organization.
-     *
-     * @return Organization|null
-     */
-    public function getOrganization(): ?Organization
-    {
-        return $this->organization ?? null;
-    }
-
-    /**
      * Creates a new organization.
      *
      * @param User                  $user

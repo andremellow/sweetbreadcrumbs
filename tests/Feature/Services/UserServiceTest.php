@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleEnum;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\Workstream;
@@ -164,4 +165,41 @@ it('retrieves organization by slug', function () {
     $notFound = UserService::getOrganizationBySlug($this->user, 'non-existent-slug');
 
     expect($notFound)->toBeNull();
+});
+
+it('gets all user capabilities', function () {
+    $capabilities = $this->userService->getCapabilities();
+
+    expect($capabilities)->toBeCollection();
+    expect($capabilities)->toHaveCount(35);
+});
+
+it('Admin user has all user capabilities', function () {
+    foreach (RoleEnum::ADMIN->capabilities() as $capability) {
+        expect($this->userService->can($capability))->toBeTrue();
+    }
+});
+
+it('Contributor user has all user capabilities', function () {
+
+    $this->user->organizations()->updateExistingPivot($this->organization->id, [
+        'role_id' => RoleEnum::CONTRIBUTOR->value,
+    ]);
+
+    expect($this->userService->getCapabilities())->toHaveCount(24);
+    foreach (RoleEnum::CONTRIBUTOR->capabilities() as $capability) {
+        expect($this->userService->can($capability))->toBeTrue();
+    }
+});
+
+it('Viewer user has all user capabilities', function () {
+
+    $this->user->organizations()->updateExistingPivot($this->organization->id, [
+        'role_id' => RoleEnum::VIEWER->value,
+    ]);
+
+    expect($this->userService->getCapabilities())->toHaveCount(6);
+    foreach (RoleEnum::VIEWER->capabilities() as $capability) {
+        expect($this->userService->can($capability))->toBeTrue();
+    }
 });
