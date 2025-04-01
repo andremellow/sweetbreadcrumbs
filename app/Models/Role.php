@@ -25,11 +25,8 @@ class Role extends Model
         ];
     }
 
-
-    /**
-     *
-     */
-    public function capabilities(): BelongsToMany {
+    public function capabilities(): BelongsToMany
+    {
         return $this->belongsToMany(Capability::class);
     }
 }

@@ -115,11 +115,11 @@ it('gets all invites from the current user', function () {
     Context::add('current_organization', $this->organization);
     $invitee = User::factory()->create();
     [$otherUser, $otherOrganization] = createOrganization();
-    $currentUserInvite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create([
+    $currentUserInvite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([
         'email' => $invitee->email,
     ]);
-    App\Models\Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->withRole($otherOrganization)->create();
-    $currentUserInvite1 = App\Models\Invite::factory()->for($otherOrganization)->for($this->user, 'inviter')->withRole($otherOrganization)->create([
+    App\Models\Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->create();
+    $currentUserInvite1 = App\Models\Invite::factory()->for($otherOrganization)->for($this->user, 'inviter')->create([
         'email' => $invitee->email,
     ]);
 
@@ -135,7 +135,7 @@ it('gets all invites from the current user', function () {
 it('gets and invite by Id', function () {
     Context::add('current_organization', $this->organization);
     $invitee = User::factory()->create();
-    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create([
+    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([
         'email' => $invitee->email,
     ]);
 
@@ -149,7 +149,7 @@ it('gets and invite by Id', function () {
 
 it('gets and invite by Id validates if id belongs to the current user', function () {
     Context::add('current_organization', $this->organization);
-    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
 
     $this->userService->getInviteById($invite->id);
 })->throws(ModelNotFoundException::class);

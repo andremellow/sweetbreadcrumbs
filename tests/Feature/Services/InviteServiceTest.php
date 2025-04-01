@@ -122,7 +122,7 @@ it('deletes a invite using DeleteInvite action', function () {
 
 it('accepts a invite using acceptInvite action', function () {
     /** @var Invite */
-    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
     $dto = new AcceptInviteDTO(
         user: $this->user,
         invite: $invite
@@ -147,7 +147,7 @@ it('accepts a invite using acceptInvite action', function () {
 
 it('sends notification', function () {
     Notification::fake();
-    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
 
     $updateInviteSentDTO = new UpdateInviteSentDTO(
         user: $this->user,
@@ -181,7 +181,7 @@ it('validates can_resend before sending', function () {
     // 'sent_at' => Carbon::now() -> should not allow to send message again
     $invite = Invite::factory()->for($this->organization)
         ->for($this->user, 'inviter')
-        ->withRole($this->organization)->create(['sent_at' => Carbon::now()]);
+        ->create(['sent_at' => Carbon::now()]);
 
     $invite = Invite::find($invite->id); // make wasRecentlyCreated false
 
@@ -219,7 +219,7 @@ it('sends notification using invite id', function () {
 
 it('get invite by id', function () {
 
-    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
 
     $inviteFound = $this->service->get(
         organization: $this->organization,

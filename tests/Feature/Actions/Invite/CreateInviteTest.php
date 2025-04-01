@@ -10,7 +10,6 @@ beforeEach(function () {
 });
 
 it('creates a new invite with required with all fields', function () {
-    $role = $this->organization->roles()->first();
 
     $invite = app(CreateInvite::class)(
         CreateInviteDTO::from([
@@ -18,7 +17,7 @@ it('creates a new invite with required with all fields', function () {
             'organization' => $this->organization,
             ...[
                 'email' => 'johndoe@gmail.com',
-                'role_id' => $role->id,
+                'role_id' => 2,
             ],
         ])
     );
@@ -27,5 +26,5 @@ it('creates a new invite with required with all fields', function () {
 
     expect($invite->organization_id)->toBe($this->organization->id);
     expect($invite->email)->toBe('johndoe@gmail.com');
-    expect($invite->role_id)->toBe($role->id);
+    expect($invite->role_id)->toBe(2);
 });

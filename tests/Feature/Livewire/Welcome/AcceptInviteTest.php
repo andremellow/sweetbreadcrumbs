@@ -15,7 +15,7 @@ beforeEach(function () {
 
     // Create an invite for the user
     $this->inviteeUser = User::factory()->create(['first_name' => '', 'last_name' => '']);
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create([
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([
         'email' => $this->inviteeUser->email,
     ]);
     actingAs($this->inviteeUser);

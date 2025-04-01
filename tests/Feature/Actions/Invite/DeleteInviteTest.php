@@ -11,7 +11,7 @@ beforeEach(function () {
 });
 
 it('Soft deletes a meeting', function () {
-    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
 
     (new DeleteInvite)(
         new DeleteInviteDTO(

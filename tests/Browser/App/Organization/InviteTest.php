@@ -9,7 +9,7 @@ beforeEach(function () {
     $this->user = $user;
     $this->organization = $organization;
 
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
 });
 
 test('it loads the page', function () {

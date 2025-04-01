@@ -12,7 +12,7 @@ beforeEach(function () {
     [$user, $organization] = createOrganization();
     $this->user = $user;
     $this->organization = $organization;
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create(['role_id' => 5]);
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create(['role_id' => 2]);
 });
 
 it('cannot validate if organizaiton is not preset', function () {
