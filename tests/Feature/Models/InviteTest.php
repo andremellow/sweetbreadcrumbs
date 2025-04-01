@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->user = $user;
     $this->organization = $organization;
     $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')
-        ->create(['email' => 'mariodoe@test.com', 'role_id' => 4, 'sent_at' => Carbon::now()->addDays(-2)]);
+        ->create(['email' => 'mariodoe@test.com', 'role_id' => 1, 'sent_at' => Carbon::now()->addDays(-2)]);
 
     Context::add('current_organization', $this->organization);
 

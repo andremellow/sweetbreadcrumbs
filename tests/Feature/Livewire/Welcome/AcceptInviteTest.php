@@ -15,7 +15,7 @@ beforeEach(function () {
 
     // Create an invite for the user
     $this->inviteeUser = User::factory()->create(['first_name' => '', 'last_name' => '']);
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create([
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([
         'email' => $this->inviteeUser->email,
     ]);
     actingAs($this->inviteeUser);
@@ -59,7 +59,9 @@ it('accepts the invite and redirects to the dashboard', function () {
 });
 
 it('validates role id belongs to the organization', function () {
-    $this->invite->update(['role_id' => 1]);
+    [$otheruser, $otherOrganization] = createOrganization();
+    $role = $otherOrganization->roles()->create(['name' => 'New role', 'is_default' => false]);
+    $this->invite->update(['role_id' => $role->id]);
 
     Livewire::test(AcceptInvite::class, ['invite' => $this->invite])
         ->set('first_name', 'John')
@@ -70,7 +72,7 @@ it('validates role id belongs to the organization', function () {
 });
 
 it('deletes the invite if user already belongs to the organization', function () {
-    $this->inviteeUser->organizations()->attach($this->organization->id, ['role_id' => $this->organization->roles()->first()->id]);
+    $this->inviteeUser->organizations()->attach($this->organization->id, ['role_id' => 3]);
 
     Livewire::test(AcceptInvite::class, ['invite' => $this->invite])
         ->assertRedirect(route('dashboard', ['organization' => $this->organization->slug]));

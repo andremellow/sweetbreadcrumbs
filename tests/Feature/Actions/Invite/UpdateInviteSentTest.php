@@ -9,7 +9,7 @@ beforeEach(function () {
     [$user, $organization] = createOrganization();
     $this->user = $user;
     $this->organization = $organization;
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
 });
 
 it('updates a workstream with all fields', function () {

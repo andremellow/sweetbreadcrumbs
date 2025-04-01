@@ -10,6 +10,7 @@ class Dashboard extends Component
 {
     public function render(UserService $userService): View
     {
+
         return view('livewire.organization.dashboard', [
             'organization' => $userService->getCurrentOrganization(),
         ]);

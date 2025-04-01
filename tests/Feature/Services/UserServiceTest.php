@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleEnum;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\Workstream;
@@ -115,11 +116,11 @@ it('gets all invites from the current user', function () {
     Context::add('current_organization', $this->organization);
     $invitee = User::factory()->create();
     [$otherUser, $otherOrganization] = createOrganization();
-    $currentUserInvite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create([
+    $currentUserInvite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([
         'email' => $invitee->email,
     ]);
-    App\Models\Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->withRole($otherOrganization)->create();
-    $currentUserInvite1 = App\Models\Invite::factory()->for($otherOrganization)->for($this->user, 'inviter')->withRole($otherOrganization)->create([
+    App\Models\Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->create();
+    $currentUserInvite1 = App\Models\Invite::factory()->for($otherOrganization)->for($this->user, 'inviter')->create([
         'email' => $invitee->email,
     ]);
 
@@ -135,7 +136,7 @@ it('gets all invites from the current user', function () {
 it('gets and invite by Id', function () {
     Context::add('current_organization', $this->organization);
     $invitee = User::factory()->create();
-    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create([
+    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([
         'email' => $invitee->email,
     ]);
 
@@ -149,7 +150,7 @@ it('gets and invite by Id', function () {
 
 it('gets and invite by Id validates if id belongs to the current user', function () {
     Context::add('current_organization', $this->organization);
-    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $invite = App\Models\Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
 
     $this->userService->getInviteById($invite->id);
 })->throws(ModelNotFoundException::class);
@@ -164,4 +165,41 @@ it('retrieves organization by slug', function () {
     $notFound = UserService::getOrganizationBySlug($this->user, 'non-existent-slug');
 
     expect($notFound)->toBeNull();
+});
+
+it('gets all user capabilities', function () {
+    $capabilities = $this->userService->getCapabilities();
+
+    expect($capabilities)->toBeCollection();
+    expect($capabilities)->toHaveCount(35);
+});
+
+it('Admin user has all user capabilities', function () {
+    foreach (RoleEnum::ADMIN->capabilities() as $capability) {
+        expect($this->userService->can($capability))->toBeTrue();
+    }
+});
+
+it('Contributor user has all user capabilities', function () {
+
+    $this->user->organizations()->updateExistingPivot($this->organization->id, [
+        'role_id' => RoleEnum::CONTRIBUTOR->value,
+    ]);
+
+    expect($this->userService->getCapabilities())->toHaveCount(24);
+    foreach (RoleEnum::CONTRIBUTOR->capabilities() as $capability) {
+        expect($this->userService->can($capability))->toBeTrue();
+    }
+});
+
+it('Viewer user has all user capabilities', function () {
+
+    $this->user->organizations()->updateExistingPivot($this->organization->id, [
+        'role_id' => RoleEnum::VIEWER->value,
+    ]);
+
+    expect($this->userService->getCapabilities())->toHaveCount(6);
+    foreach (RoleEnum::VIEWER->capabilities() as $capability) {
+        expect($this->userService->can($capability))->toBeTrue();
+    }
 });

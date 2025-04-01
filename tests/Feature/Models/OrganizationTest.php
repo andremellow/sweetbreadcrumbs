@@ -11,10 +11,11 @@ beforeEach(function () {
     [$user, $organization] = createOrganization();
     $this->user = $user;
     $this->organization = $organization;
-    Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
     $workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
     Task::factory()->for($workstream, 'taskable')->withPriority($this->organization)->create();
     Meeting::factory()->for($workstream)->create();
+    $this->organization->roles()->create(['name' => 'New role', 'is_default' => false]);
 
 });
 

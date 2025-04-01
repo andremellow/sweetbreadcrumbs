@@ -13,7 +13,7 @@ beforeEach(function () {
 
 test('it validates the fields', function () {
     $this->inviteeUser = User::factory()->create(['first_name' => '', 'last_name' => '']);
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create(
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create(
         ['email' => $this->inviteeUser->email]
     );
 
@@ -31,7 +31,7 @@ test('it validates the fields', function () {
 test('it updates user name and accepts the invite', function () {
     $this->inviteeUser = User::factory()->create(['first_name' => '', 'last_name' => '']);
 
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create(
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create(
         ['email' => $this->inviteeUser->email]
     );
 
@@ -54,7 +54,7 @@ test('it updates user name and accepts the invite', function () {
 
 test('accepts the invite', function () {
     $this->inviteeUser = User::factory()->create();
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create(
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create(
         ['email' => $this->inviteeUser->email]
     );
     expect($this->inviteeUser->organizations()->where('organizations.id', $this->organization->id)->exists())->toBe(false);
@@ -72,10 +72,13 @@ test('accepts the invite', function () {
 });
 
 test('validate if role belongs to the organization', function () {
+    [$user, $organization] = createOrganization();
+    $role = $organization->roles()->create(['name' => 'Admin']);
+
     $this->inviteeUser = User::factory()->create();
     $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create([
         'email' => $this->inviteeUser->email,
-        'role_id' => 1,
+        'role_id' => $role->id,
     ]);
 
     $this->browse(function (Browser $browser) {
@@ -83,14 +86,13 @@ test('validate if role belongs to the organization', function () {
             ->loginAs($this->inviteeUser)
             ->visit(route('invite.accept', ['invite' => $this->invite->token]))
             ->press('Accept')
-            ->waitForText(config('app.error_message'))
-            ->screenshot('alert');
+            ->waitForText(config('app.error_message'));
     });
 });
 
 test('it cannot access someone elses invite', function () {
     $this->inviteeUser = User::factory()->create(['first_name' => '', 'last_name' => '']);
-    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $this->invite = Invite::factory()->for($this->organization)->for($this->user, 'inviter')->create();
 
     $this->browse(function (Browser $browser) {
         $browser

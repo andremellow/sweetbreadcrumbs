@@ -16,7 +16,7 @@ beforeEach(function () {
     [$user, $organization] = createOrganization();
     $this->user = $user;
     $this->organization = $organization;
-    $this->invites = App\Models\Invite::factory(10)->for($this->organization)->for($this->user, 'inviter')->withRole($this->organization)->create();
+    $this->invites = App\Models\Invite::factory(10)->for($this->organization)->for($this->user, 'inviter')->create();
 
     URL::defaults(['organization' => $this->organization->slug]);
 

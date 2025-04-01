@@ -25,7 +25,7 @@ test('it loads the page with no pending invites', function () {
 });
 
 test('it handles expired invites', function () {
-    $this->invite = Invite::factory()->for($this->inviterOrganization)->for($this->inviterUser, 'inviter')->withRole($this->inviterOrganization)->create([
+    $this->invite = Invite::factory()->for($this->inviterOrganization)->for($this->inviterUser, 'inviter')->create([
         'email' => $this->user->email,
         'sent_at' => Carbon::now()->subDays(8),
     ]);
@@ -42,7 +42,7 @@ test('it handles expired invites', function () {
 });
 
 test('it declies an invite', function () {
-    $this->invite = Invite::factory()->for($this->inviterOrganization)->for($this->inviterUser, 'inviter')->withRole($this->inviterOrganization)->create([
+    $this->invite = Invite::factory()->for($this->inviterOrganization)->for($this->inviterUser, 'inviter')->create([
         'email' => $this->user->email,
         'sent_at' => Carbon::now()->subDays(8),
     ]);
@@ -71,7 +71,7 @@ test('it declies an invite', function () {
 });
 
 test('it accepts an invite', function () {
-    $this->invite = Invite::factory()->for($this->inviterOrganization)->for($this->inviterUser, 'inviter')->withRole($this->inviterOrganization)->create([
+    $this->invite = Invite::factory()->for($this->inviterOrganization)->for($this->inviterUser, 'inviter')->create([
         'email' => $this->user->email,
     ]);
 
@@ -96,13 +96,13 @@ test('it accepts an invite', function () {
     });
 });
 
-test('cannot accept invite if already part of the organization', function () {
-    $this->invite = Invite::factory()->for($this->inviterOrganization)->for($this->inviterUser, 'inviter')->withRole($this->inviterOrganization)->create([
+test('it cannot accept invite if already part of the organization', function () {
+    $this->invite = Invite::factory()->for($this->inviterOrganization)->for($this->inviterUser, 'inviter')->create([
         'email' => $this->user->email,
     ]);
 
     $this->inviterOrganization->users()->attach($this->user->id, [
-        'role_id' => $this->inviterOrganization->roles()->first()->id,
+        'role_id' => 1,
     ]);
 
     $this->browse(function (Browser $browser) {

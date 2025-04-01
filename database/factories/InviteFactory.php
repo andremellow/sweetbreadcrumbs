@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Organization;
+use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,19 +21,8 @@ class InviteFactory extends Factory
         return [
             'email' => fake()->email(),
             'token' => fake()->uuid(),
+            'role_id' => Role::inRandomOrder()->first()->id,
             'sent_at' => Carbon::now(),
         ];
-    }
-
-    /**
-     * Indicate that the user is suspended.
-     */
-    public function withRole(Organization $organization): Factory
-    {
-        return $this->state(function (array $attributes) use ($organization) {
-            return [
-                'role_id' => $organization->roles()->inRandomOrder()->first()->id,
-            ];
-        });
     }
 }

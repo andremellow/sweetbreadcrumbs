@@ -27,11 +27,11 @@ it('renders the Invites component successfully', function () {
 it('lists invites', function () {
 
     [$otherUser, $otherOrganization] = createOrganization();
-    $this->invite = Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->withRole($otherOrganization)->create(
+    $this->invite = Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->create(
         ['email' => $this->user->email]
     );
     [$otherUser1, $otherOrganization1] = createOrganization();
-    $this->invite1 = Invite::factory()->for($otherOrganization1)->for($otherUser1, 'inviter')->withRole($otherOrganization1)->create(
+    $this->invite1 = Invite::factory()->for($otherOrganization1)->for($otherUser1, 'inviter')->create(
         ['email' => $this->user->email]
     );
 
@@ -44,11 +44,11 @@ it('lists invites', function () {
 it('accepts an invite', function () {
 
     [$otherUser, $otherOrganization] = createOrganization();
-    $this->invite = Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->withRole($otherOrganization)->create(
+    $this->invite = Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->create(
         ['email' => $this->user->email]
     );
     [$otherUser1, $otherOrganization1] = createOrganization();
-    $this->invite1 = Invite::factory()->for($otherOrganization1)->for($otherUser1, 'inviter')->withRole($otherOrganization1)->create(
+    $this->invite1 = Invite::factory()->for($otherOrganization1)->for($otherUser1, 'inviter')->create(
         ['email' => $this->user->email]
     );
 
@@ -63,7 +63,7 @@ it('accepts an invite', function () {
 it('cannot accept an expired invite', function () {
 
     [$otherUser, $otherOrganization] = createOrganization();
-    $this->invite = Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->withRole($otherOrganization)->create(
+    $this->invite = Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->create(
         ['email' => $this->user->email]
     );
     $this->invite->update(['sent_at' => now()->subDay(10)]);
@@ -80,11 +80,11 @@ it('cannot accept an expired invite', function () {
 it('declines an invite', function () {
 
     [$otherUser, $otherOrganization] = createOrganization();
-    $this->invite = Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->withRole($otherOrganization)->create(
+    $this->invite = Invite::factory()->for($otherOrganization)->for($otherUser, 'inviter')->create(
         ['email' => $this->user->email]
     );
     [$otherUser1, $otherOrganization1] = createOrganization();
-    $this->invite1 = Invite::factory()->for($otherOrganization1)->for($otherUser1, 'inviter')->withRole($otherOrganization1)->create(
+    $this->invite1 = Invite::factory()->for($otherOrganization1)->for($otherUser1, 'inviter')->create(
         ['email' => $this->user->email]
     );
 

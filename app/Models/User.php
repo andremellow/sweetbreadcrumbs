@@ -74,11 +74,6 @@ class User extends Authenticatable
         return "$this->first_name $this->last_name";
     }
 
-    // public function studios()
-    // {
-    //     return $this->belongsToMany(Studio::class);
-    // }
-
     /**
      * User's Organization.
      *

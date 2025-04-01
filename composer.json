@@ -93,8 +93,9 @@
         "pre-commit": [
             "vendor/bin/pint",
             "@php artisan test --parallel",
+            "@php artisan dusk",
             "./vendor/bin/pest --type-coverage --min=100",
-            "@php artisan dusk"
+            "herd coverage ./vendor/bin/pest --coverage --coverage-html coverage  --testsuite=Feature --min=100"
         ]
     },
     "extra": {

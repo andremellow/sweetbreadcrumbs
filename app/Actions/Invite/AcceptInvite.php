@@ -26,7 +26,7 @@ class AcceptInvite
             throw new CreateInviteException(__('Invite is expired'));
         }
 
-        if ($this->roleNotExists($acceptInviteDTO)) {
+        if ($this->roleNotExists($acceptInviteDTO, $organizationService)) {
             throw new CreateInviteException(__('Invite role does not belongs to the organization'));
         }
 
@@ -51,14 +51,13 @@ class AcceptInvite
             ->exists();
     }
 
-    protected function roleNotExists(AcceptInviteDTO $acceptInviteDTO): bool
+    protected function roleNotExists(AcceptInviteDTO $acceptInviteDTO, OrganizationService $organizationService): bool
     {
-        return $acceptInviteDTO
-            ->invite
-            ->organization
-            ->roles()
-            ->where('id', $acceptInviteDTO->invite->role_id)
-            ->exists() === false;
+        return
+            $organizationService
+                ->getRolesQuery()
+                ->where('id', $acceptInviteDTO->invite->role_id)
+                ->exists() === false;
     }
 
     protected function inviteDoesNotBelongsToSameEmail(AcceptInviteDTO $acceptInviteDTO): bool

@@ -5,11 +5,13 @@ namespace App\Services;
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
 use App\Models\Organization;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrganizationService
 {
-    //  Organization $organization;
+    protected ?Organization $organization;
 
     /**
      * OrganizationService Construct.
@@ -18,7 +20,7 @@ class OrganizationService
      *
      * @return OrganizationService
      */
-    public function __construct(protected UserService $userService, protected CreateOrganization $createOrganization, protected ?Organization $organization = null)
+    public function __construct(protected UserService $userService, protected CreateOrganization $createOrganization)
     {
         $this->organization = $userService->getCurrentOrganization();
     }
@@ -36,16 +38,6 @@ class OrganizationService
 
         return $this;
     }
-
-    // /**
-    //  * Get organization.
-    //  *
-    //  * @return Organization|null
-    //  */
-    // public function getOrganization(): ?Organization
-    // {
-    //     return $this->organization ?? null;
-    // }
 
     /**
      * Creates a new organization.
@@ -93,7 +85,7 @@ class OrganizationService
      */
     public function getRolesDropDownData(): \Illuminate\Support\Collection
     {
-        return $this->organization->roles()->select('id', 'name')->get()->pluck('name', 'id');
+        return $this->getRolesQuery()->get()->pluck('name', 'id');
     }
 
     /**
@@ -115,9 +107,27 @@ class OrganizationService
     {
         $role = $this->organization->roles()->where('is_default', true)->first();
         if (! $role) {
-            $role = $this->organization->roles()->first();
+            $role = Role::where('organization_id', config('app.demo_organization_id'))->where('is_default', true)->first();
+        }
+
+        if (! $role) {
+            $role = Role::where('organization_id', config('app.demo_organization_id'))->first();
         }
 
         return $role->id;
+    }
+
+    /**
+     * Get List Of Roles.
+     *
+     * @return Builder
+     */
+    public function getRolesQuery(): Builder
+    {
+        return Role::where(function (Builder $query) {
+            $query->when($this->organization, function (Builder $query, Organization $organization) {
+                $query->where('organization_id', $organization->id);
+            })->orWhere('organization_id', config('app.demo_organization_id'));
+        })->select('id', 'name');
     }
 }
