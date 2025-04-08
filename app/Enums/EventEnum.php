@@ -20,6 +20,9 @@ enum EventEnum: string
     case WORKSTREAM_DELETED = 'workstream-deleted';
     case LOAD_WORKSTREAM_FORM_MODAL = 'load-workstream-form-modal';
 
+    case ACCESS_GRANTED = 'access-granted';
+    case ACCESS_REVOKED = 'access-revoked';
+
     case INVITE_CREATED = 'invite-created';
     case INVITE_DELETED = 'invite-deleted';
 

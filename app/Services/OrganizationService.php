@@ -87,7 +87,7 @@ class OrganizationService
 
     }
 
-    public function getRoleForUser(User $user)
+    public function getRoleForUser(User $user): Role
     {
         return Role::find(
             $this->organization

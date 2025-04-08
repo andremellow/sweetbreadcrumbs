@@ -1,12 +1,7 @@
 <section class="w-full">
     <x-heading heading="{{ __('Workstreams') }}" subheading="{!! __('All you need from your workstream together.')  !!}" >
         <flux:modal.trigger name="member-access-modal" >
-            <flux:avatar.group>
-                <flux:avatar size="sm" as="button" tooltip circle name="Caleb Porzio" color="auto" />
-                <flux:avatar size="sm" as="button" tooltip circle name="Caleb Porzio" color="auto" />
-                <flux:avatar size="sm" as="button" tooltip circle name="Caleb Porzio" color="auto" />
-                <flux:avatar size="sm" as="button" circle>3+</flux:avatar>
-            </flux:avatar.group>
+            <livewire:access.access-avatars :accessible="$workstream" />
         </flux:modal.trigger>
     </x-heading>
 

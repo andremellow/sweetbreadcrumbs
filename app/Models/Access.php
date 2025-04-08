@@ -13,7 +13,6 @@ class Access extends Model
         'role_id',
     ];
 
-
     public function accessible(): MorphTo
     {
         return $this->morphTo();

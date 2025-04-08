@@ -164,8 +164,7 @@ class UserService
     public function getCurrentRole(): Role
     {
 
-
-            dd($this->getCurrentOrganization());
+        dd($this->getCurrentOrganization());
 
     }
 

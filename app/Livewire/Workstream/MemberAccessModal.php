@@ -3,6 +3,9 @@
 namespace App\Livewire\Workstream;
 
 use App\Contracts\AccessibleContract;
+use App\DTO\Access\GrantAccessDTO;
+use App\DTO\Access\RevokeAccessDTO;
+use App\Enums\EventEnum;
 use App\Enums\RoleEnum;
 use App\Models\User;
 use App\Services\AccessService;
@@ -10,6 +13,7 @@ use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -22,7 +26,7 @@ class MemberAccessModal extends Component
 
     public string $email;
 
-    public int $roleId = 3;
+    public int $roleId;
 
     public string $search = '';
 
@@ -32,38 +36,49 @@ class MemberAccessModal extends Component
 
     public ?string $roleName;
 
-    public function onModalClose() {}
+    public function onModalClose(): void {}
 
     public function updatedEmail(OrganizationService $organizationService): void
     {
         $this->user = $organizationService->getUserByEmail($this->email);
-        $role = $organizationService->getRoleForUser($this->user);
+        //        $role = $organizationService->getRoleForUser($this->user);
 
-        if ($role->id === RoleEnum::ADMIN->value || $role->id === RoleEnum::VIEWER->value) {
-            $this->roleId = $role->id;
-            $this->roleName = $role->name;
-        } else {
-            $this->reset('roleId', 'roleName');
-        }
+        //        if ($role->id === RoleEnum::ADMIN->value || $role->id === RoleEnum::VIEWER->value) {
+        //            $this->roleId = $role->id;
+        //            $this->roleName = $role->name;
+        //        } else {
+        //            $this->reset('roleId', 'roleName');
+        //        }
     }
 
-    public function add(AccessService $accessService): void
+    public function add(AccessService $accessService, OrganizationService $organizationService): void
     {
+        $this->validate([
+            'email' => 'required|email',
+            'roleId' => 'required',
+        ]);
 
-        if ($this->accessible->accesses()->where('user_id', $this->user->id)->exists() === false) {
-
-            $this->accessible->accesses()->create([
-                'user_id' => $this->user->id,
-                'role_id' => $this->roleId,
-            ]);
-        }
+        $accessService->grantAccess(
+            grantAccessDTO: new GrantAccessDTO(
+                accessible: $this->accessible,
+                user: $this->user,
+                role: RoleEnum::from($this->roleId)
+            ),
+            organizationService: $organizationService,
+        );
 
         $this->reset('roleId', 'roleName', 'search', 'email');
+        $this->dispatch(EventEnum::ACCESS_GRANTED);
     }
 
-    public function delete(int $userId): void
+    public function delete(AccessService $accessService, int $userId): void
     {
-        $this->accessible->accesses()->where('user_id', $userId)->delete();
+        $accessService->revokeAccess(new RevokeAccessDTO(
+            accessible: $this->accessible,
+            user_id: $userId
+        ));
+
+        $this->dispatch(EventEnum::ACCESS_REVOKED);
     }
 
     public function getAutocomplete(AccessService $accessService): array|Collection
@@ -76,7 +91,7 @@ class MemberAccessModal extends Component
     }
 
     #[Computed]
-    public function members()
+    public function members(): LengthAwarePaginator
     {
         $accessServices = app(AccessService::class);
 

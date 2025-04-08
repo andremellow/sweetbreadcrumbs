@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int $id
+ * @property int    $id
  * @property string $name
  */
 class Workstream extends Model implements AccessibleContract
@@ -69,8 +69,6 @@ class Workstream extends Model implements AccessibleContract
     //     return $this->belongsToMany(Release::class);
     // }
 
-
-
     /**
      * Workstream's priority.
      *
@@ -110,5 +108,4 @@ class Workstream extends Model implements AccessibleContract
     {
         return $this->morphMany(Task::class, 'taskable');
     }
-
 }

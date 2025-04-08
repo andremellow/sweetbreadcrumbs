@@ -3,12 +3,15 @@
 namespace Database\Seeders;
 
 use App\Actions\Organization\CreateOrganization;
+use App\DTO\Access\GrantAccessDTO;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\RoleEnum;
 use App\Models\Meeting;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Workstream;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Services\AccessService;
 use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Database\Seeder;
@@ -55,7 +58,18 @@ class QuickStartDatabaseSeeder extends Seeder
         //        $organization->releases()->create(['name' => '5.35']);
         //        $organization->releases()->create(['name' => '5.36']);
 
-        Workstream::factory()->count(30)->for($organization)->withPriority($organization)->create();
+        $accessService = app(AccessService::class);
+        Workstream::factory()->count(30)
+            ->for($organization)
+            ->withPriority($organization)
+            ->create()
+            ->each(function (Workstream $workstream) use ($accessService, $userAndreMello, $organizationService) {
+                $accessService->grantAccess(new GrantAccessDTO(
+                    accessible: $workstream,
+                    user: $userAndreMello,
+                    role: RoleEnum::ADMIN
+                ), $organizationService);
+            });
 
         $workstream = $organization->workstreams()->first();
         $workstream->update(['name' => 'AA First Workstream']);

@@ -3,23 +3,21 @@
 namespace App\DTO\Access;
 
 use App\Contracts\AccessibleContract;
-use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
 
-class GrantAccessDTO extends Data
+class RevokeAccessDTO extends Data
 {
     public function __construct(
         public AccessibleContract $accessible,
-        public User $user,
-        public RoleEnum $role,
+        public int $user_id,
     ) {}
 
     public static function rules(): array
     {
         return [
-            'role' => [Rule::enum(RoleEnum::class)],
+            'user_id' => ['required', 'integer', Rule::exists(User::class, 'id')],
         ];
     }
 }

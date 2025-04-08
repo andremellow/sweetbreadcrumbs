@@ -14,7 +14,7 @@
                 </div>
                 <div class='w-full sm:w-64'>
                     <livewire:role-dropdown wire:model="roleId" key="role-dropdown" with-user="true" :$user />
-                    <flux:error name="role_id"/>
+                    <flux:error name="roleId"/>
 
                 </div>
                 <div class="sm:mt-6.5">
@@ -27,7 +27,7 @@
             <flux:table :paginate="$this->members">
                     <flux:table.columns>
                         <flux:table.column>Name</flux:table.column>
-                        <flux:table.column >Since</flux:table.column>
+                        <flux:table.column class="hidden sm:table-cell" >Since</flux:table.column>
                         <flux:table.column >Role</flux:table.column>
                         <flux:table.column ></flux:table.column>
                     </flux:table.columns>
@@ -35,12 +35,15 @@
                     <flux:table.rows>
                         @foreach ($this->members as $member)
                             <flux:table.row :key="$member->id">
-                                <flux:table.cell class="flex items-center gap-3">
-                                    {{ $member->user->full_name }}
+                                <flux:table.cell >
+                                    <flux:tooltip content="{{ $member->user->email }}">
+                                        <div>{{ $member->user->full_name }}</div>
+                                    </flux:tooltip>
+
                                 </flux:table.cell>
 
-                                <flux:table.cell class="whitespace-nowrap">
-                                    {{ $member->created_at->toDayDateTimeString() }}
+                                <flux:table.cell class="whitespace-nowrap hidden sm:table-cell">
+                                    {{ $member->created_at->toFormattedDayDateString() }}
                                 </flux:table.cell>
 
                                 <flux:table.cell>
@@ -49,6 +52,7 @@
 
 
                                 <flux:table.cell class="text-right space-x-1">
+                                    @if($member->user->id !== Auth::user()->id)
                                     <flux:button
                                         class="cursor-pointer"
                                         size="sm"
@@ -57,6 +61,7 @@
                                         wire:click="delete({{ $member->user->id  }})"
                                         wire:confirm="Are you sure you want revoke this access?"
                                     />
+                                    @endif
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach
