@@ -161,6 +161,14 @@ class UserService
         return $user->organizations()->where('slug', $slug)->first();
     }
 
+    public function getCurrentRole(): Role
+    {
+
+
+            dd($this->getCurrentOrganization());
+
+    }
+
     public function getCapabilities(): Collection
     {
         return Cache::remember("user.capabilities.{$this->user->id}.{$this->getCurrentOrganization()->id}", 60, function () {

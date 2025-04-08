@@ -2,10 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Models\User;
 use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Modelable;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class RoleDropdown extends Component
@@ -13,12 +16,27 @@ class RoleDropdown extends Component
     #[Modelable]
     public ?int $roleId;
 
-    public function render(UserService $userService, OrganizationService $organizationService): View
+    #[Reactive]
+    public ?User $user;
+
+    public bool $withUser = false;
+
+    #[Computed]
+    public function roles()
     {
+        $userService = app(UserService::class);
+        $organizationService = app(OrganizationService::class);
         $organizationService->setOrganization($userService->getCurrentOrganization());
 
-        return view('livewire.role-dropdown', [
-            'roles' => $organizationService->getRolesDropDownData(),
-        ]);
+
+        return $this->withUser ?
+                $organizationService->getRolesDropDownDataForUser($this->user) :
+                $organizationService->getRolesDropDownData() ;
+    }
+
+    public function render(): View
+    {
+
+        return view('livewire.role-dropdown');
     }
 }

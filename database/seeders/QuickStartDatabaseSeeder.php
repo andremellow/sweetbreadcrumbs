@@ -9,6 +9,8 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Workstream;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Services\OrganizationService;
+use App\Services\UserService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,7 +22,8 @@ class QuickStartDatabaseSeeder extends Seeder
     public function run(): void
     {
         $userAndreMello = User::create(['first_name' => 'Andre', 'last_name' => 'Mello', 'email' => 'andre.mello@disney.com', 'password' => Hash::make('123456')]);
-        $organization = (new CreateOrganization)($userAndreMello, new CreateOrganizationDTO('Disney'));
+        $organizationService = new OrganizationService(new UserService($userAndreMello), app(CreateOrganization::class));
+        $organization = (new CreateOrganization)($userAndreMello, new CreateOrganizationDTO('Disney'), $organizationService);
 
         // $studioWounder = $organization->studios()->create(['name' => 'Wounder']);
         // $studioFantasy = $organization->studios()->create(['name' => 'Fantasy']);
@@ -28,26 +31,29 @@ class QuickStartDatabaseSeeder extends Seeder
         // $studioUni = $organization->studios()->create(['name' => 'Uni']);
         // $studioNautilus = $organization->studios()->create(['name' => 'Nautilus']);
 
-        $userJonathanNammour = $organization->users()->create(['first_name' => 'Jonathan Nammour', 'email' => 'jonathan.nammour@disney.com']);
-        $userMitchThomas = $organization->users()->create(['first_name' => 'Mitch Thomas', 'email' => 'mitch.thomas@disney.com']);
+        $userJonathanNammour = User::create(['first_name' => 'Jonathan', 'last_name' => 'Nammour', 'email' => 'jonathan.nammour@disney.com']);
+        $userMitchThomas = User::create(['first_name' => 'Mitch', 'last_name' => 'Thomas', 'email' => 'mitch.thomas@disney.com']);
 
-        $userKevinHaynes = $organization->users()->create(['first_name' => 'Kevin Haynes', 'email' => 'kevin.haynes@disney.com']);
-        $userBrendonHaynes = $organization->users()->create(['first_name' => 'Brendon Haynes', 'email' => 'brendon.haynes@disney.com']);
+        $userKevinHaynes = User::create(['first_name' => 'Kevin', 'last_name' => 'Haynes', 'email' => 'kevin.haynes@disney.com']);
+        $userBrendonHaynes = User::create(['first_name' => 'Brendon', 'last_name' => 'Haynes', 'email' => 'brendon.haynes@disney.com']);
 
-        $userSandyLeon = $organization->users()->create(['first_name' => 'Sandy Leon', 'email' => 'sandy.leon@disney.com']);
-        $userWalterCojal = $organization->users()->create(['first_name' => 'Walter Cojal', 'email' => 'walter.cojal@disney.com']);
+        $userSandyLeon = User::create(['first_name' => 'Sandy', 'last_name' => 'Leon', 'email' => 'sandy.leon@disney.com']);
+        $userWalterCojal = User::create(['first_name' => 'Walter', 'last_name' => 'Cojal', 'email' => 'walter.cojal@disney.com']);
 
-        // $studioWounder->users()->sync([$userAndreMello, $userJonathanNammour, $userMitchThomas, $userKevinHaynes, $userBrendonHaynes]);
-        // $studioUni->users()->sync([$userAndreMello, $userJonathanNammour]);
-        // $studioFantasy->users()->sync([$userSandyLeon]);
-        // $studioDream->users()->sync([$userWalterCojal]);
+        $organizationService->attachUser($organization, $userJonathanNammour, roleId: 1);
+        $organizationService->attachUser($organization, $userMitchThomas, roleId: 1);
+        $organizationService->attachUser($organization, $userKevinHaynes, roleId: 2);
+        $organizationService->attachUser($organization, $userBrendonHaynes, roleId: 2);
+        $organizationService->attachUser($organization, $userSandyLeon, roleId: 3);
+        $organizationService->attachUser($organization, $userWalterCojal, roleId: 3);
 
-        $organization->releases()->create(['name' => '5.31']);
-        $organization->releases()->create(['name' => '5.32']);
-        $organization->releases()->create(['name' => '5.33']);
-        $organization->releases()->create(['name' => '5.34']);
-        $organization->releases()->create(['name' => '5.35']);
-        $organization->releases()->create(['name' => '5.36']);
+        //
+        //        $organization->releases()->create(['name' => '5.31']);
+        //        $organization->releases()->create(['name' => '5.32']);
+        //        $organization->releases()->create(['name' => '5.33']);
+        //        $organization->releases()->create(['name' => '5.34']);
+        //        $organization->releases()->create(['name' => '5.35']);
+        //        $organization->releases()->create(['name' => '5.36']);
 
         Workstream::factory()->count(30)->for($organization)->withPriority($organization)->create();
 

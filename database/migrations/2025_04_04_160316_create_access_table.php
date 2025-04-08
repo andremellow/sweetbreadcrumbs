@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('user_workstream', function (Blueprint $table) {
+        Schema::create('accesses', function (Blueprint $table) {
             $table->id();
+            $table->morphs('accessible');
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('workstream_id')->constrained();
             $table->foreignId('role_id')->constrained();
             $table->timestamps();
         });
@@ -18,6 +18,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('user_workstream');
+        Schema::dropIfExists('accesses');
     }
 };
