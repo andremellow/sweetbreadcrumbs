@@ -41,14 +41,7 @@ class MemberAccessModal extends Component
     public function updatedEmail(OrganizationService $organizationService): void
     {
         $this->user = $organizationService->getUserByEmail($this->email);
-        //        $role = $organizationService->getRoleForUser($this->user);
-
-        //        if ($role->id === RoleEnum::ADMIN->value || $role->id === RoleEnum::VIEWER->value) {
-        //            $this->roleId = $role->id;
-        //            $this->roleName = $role->name;
-        //        } else {
-        //            $this->reset('roleId', 'roleName');
-        //        }
+        $this->search = $this->user->full_name;
     }
 
     public function add(AccessService $accessService, OrganizationService $organizationService): void

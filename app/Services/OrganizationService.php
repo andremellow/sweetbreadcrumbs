@@ -133,11 +133,9 @@ class OrganizationService
                 match ($role->id) {
                     RoleEnum::ADMIN->value => $builder->where('id', RoleEnum::ADMIN->value),
                     RoleEnum::VIEWER->value => $builder->where('id', RoleEnum::VIEWER->value),
-                    default => $builder
+                    RoleEnum::CONTRIBUTOR->value => $builder
                 };
 
-            }, function (Builder $builder) {
-                $builder->where('id', RoleEnum::VIEWER->value);
             })
             ->get()->pluck('name', 'id');
     }

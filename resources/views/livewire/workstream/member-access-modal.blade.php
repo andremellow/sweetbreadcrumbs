@@ -4,10 +4,19 @@
                 <div class="w-full">
                     <flux:select wire:model="email" label="Email" variant="combobox" clearable :filter="false">
                         <x-slot name="input">
-                            <flux:select.input wire:model.live.debounce.150ms="search" placeholder="Search by Name o email" />
+                            <flux:select.input wire:model.live.debounce.150ms="search" placeholder="Search by Name or Email" />
                         </x-slot>
                         @foreach($autocomplete as $userAutoComplete)
-                            <flux:select.option value="{{ $userAutoComplete->email }}" >{{ $userAutoComplete->last_name  }}, {{ $userAutoComplete->first_name }}  {{ $userAutoComplete->email  }}</flux:select.option>
+                            <flux:select.option value="{{ $userAutoComplete->email }}" >
+                                <div class="flex items-center gap-4">
+                                    <flux:avatar size="lg" circle name="{{ $userAutoComplete->full_name  }}" src="{{ $userAutoComplete->avatar }}" />
+                                    <div>
+                                        <flux:heading size="lg">{{ $userAutoComplete->full_name }}</flux:heading>
+                                        <flux:text>{{ $userAutoComplete->email  }}</flux:text>
+                                    </div>
+                                </div>
+
+                            </flux:select.option>
                         @endforeach
 
                     </flux:select>

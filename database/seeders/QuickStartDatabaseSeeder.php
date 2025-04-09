@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Actions\Access\GrantAccess;
+use App\Actions\Access\RevokeAccess;
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Access\GrantAccessDTO;
 use App\DTO\Organization\CreateOrganizationDTO;
@@ -58,7 +60,12 @@ class QuickStartDatabaseSeeder extends Seeder
         //        $organization->releases()->create(['name' => '5.35']);
         //        $organization->releases()->create(['name' => '5.36']);
 
-        $accessService = app(AccessService::class);
+        $accessService = new AccessService(
+            userService: new UserService($userAndreMello),
+            grantAccess: app(GrantAccess::class),
+            revokeAccess: app(RevokeAccess::class),
+        );
+
         Workstream::factory()->count(30)
             ->for($organization)
             ->withPriority($organization)

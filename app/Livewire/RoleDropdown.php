@@ -23,8 +23,11 @@ class RoleDropdown extends Component
     public bool $withUser = false;
 
     #[Computed]
-    public function roles(): Collection
+    public function roles(): array|Collection
     {
+        if ($this->withUser && isset($this->user) === false) {
+            return [];
+        }
         $userService = app(UserService::class);
         $organizationService = app(OrganizationService::class);
         $organizationService->setOrganization($userService->getCurrentOrganization());
