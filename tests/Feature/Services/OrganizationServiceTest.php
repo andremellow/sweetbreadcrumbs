@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\OrganizationService;
 use App\Services\UserService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -161,3 +162,32 @@ it('returns roles available for a user, based on his role', function (RoleEnum $
     [RoleEnum::VIEWER, [3 => 'Viewer']],
 
 ]);
+
+it('gets an organization user by email', function () {
+    $this->organizationService = app(OrganizationService::class);
+    $organization = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 1'));
+
+    $user = User::factory()->create();
+    $this->organizationService->attachUser(
+        organization: $organization,
+        user: $user,
+        roleId: RoleEnum::CONTRIBUTOR->value
+    );
+
+    $this->organizationService->setOrganization($organization);
+    $organizationUser = $this->organizationService->getUserByEmail($user->email);
+
+    expect($organizationUser->id)->toBe($user->id);
+
+});
+
+it('throws an when trying to get an user by email that does not belongs to the organization', function () {
+    $this->organizationService = app(OrganizationService::class);
+    $organization = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 1'));
+
+    $user = User::factory()->create();
+
+    $this->organizationService->setOrganization($organization);
+    $this->organizationService->getUserByEmail($user->email);
+
+})->throws(ModelNotFoundException::class);

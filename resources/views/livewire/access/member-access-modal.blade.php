@@ -1,5 +1,8 @@
-<flux:modal class="w-full lg:w-2/3" variant="flyout" name="member-access-modal" :dismissible="false" wire:model.self="showMemberAccessModal"  @close="onModalClose">
-        <form  wire:submit="add" >
+<flux:modal class="w-full lg:w-2/3" variant="flyout" name="member-access-modal" :dismissible="false" wire:model.self="showMemberAccessModal"  >
+    <div>
+        <flux:heading size="lg">Manage Access</flux:heading>
+    </div>
+        <form  wire:submit="add" class="mt-3">
             <div class="flex flex-col space-y-4 sm:flex-row sm:items-start sm:justify-between sm:space-x-2 sm:space-y-0">
                 <div class="w-full">
                     <flux:select wire:model="email" label="Email" variant="combobox" clearable :filter="false">
@@ -8,7 +11,7 @@
                         </x-slot>
                         @foreach($autocomplete as $userAutoComplete)
                             <flux:select.option value="{{ $userAutoComplete->email }}" >
-                                <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-4" dusk="autocomplete-{{ $userAutoComplete->email }}">
                                     <flux:avatar size="lg" circle name="{{ $userAutoComplete->full_name  }}" src="{{ $userAutoComplete->avatar }}" />
                                     <div>
                                         <flux:heading size="lg">{{ $userAutoComplete->full_name }}</flux:heading>
@@ -67,7 +70,7 @@
                                         size="sm"
                                         icon="trash"
                                         variant="danger"
-                                        wire:click="delete({{ $member->user->id  }})"
+                                        wire:click="revoke({{ $member->user->id  }})"
                                         wire:confirm="Are you sure you want revoke this access?"
                                     />
                                     @endif

@@ -10,5 +10,5 @@
     @endforelse
 
 
-    <flux:avatar size="sm" as="button" color="green" circle>{{ $plus > 0 ? $plus : ''  }}+</flux:avatar>
+    <flux:avatar size="sm" dusk="open-member-access-modal" as="button" color="green" circle>{{ $plus > 0 ? $plus : ''  }}+</flux:avatar>
 </flux:avatar.group>

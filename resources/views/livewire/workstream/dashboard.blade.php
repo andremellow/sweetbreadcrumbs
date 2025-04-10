@@ -19,6 +19,6 @@
                 </div>
             </div>
         </div>
-        <livewire:workstream.member-access-modal :accessible="$workstream" />
+        <livewire:access.member-access-modal :accessible="$workstream" />
     </x-workstreams.layout>
 </section>

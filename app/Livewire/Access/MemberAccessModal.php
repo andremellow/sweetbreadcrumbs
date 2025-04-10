@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Workstream;
+namespace App\Livewire\Access;
 
 use App\Contracts\AccessibleContract;
 use App\DTO\Access\GrantAccessDTO;
@@ -36,8 +36,6 @@ class MemberAccessModal extends Component
 
     public ?string $roleName;
 
-    public function onModalClose(): void {}
-
     public function updatedEmail(OrganizationService $organizationService): void
     {
         $this->user = $organizationService->getUserByEmail($this->email);
@@ -64,7 +62,7 @@ class MemberAccessModal extends Component
         $this->dispatch(EventEnum::ACCESS_GRANTED);
     }
 
-    public function delete(AccessService $accessService, int $userId): void
+    public function revoke(AccessService $accessService, int $userId): void
     {
         $accessService->revokeAccess(new RevokeAccessDTO(
             accessible: $this->accessible,
@@ -96,7 +94,7 @@ class MemberAccessModal extends Component
 
     public function render(UserService $userService, AccessService $accessService): View
     {
-        return view('livewire.workstream.member-access-modal', [
+        return view('livewire.access.member-access-modal', [
             'organization' => $userService->getCurrentOrganization(),
             'autocomplete' => $this->getAutocomplete($accessService),
         ]);

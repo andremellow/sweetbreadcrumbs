@@ -1,9 +1,14 @@
 <?php
 
 use App\Actions\Organization\CreateOrganization;
+use App\Contracts\AccessibleContract;
+use App\DTO\Access\GrantAccessDTO;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\RoleEnum;
 use App\Models\Organization;
 use App\Models\User;
+use App\Models\Workstream;
+use App\Services\AccessService;
 use App\Services\OrganizationService;
 
 use function Pest\Laravel\actingAs;
@@ -55,7 +60,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function createOrganization(?User $user = null, string $name = 'New Organization Name')
+function createOrganization(?User $user = null, string $name = 'New Organization Name'): array
 {
     if (! $user) {
         $user = User::factory()->create();
@@ -74,6 +79,46 @@ function createOrganization(?User $user = null, string $name = 'New Organization
 function createUser()
 {
     return User::factory()->create();
+}
+
+
+function createWorkstream(Organization $organization): Workstream
+{
+    return Workstream::factory()->for($organization)->withPriority($organization)->create();
+}
+
+function createAccessUsers(Organization $organization, AccessibleContract $accessible): array
+{
+    $usersWithAccess = User::Factory(10)->create();
+    $usersWithoutAccess = User::Factory(10)->create();
+
+    $organizationService = app(OrganizationService::class);
+    $organizationService->setOrganization($organization);
+    $accessService = app(AccessService::class);
+
+    foreach ([...$usersWithAccess, ...$usersWithoutAccess] as $user) {
+
+        // Attach to the Organization
+        $organizationService->attachUser(
+            organization: $organization,
+            user: $user,
+            roleId: RoleEnum::CONTRIBUTOR->value
+        );
+    }
+
+    foreach ($usersWithAccess as $user) {
+        // Attach to Workstream
+        $accessService->grantAccess(
+            grantAccessDTO: new GrantAccessDTO(
+                accessible: $accessible,
+                user: $user,
+                role: RoleEnum::CONTRIBUTOR
+            ),
+            organizationService: $organizationService
+        );
+    }
+
+    return [$usersWithAccess, $usersWithoutAccess];
 }
 
 class FakeRoute

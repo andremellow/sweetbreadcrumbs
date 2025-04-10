@@ -101,69 +101,57 @@ it('Revokes access', function () {
 
 });
 
- describe('list access', function () {
+describe('list access', function () {
     beforeEach(function () {
-        $users = User::Factory(5)->create();
-        $organizationService = app(OrganizationService::class);
-        $organizationService->setOrganization($this->organization);
-        $workstream = Workstream::factory()->for($this->organization)->create();
+        $this->workstream = Workstream::factory()->for($this->organization)->withPriority($this->organization)->create();
 
-        $users->each(function (User $user) use($organizationService) {
-            $organizationService->attachUser(
-                organization: $this->organization,
-                user: $user,
-                roleId: RoleEnum::CONTRIBUTOR->value
-            );
+        [$usersWithAccess, $usersWithoutAccess] = createAccessUsers($this->organization, $this->workstream);
+        $this->usersWithAccess = $usersWithAccess;
+        $this->usersWithoutAccess = $usersWithoutAccess;
 
+        $this->accessService = app(AccessService::class);
+    });
 
-        })
+    it('lists members', function () {
+        $members = $this->accessService->list(
+            accessible: $this->workstream,
+        );
 
+        expect($members)->toHaveCount(10);
+
+        $idToFind = $this->usersWithAccess[0]->id;
+        $idToFail = $this->usersWithoutAccess[0]->id;
+
+        expect($members->find($idToFind)->id)->toBe($idToFind);
+        expect($members->find($idToFail))->toBeNull();
 
     });
 
-//    it('lists invites default sort by sent_at if invalid argument is given', function () {
-//        $invites = $this->service->list(
-//            organization: $this->organization,
-//            sortBy: 'any_invalid_sort_fields',
-//            sortDirection: SortDirection::ASC
-//        );
-//
-//        expect($invites)->toHaveCount(3);
-//        expect($invites[0]->email)->toBe('williamdoe@test.com');
-//    });
-//
-//    it('lists invites with default sorting', function () {
-//        $invites = $this->service->list(
-//            organization: $this->organization
-//        );
-//
-//        expect($invites)->toHaveCount(3);
-//        expect($invites[0]->email)->toBe('williamdoe@test.com');
-//        expect($invites[1]->email)->toBe('mariodoe@test.com');
-//        expect($invites[2]->email)->toBe('andredoe@test.com');
-//    });
-//
-//    it('lists invites with email sorting', function () {
-//        $invites = $this->service->list(
-//            organization: $this->organization,
-//            sortBy: 'email'
-//        );
-//
-//        expect($invites)->toHaveCount(3);
-//        expect($invites[0]->email)->toBe('andredoe@test.com');
-//        expect($invites[1]->email)->toBe('mariodoe@test.com');
-//        expect($invites[2]->email)->toBe('williamdoe@test.com');
-//    });
-//
-//    it('lists invites with role sorting', function () {
-//        $invites = $this->service->list(
-//            organization: $this->organization,
-//            sortBy: 'role'
-//        );
-//
-//        expect($invites)->toHaveCount(3);
-//        expect($invites[0]->email)->toBe('mariodoe@test.com');
-//        expect($invites[1]->email)->toBe('andredoe@test.com');
-//        expect($invites[2]->email)->toBe('williamdoe@test.com');
-//    });
- });
+    it('lists non members to autocomplete', function () {
+        // Make name unique
+        $this->usersWithoutAccess[0]->update(['first_name' => 'John123', 'last_name' => 'Doe321', 'email' => 'johndoe@gmail.com']);
+
+        $members = $this->accessService->listAutoComplete(
+            accessible: $this->workstream,
+            search: 'johndoe@gmail.com'
+        );
+
+        expect($members)->toHaveCount(1);
+
+        expect($members[0]->id)->toBe($this->usersWithoutAccess[0]->id);
+
+    });
+
+    it('does not lists members already with access to autocomplete', function () {
+        // Make name unique
+        $this->usersWithAccess[0]->update(['first_name' => 'John123', 'last_name' => 'Doe321', 'email' => 'johndoe@gmail.com']);
+
+        $members = $this->accessService->listAutoComplete(
+            accessible: $this->workstream,
+            search: 'johndoe@gmail.com'
+        );
+
+        expect($members)->toHaveCount(0);
+    });
+
+});

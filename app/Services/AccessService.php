@@ -51,6 +51,8 @@ class AccessService
                 'last_name',
                 'email',
             ], 'like', "%$search%")
+            ->orderBy('first_name')
+            ->orderBy('last_name')
             ->limit(10)
             ->get();
 
