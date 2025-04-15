@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\AccessibleContract;
 use App\Enums\CapabilityEnum;
 use App\Models\Invite;
 use App\Models\Organization;
@@ -11,6 +12,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Context;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -169,8 +171,35 @@ class UserService
         });
     }
 
-    public function can(CapabilityEnum $capability): bool
+    public function getCapabilitiesFor(AccessibleContract $accessible): Collection
     {
-        return $this->getCapabilities()->pluck('id')->contains($capability->value);
+
+        return Cache::remember($this->getCacheKeyForCapabilitiesFor($accessible), 60, function () use ($accessible) {
+            $access = $accessible->accesses()->where('user_id', $this->user->id)->first();
+
+            if (! $access) {
+                return new Collection();
+            }
+            return Role::find($access->role_id)->capabilities;
+        });
+    }
+
+    public function can(CapabilityEnum $capability, ?AccessibleContract $accessible = null): bool
+    {
+        $capabilities = $accessible ?
+            $this->getCapabilitiesFor($accessible) :
+            $this->getCapabilities();
+
+        return $capabilities->pluck('id')->contains($capability->value);
+    }
+
+    public function getCacheKeyForCapabilitiesFor(AccessibleContract $accessible): string {
+        $class = Str::slug($accessible::class);
+
+        return "user.capabilities.{$this->user->id}.{$this->getCurrentOrganization()->id}.{$class}";
+    }
+
+    public function forgetCapabilitiesForCache(AccessibleContract $accessible): void {
+        Cache::forget($this->getCacheKeyForCapabilitiesFor($accessible));
     }
 }

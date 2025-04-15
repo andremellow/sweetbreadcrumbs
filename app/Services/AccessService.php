@@ -83,10 +83,14 @@ class AccessService
         GrantAccessDTO $grantAccessDTO,
         OrganizationService $organizationService
     ): Access {
-        return ($this->grantAccess)(
+        $access = ($this->grantAccess)(
             grantAccessDTO: $grantAccessDTO,
             organizationService: $organizationService
         );
+
+        $this->userService->forgetCapabilitiesForCache($grantAccessDTO->accessible);
+
+        return $access;
     }
 
     /**

@@ -34,6 +34,8 @@ class ListMeetings extends Component
 
     public function mount(Workstream $workstream): void
     {
+        $this->authorize('viewAny', [ Meeting::class, $this->workstream ]);
+
         $this->workstream = $workstream;
         $this->sortBy = 'name';
     }
