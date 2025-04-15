@@ -46,11 +46,22 @@ class AccessService
                     ->whereColumn('accesses.user_id', 'users.id')
                     ->where('accesses.accessible_id', '=', $accessible->id)
                     ->where('accesses.accessible_type', '=', $accessible::class);
-            })->whereAny([
-                'first_name',
-                'last_name',
-                'email',
-            ], 'like', "%$search%")
+            })->where(function (\Illuminate\Database\Eloquent\Builder $query) use ($search) {
+                $query->whereAny([
+                    'first_name',
+                    'last_name',
+                    'email',
+                ], 'like', "%$search%");
+
+                foreach (explode(' ', $search) as $word) {
+                    $query->orWhereAny([
+                        'first_name',
+                        'last_name',
+                        'email',
+                    ], 'like', "%$word%");
+                }
+
+            })
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->limit(10)

@@ -10,6 +10,7 @@ use App\Services\InviteService;
 use App\Services\UserService;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -26,8 +27,14 @@ class AcceptInvite extends Component
 
     public ModelsInvite $invite;
 
-    public function mount(UserService $userService, InviteService $inviteService): void
+    public function mount(Request $request, UserService $userService, InviteService $inviteService): void
     {
+        // @codeCoverageIgnoreStart
+        if ($request->hasSession()) {
+            $request->session()->forget('invite');
+        }
+        // @codeCoverageIgnoreEnd
+
         $this->inviteBelongstoAuthenticatedUser = $this->invite->email === Auth::user()->email;
 
         if ($userService->hasOrganization($this->invite->organization_id)) {

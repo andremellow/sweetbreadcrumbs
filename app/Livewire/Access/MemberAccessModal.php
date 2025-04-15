@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\AccessService;
 use App\Services\OrganizationService;
 use App\Services\UserService;
+use Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -60,6 +61,7 @@ class MemberAccessModal extends Component
 
         $this->reset('roleId', 'roleName', 'search', 'email');
         $this->dispatch(EventEnum::ACCESS_GRANTED);
+        Flux::toast(text: __('Access granted'));
     }
 
     public function revoke(AccessService $accessService, int $userId): void
@@ -70,6 +72,7 @@ class MemberAccessModal extends Component
         ));
 
         $this->dispatch(EventEnum::ACCESS_REVOKED);
+        Flux::toast(text: __('Access revoked'));
     }
 
     public function getAutocomplete(AccessService $accessService): array|Collection

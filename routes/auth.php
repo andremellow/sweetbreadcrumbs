@@ -16,6 +16,12 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
     $userService = new UserService($user);
     $organization = $userService->getCurrentOrganization();
 
+    if ($request->session()->has('invite')) {
+        return redirect(route('welcome.accept-invite', [
+            'invite' => $request->session()->get('invite'),
+        ]));
+    }
+
     if ($user->first_name === null || $user->first_name === '') {
         return redirect(route('welcome.profile'));
     } elseif ($organization === null) {

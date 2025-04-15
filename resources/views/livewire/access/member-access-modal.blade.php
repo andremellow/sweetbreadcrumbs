@@ -10,12 +10,12 @@
                             <flux:select.input wire:model.live.debounce.150ms="search" placeholder="Search by Name or Email" />
                         </x-slot>
                         @foreach($autocomplete as $userAutoComplete)
-                            <flux:select.option value="{{ $userAutoComplete->email }}" >
-                                <div class="flex items-center gap-4" dusk="autocomplete-{{ $userAutoComplete->email }}">
+                            <flux:select.option dusk="autocomplete-{{ $userAutoComplete->id  }}" value="{{ $userAutoComplete->email }}" >
+                                <div class="flex items-center gap-4" >
                                     <flux:avatar size="lg" circle name="{{ $userAutoComplete->full_name  }}" src="{{ $userAutoComplete->avatar }}" />
                                     <div>
                                         <flux:heading size="lg">{{ $userAutoComplete->full_name }}</flux:heading>
-                                        <flux:text>{{ $userAutoComplete->email  }}</flux:text>
+                                        <flux:text><div >{{ $userAutoComplete->email  }}</div></flux:text>
                                     </div>
                                 </div>
 
@@ -30,7 +30,7 @@
 
                 </div>
                 <div class="sm:mt-6.5">
-                    <flux:button type="submit" icon="user-plus" variant="filled">Add</flux:button>
+                    <flux:button type="submit" dusk="Add" icon="user-plus" variant="filled">Add</flux:button>
                 </div>
             </div>
         </form >
@@ -66,6 +66,7 @@
                                 <flux:table.cell class="text-right space-x-1">
                                     @if($member->user->id !== Auth::user()->id)
                                     <flux:button
+                                        dusk="revoke-{{ $member->user->id  }}"
                                         class="cursor-pointer"
                                         size="sm"
                                         icon="trash"

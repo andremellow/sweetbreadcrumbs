@@ -31,11 +31,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // @codeCoverageIgnoreStart
         Feature::define('dev', fn (User $user) => match (true) {
             $user->email === 'andremellow@gmail.com' => true,
             config('app.env') === 'testing' => true,
             default => false,
         });
+        // @codeCoverageIgnoreEnd
 
         if (config('app.env') !== 'production') {
 

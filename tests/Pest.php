@@ -81,7 +81,6 @@ function createUser()
     return User::factory()->create();
 }
 
-
 function createWorkstream(Organization $organization): Workstream
 {
     return Workstream::factory()->for($organization)->withPriority($organization)->create();
