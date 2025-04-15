@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HandleInviteTokenMiddleware;
 use App\Http\Middleware\SetOrganizationRouteParameter;
 use App\Livewire\Meeting\ListMeetings;
 use App\Livewire\Organization\Dashboard as OrganizationDashboard;
@@ -13,13 +14,17 @@ use App\Livewire\Welcome\Workstream as WelcomeWorkstream;
 use App\Livewire\Workstream\Dashboard as WorkstreamDashboard;
 use App\Livewire\Workstream\ListWorkstreams;
 use Illuminate\Support\Facades\Route;
-use Laravel\Pennant\Middleware\EnsureFeaturesAreActive;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 use Livewire\Livewire;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('invite/{invite:token}', function ($invite) {
+    return redirect()->route('welcome.accept-invite', ['invite' => $invite]);
+})->name('invite.accept')
+    ->middleware([HandleInviteTokenMiddleware::class]);
 
 Route::middleware([
     'auth',
@@ -31,8 +36,7 @@ Route::middleware([
     });
 
     Route::group(['middleware' => ['verified']], function () {
-        Route::get('invite/{invite:token}', WelcomeAcceptInvite::class)->name('invite.accept')
-            ->middleware(EnsureFeaturesAreActive::using('dev'));
+        Route::get('welcome/invite/{invite:token}', WelcomeAcceptInvite::class)->name('welcome.accept-invite');
 
         Route::get('welcome/profile', WelcomeProfile::class)->name('welcome.profile');
         Route::get('welcome/organization', WelcomeOrganization::class)->name('welcome.organization');
@@ -49,8 +53,8 @@ Route::middleware([
             Route::get('/workstreams/{workstream}/tasks', ListTasks::class)->name('workstreams.tasks.index');
 
             Route::get('dashboard', OrganizationDashboard::class)->name('dashboard');
-            Route::get('settings', OrganizationSettings::class)->name('organization.settings')->middleware(EnsureFeaturesAreActive::using('dev'));
-            Route::get('invite', OrganizationInvite::class)->name('organization.invite')->middleware(EnsureFeaturesAreActive::using('dev'));
+            Route::get('settings', OrganizationSettings::class)->name('organization.settings');
+            Route::get('invite', OrganizationInvite::class)->name('organization.invite');
 
         });
     });

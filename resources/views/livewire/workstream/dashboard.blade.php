@@ -1,5 +1,10 @@
 <section class="w-full">
-    @include('partials.workstreams-heading')
+    <x-heading heading="{{ __('Workstreams') }}" subheading="{!! __('All you need from your workstream together.')  !!}" >
+        <flux:modal.trigger name="member-access-modal" >
+            <livewire:access.access-avatars :accessible="$workstream" />
+        </flux:modal.trigger>
+    </x-heading>
+
 
     <x-workstreams.layout :$workstream >
         <div class="flex h-full  w-full flex-1 flex-col gap-4 ">
@@ -13,10 +18,7 @@
                     <livewire:workstream.list-tasks-card :$workstream/>
                 </div>
             </div>
-            <!-- <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div> -->
         </div>
-
+        <livewire:access.member-access-modal :accessible="$workstream" />
     </x-workstreams.layout>
 </section>

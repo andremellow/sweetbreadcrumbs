@@ -2,12 +2,14 @@
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\RoleEnum;
 use App\Models\Organization;
 use App\Models\Release;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\OrganizationService;
 use App\Services\UserService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -54,12 +56,12 @@ it('returns only organization proirity dropdown data', function () {
 
     $priorities = $this->organizationService->getPrioritiesDropDownData();
 
-    expect($priorities)->toHaveCount(5);
-    expect($priorities[11])->toBe('Highest');
-    expect($priorities[12])->toBe('High');
-    expect($priorities[13])->toBe('Midium');
-    expect($priorities[14])->toBe('Low');
-    expect($priorities[15])->toBe('Lowest');
+    expect($priorities)->toHaveCount(5)
+        ->and($priorities[11])->toBe('Highest')
+        ->and($priorities[12])->toBe('High')
+        ->and($priorities[13])->toBe('Midium')
+        ->and($priorities[14])->toBe('Low')
+        ->and($priorities[15])->toBe('Lowest');
 });
 
 it('returns only organization roles dropdown data', function () {
@@ -74,11 +76,11 @@ it('returns only organization roles dropdown data', function () {
 
     $roles = $this->organizationService->getRolesDropDownData();
 
-    expect($roles)->toHaveCount(4);
-    expect($roles[1])->toBe('Admin');
-    expect($roles[2])->toBe('Contributor');
-    expect($roles[3])->toBe('Viewer');
-    expect($roles[5])->toBe('New role');
+    expect($roles)->toHaveCount(4)
+        ->and($roles[1])->toBe('Admin')
+        ->and($roles[2])->toBe('Contributor')
+        ->and($roles[3])->toBe('Viewer')
+        ->and($roles[5])->toBe('New role');
 });
 
 it('returns default role id', function () {
@@ -125,9 +127,67 @@ it('returns only organization release dropdown data', function () {
 
     $releasesData = $this->organizationService->getReleasesDropDownData();
 
-    expect($releasesData)->toHaveCount(3);
-    expect($releasesData[6])->toBe('5.30');
-    expect($releasesData[7])->toBe('5.31');
-    expect($releasesData[8])->toBe('5.32');
+    expect($releasesData)->toHaveCount(3)
+        ->and($releasesData[6])->toBe('5.30')
+        ->and($releasesData[7])->toBe('5.31')
+        ->and($releasesData[8])->toBe('5.32');
 
 });
+
+it('returns roles available for a user, based on his role', function (RoleEnum $role, array $results) {
+    $this->organizationService = app(OrganizationService::class);
+    $organization = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 1'));
+
+    $user = User::factory()->create();
+    $this->organizationService->attachUser(
+        organization: $organization,
+        user: $user,
+        roleId: $role->value
+    );
+
+    $this->organizationService->setOrganization($organization);
+    $roleData = $this->organizationService->getRolesDropDownDataForUser($user);
+
+    expect($roleData)->toHaveCount(count($results))
+        ->and($roleData->toArray())->toBe($results);
+
+})->with([
+    [RoleEnum::ADMIN, [1 => 'Admin']],
+    [RoleEnum::CONTRIBUTOR, [
+        1 => 'Admin',
+        2 => 'Contributor',
+        3 => 'Viewer',
+    ],
+    ],
+    [RoleEnum::VIEWER, [3 => 'Viewer']],
+
+]);
+
+it('gets an organization user by email', function () {
+    $this->organizationService = app(OrganizationService::class);
+    $organization = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 1'));
+
+    $user = User::factory()->create();
+    $this->organizationService->attachUser(
+        organization: $organization,
+        user: $user,
+        roleId: RoleEnum::CONTRIBUTOR->value
+    );
+
+    $this->organizationService->setOrganization($organization);
+    $organizationUser = $this->organizationService->getUserByEmail($user->email);
+
+    expect($organizationUser->id)->toBe($user->id);
+
+});
+
+it('throws an when trying to get an user by email that does not belongs to the organization', function () {
+    $this->organizationService = app(OrganizationService::class);
+    $organization = $this->organizationService->create($this->user, new CreateOrganizationDTO('organization 1'));
+
+    $user = User::factory()->create();
+
+    $this->organizationService->setOrganization($organization);
+    $this->organizationService->getUserByEmail($user->email);
+
+})->throws(ModelNotFoundException::class);

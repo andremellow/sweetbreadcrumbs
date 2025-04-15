@@ -23,7 +23,7 @@
                     <flux:navlist.item href="{{ route('dashboard', [ 'organization' => $organization->slug ]) }}">Dashboard</flux:navlist.item>
                 </flux:navlist.group>
                 <livewire:sidebar.featured-workstreams />
-                
+
             </flux:navlist>
 
             <flux:spacer />
@@ -79,24 +79,22 @@
                         <flux:menu.item href="{{ route('settings.profile') }}" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                         <flux:menu.submenu heading="Organizations">
                             <flux:menu.group heading="Organizations">
-                                @foreach($usesOrganizations as $org) 
+                                @foreach($usesOrganizations as $org)
                                     <flux:navmenu.item  href="{{ route('dashboard', ['organization' => $org->slug]) }}" :checked="$org->id === $organization->id">
                                         <div class="w-full flex justify-between items-center">
                                             <div class="flex space-x-1 items-center">
-                                                @if($org->id === $organization->id) 
-                                                    <flux:icon.check variant="micro"/> 
+                                                @if($org->id === $organization->id)
+                                                    <flux:icon.check variant="micro"/>
                                                 @endif
                                                 <div>
                                                 {{ $org->name }}
                                                 </div>
                                             </div>
-                                            @if(Feature::active('dev'))
-                                                @if($org->id === $organization->id) 
+                                                @if($org->id === $organization->id)
                                                     <a class="ml-2" href="{{ route('organization.settings', [ 'organization' => $org->slug ]) }}">
-                                                        <flux:icon.settings variant="mini"/> 
+                                                        <flux:icon.settings variant="mini"/>
                                                     </a>
                                                 @endif
-                                            @endif
                                         </div>
                                     </flux:navmenu.item>
                                 @endforeach

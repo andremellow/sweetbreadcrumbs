@@ -17,7 +17,7 @@
     <div class="bg-white">
             <header class="absolute inset-x-0 top-0 z-50">
                 <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
-                
+
                 <div class="flex flex-1 justify-end">
                 @auth
                     @php
@@ -47,7 +47,7 @@
 
             <div class="relative isolate px-6 pt-14 lg:px-8">
                 <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-                <div class="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+                <div class="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-linear-to-tr from-[#4255A4] to-[#51A5DB] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
                 </div>
                 <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
                 <div class="hidden sm:mb-8 sm:flex sm:justify-center">
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <h1 class="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">SWEET BREADCRUMBS</h1>
+                    <img src="/storage/logo.png">
                     @php
                         $punchlines = [
                             "Sweet Bread Crumbs: Guiding Your Work, One Step at a Time.",
@@ -70,7 +70,7 @@
                 </div>
                 </div>
                 <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
-                <div class="relative left-[calc(50%+3rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+                <div class="relative left-[calc(50%+3rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 bg-linear-to-tr from-[#4255A4] to-[#51A5DB] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
                 </div>
             </div>
         </div>
@@ -78,11 +78,11 @@
         <nav aria-label="Progress">
             <ol role="list" class="overflow-hidden">
                 <li class="relative pb-10">
-                <div class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-red-300" aria-hidden="true"></div>
+                <div class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-blue-400" aria-hidden="true"></div>
                 <!-- Complete Step -->
                 <a href="#" class="group relative flex items-start">
                     <span class="flex h-9 items-center">
-                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full bg-red-300 group-hover:bg-red-300">
+                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full bg-blue-400 group-hover:bg-rblue300">
                         <svg class="size-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                         <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
                         </svg>
@@ -99,12 +99,12 @@
                 <!-- Current Step -->
                 <a href="#" class="group relative flex items-start" aria-current="step">
                     <span class="flex h-9 items-center" aria-hidden="true">
-                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full border-2 border-red-300 bg-white">
-                        <span class="size-2.5 rounded-full bg-red-300"></span>
+                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full border-2 border-blue-400 bg-white">
+                        <span class="size-2.5 rounded-full bg-blue-400"></span>
                     </span>
                     </span>
                     <span class="ml-4 flex min-w-0 flex-col">
-                    <span class="text-sm font-medium text-red-300">Permissions & Security @ {{ Carbon\Carbon::create(2025,04,01)->toFormattedDayDateString() }}</span>
+                    <span class="text-sm font-medium text-blue-400">Permissions & Security @ {{ Carbon\Carbon::create(2025,04,01)->toFormattedDayDateString() }}</span>
                     <span class="text-sm text-gray-500">Invite user to organization.</span>
                     <span class="text-sm text-gray-500">User's permissions.</span>
                     <span class="text-sm text-gray-500">Workstream & Task access control between team members</span>
@@ -122,9 +122,9 @@
                     </span>
                     </span>
                     <span class="ml-4 flex min-w-0 flex-col">
-                    <span class="text-sm font-medium text-red-300">Risks & Notes  @ {{ Carbon\Carbon::create(2025,04,15)->toFormattedDayDateString() }}</span>
-                    <span class="text-sm text-gray-500">Ability to create and magane risks.</span>
-                    <span class="text-sm text-gray-500">Ability to create and magane notes.</span>
+                    <span class="text-sm font-medium text-blue-400">Risks & Notes  @ {{ Carbon\Carbon::create(2025,04,15)->toFormattedDayDateString() }}</span>
+                    <span class="text-sm text-gray-500">Ability to create and menage risks.</span>
+                    <span class="text-sm text-gray-500">Ability to create and menage notes.</span>
                     <span class="text-sm text-gray-500">Dashboard improvements.</span>
                     <span class="text-sm text-gray-500">Daily digest emails.</span>
                     </span>
@@ -140,7 +140,7 @@
                     </span>
                     </span>
                     <span class="ml-4 flex min-w-0 flex-col">
-                    <span class="text-sm font-medium text-red-300">Dashboard enhancement @ {{ Carbon\Carbon::create(2025,05,1)->toFormattedDayDateString() }}</span>
+                    <span class="text-sm font-medium text-blue-400">Dashboard enhancement @ {{ Carbon\Carbon::create(2025,05,1)->toFormattedDayDateString() }}</span>
                     <span class="text-sm text-gray-500">User's dashboard across all organizations.</span>
                     <span class="text-sm text-gray-500">Notes specific dashboard.</span>
                     <span class="text-sm text-gray-500">Task specific dashboard.</span>

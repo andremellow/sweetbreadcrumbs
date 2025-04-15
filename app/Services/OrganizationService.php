@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Actions\Organization\CreateOrganization;
 use App\DTO\Organization\CreateOrganizationDTO;
+use App\Enums\RoleEnum;
 use App\Models\Organization;
 use App\Models\Role;
 use App\Models\User;
@@ -68,6 +69,35 @@ class OrganizationService
         ]);
     }
 
+    public function getUserByEmail(string $email): User
+    {
+        return $this->organization
+            ->users()
+            ->where('email', $email)
+            ->firstOrFail();
+
+    }
+
+    public function emailBelongsToOrganization(string $email): bool
+    {
+        return $this->organization
+            ->users()
+            ->where('email', $email)
+            ->exists();
+
+    }
+
+    public function getRoleForUser(User $user): Role
+    {
+        return Role::find(
+            $this->organization
+                ->users()
+                ->findOrFail($user->id)
+                ->pivot
+                ->role_id
+        );
+    }
+
     /**
      * Get Organization's Priorities.
      *
@@ -86,6 +116,28 @@ class OrganizationService
     public function getRolesDropDownData(): \Illuminate\Support\Collection
     {
         return $this->getRolesQuery()->get()->pluck('name', 'id');
+    }
+
+    /**
+     * Get Organization's Roles.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getRolesDropDownDataForUser(?User $user): \Illuminate\Support\Collection
+    {
+
+        $role = $user ? $this->getRoleForUser($user) : null;
+
+        return $this->getRolesQuery()
+            ->when($role, function (Builder $builder, Role $role) {
+                match ($role->id) {
+                    RoleEnum::ADMIN->value => $builder->where('id', RoleEnum::ADMIN->value),
+                    RoleEnum::VIEWER->value => $builder->where('id', RoleEnum::VIEWER->value),
+                    RoleEnum::CONTRIBUTOR->value => $builder
+                };
+
+            })
+            ->get()->pluck('name', 'id');
     }
 
     /**
