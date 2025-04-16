@@ -1,8 +1,10 @@
 <section class="w-full">
     <x-heading heading="{{ __('Meetings') }}" subheading="{!! __('You don\'t need to remember everything.')  !!}" >
-        <flux:modal.trigger name="meeting-form-modal">
-            <flux:button>{{ __('Create meeting') }}</flux:button>
-        </flux:modal.trigger>
+        @can('create', [\App\Models\Meeting::class, $workstream])
+            <flux:modal.trigger name="meeting-form-modal">
+                <flux:button>{{ __('Create meeting') }}</flux:button>
+            </flux:modal.trigger>
+        @endcan
     </x-heading>
     <x-workstreams.layout :$workstream >
         <x-form.filter-form wire:submit="applyFilter" :isFiltred="$this->isFiltred"  >

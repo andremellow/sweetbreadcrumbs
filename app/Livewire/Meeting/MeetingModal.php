@@ -4,6 +4,7 @@ namespace App\Livewire\Meeting;
 
 use App\Enums\EventEnum;
 use App\Livewire\Forms\MeetingForm;
+use App\Models\Meeting;
 use App\Models\Workstream;
 use App\Services\MeetingService;
 use Illuminate\Contracts\View\View;
@@ -37,6 +38,8 @@ class MeetingModal extends Component
     public function save(MeetingService $meetingService): void
     {
         if ($this->form->id === null) {
+            $this->authorize('create', [ Meeting::class, $this->form->workstream ]);
+
             $meeting = $this->form->add($meetingService);
             $this->dispatch(EventEnum::MEETING_CREATED->value, meetingId: $meeting->id);
         } else {

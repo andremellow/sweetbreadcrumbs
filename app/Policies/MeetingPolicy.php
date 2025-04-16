@@ -26,8 +26,9 @@ class MeetingPolicy
 
 
 
-    public function create(User $user): bool
+    public function create(User $user, Workstream $workstream): bool
     {
+        return $this->userService->setUser($user)->can(CapabilityEnum::CREATE_MEETINGS, $workstream);
     }
 
     public function update(User $user, Meeting $meeting): bool
